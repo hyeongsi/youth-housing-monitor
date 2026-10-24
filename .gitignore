@@ -1,0 +1,9 @@
+node_modules/
+logs/
+tmp/
+data/monitor-state.json
+data/auto-discovered.json
+data/notifications.json
+data/profile.json
+output/
+research/
