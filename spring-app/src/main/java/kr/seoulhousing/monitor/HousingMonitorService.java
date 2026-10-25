@@ -29,7 +29,7 @@ public class HousingMonitorService {
     private static final Pattern TAG = Pattern.compile("<[^>]+>");
     private static final Pattern DETAIL = Pattern.compile("getDetailView\\(\\s*['\\\"]?(\\d+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern DATE = Pattern.compile("(\\d{4})[.\\-/](\\d{1,2})[.\\-/](\\d{1,2})");
-    private static final Set<String> ALLOWED_STATUSES = Set.of("공고중", "공고예정", "접수중", "접수예정", "접수마감", "모집중", "모집예정", "모집마감", "마감", "종료", "목록 기재 없음");
+    static final Set<String> ALLOWED_STATUSES = Set.of("공고중", "공고예정", "접수중", "접수예정", "접수마감", "모집", "추가모집", "모집중", "모집예정", "모집마감", "마감", "종료", "목록 기재 없음");
     private final ObjectMapper mapper;
     private final Path data;
     private final HttpClient http = HttpClient.newBuilder()
@@ -172,7 +172,7 @@ public class HousingMonitorService {
     private boolean allowsEmptyResults(Map<String, Object> source) { return Boolean.parseBoolean(String.valueOf(source.getOrDefault("allowEmptyResults", false))); }
     private List<String> lhHeaders(String html) { Matcher rows=ROW.matcher(html); while(rows.find()) { String row=rows.group(1); if(row.toLowerCase(Locale.ROOT).contains("<th")) return cells(row); } return List.of(); }
     private int column(List<String> headers, int fallback, String... names) { for(int i=0;i<headers.size();i++) for(String name:names) if(headers.get(i).replaceAll("\\s", "").contains(name.replaceAll("\\s", ""))) return i; return fallback; }
-    private String youthStatus(String code) { return switch (code) { case "1" -> "접수예정"; case "2" -> "접수중"; default -> code; }; }
+    private String youthStatus(String code) { return switch (code) { case "1" -> "모집"; case "2" -> "추가모집"; default -> code; }; }
     private String dateOrMissing(String value) { if(value == null) return "목록 기재 없음"; Matcher m=DATE.matcher(value); if(!m.find()) return "목록 기재 없음"; try { return LocalDate.of(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))).toString(); } catch(DateTimeException e) { return "목록 기재 없음"; } }
     private String statusOrMissing(String value) { String normalized=blank(value).replaceAll("\\s+", ""); return ALLOWED_STATUSES.contains(normalized) ? normalized : "목록 기재 없음"; }
     private void validateRecord(Map<String,Object> record) { for(String field:List.of("announcedAt", "applicationEnd")) { String value=String.valueOf(record.get(field)); if(!value.equals("목록 기재 없음")) { try { LocalDate.parse(value); } catch(DateTimeParseException e) { throw new IllegalArgumentException("Invalid "+field); } } } if(!ALLOWED_STATUSES.contains(String.valueOf(record.get("status")))) throw new IllegalArgumentException("Invalid status"); }

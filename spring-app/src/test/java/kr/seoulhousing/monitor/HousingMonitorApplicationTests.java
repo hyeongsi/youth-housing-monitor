@@ -62,13 +62,17 @@ class HousingMonitorApplicationTests {
         assertEquals("접수중", lh.getFirst().get("status"));
         write("sources.json", List.of(Map.of("id", "youth", "name", "청년안심", "kind", "youth-safe-list", "endpoint", "youth")));
         StubMonitor youthService = new StubMonitor(root, Map.of());
-        youthService.youthResponse = mapper.readTree("{\"pagingInfo\":{\"totPage\":1},\"resultList\":[{\"boardId\":\"10\",\"nttSj\":\"공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"서울청년주택운영사\",\"optn4\":\"2026.10.30\",\"optn5\":\"2\"}]}");
+        youthService.youthResponse = mapper.readTree("{\"pagingInfo\":{\"totPage\":1},\"resultList\":[{\"boardId\":\"10\",\"nttSj\":\"추가모집 공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"서울청년주택운영사\",\"optn4\":\"2026.10.30\",\"optn5\":\"2\"},{\"boardId\":\"11\",\"nttSj\":\"일반모집 공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"일반모집운영사\",\"optn4\":\"2026.10.30\",\"optn5\":\"1\"},{\"boardId\":\"12\",\"nttSj\":\"알수없는 공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"미상운영사\",\"optn4\":\"2026.10.30\",\"optn5\":\"99\"}]}");
         youthService.refresh();
-        Map<String, Object> youth = catalogItems().getFirst();
-        assertEquals("서울청년주택운영사", youth.get("provider"));
-        assertEquals("접수중", youth.get("status"));
-        assertEquals("2026-10-22", youth.get("announcedAt"));
-        assertEquals("2026-10-30", youth.get("applicationEnd"));
+        List<Map<String, Object>> youth = catalogItems();
+        Map<String, Object> extraRecruitment = youth.stream().filter(item -> item.get("title").equals("추가모집 공고")).findFirst().orElseThrow();
+        assertEquals("서울청년주택운영사", extraRecruitment.get("provider"));
+        assertEquals("추가모집", extraRecruitment.get("status"));
+        assertTrue(HousingMonitorService.ALLOWED_STATUSES.contains(extraRecruitment.get("status")), "상태 필터에 표시될 추가모집 값을 허용한다");
+        assertEquals("2026-10-22", extraRecruitment.get("announcedAt"));
+        assertEquals("2026-10-30", extraRecruitment.get("applicationEnd"));
+        assertEquals("모집", youth.stream().filter(item -> item.get("title").equals("일반모집 공고")).findFirst().orElseThrow().get("status"));
+        assertEquals("목록 기재 없음", youth.stream().filter(item -> item.get("title").equals("알수없는 공고")).findFirst().orElseThrow().get("status"));
     }
 
     @Test void overviewUsesTypeCorrectDefaultsWhenDataFilesDoNotExist() throws Exception {
