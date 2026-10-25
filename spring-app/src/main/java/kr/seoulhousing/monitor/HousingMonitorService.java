@@ -36,7 +36,7 @@ public class HousingMonitorService {
         this.data = Path.of(root).resolve("data").normalize();
     }
 
-    @Scheduled(cron = "0 0 9 * * MON-FRI", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 9 * * MON", zone = "Asia/Seoul")
     public void scheduledRefresh() {
         refresh();
     }
