@@ -43,6 +43,17 @@ class HousingMonitorApplicationTests {
         assertEquals(2, ((List<?>) notifications.get("sourceFailures")).size());
     }
 
+    @Test void emptyParserResultPreservesTheSourceLastGoodCatalog() throws Exception {
+        write("sources.json", List.of(source("empty", "empty")));
+        write("all-announcements.json", Map.of("items", List.of(old("empty", "last-good"))));
+        new StubMonitor(root, Map.of("empty", "<table><tr><th>공고일</th></tr></table>")).refresh();
+
+        assertEquals("last-good", catalogItems().getFirst().get("title"));
+        Map<?, ?> state = mapper.readValue(data().resolve("monitor-state.json").toFile(), Map.class);
+        Map<?, ?> sources = (Map<?, ?>) state.get("sources");
+        assertEquals("Parser returned no records", ((Map<?, ?>) sources.get("empty")).get("error"));
+    }
+
     @Test void lhColumnsAndYouthStatusCodesAreNormalizedAndValidated() throws Exception {
         HousingMonitorService service = new StubMonitor(root, Map.of());
         List<Map<String, Object>> lh = service.parseLh(lhPage(), source("lh", "unused"), "2026-10-25T10:00:00");
@@ -51,9 +62,10 @@ class HousingMonitorApplicationTests {
         assertEquals("접수중", lh.getFirst().get("status"));
         write("sources.json", List.of(Map.of("id", "youth", "name", "청년안심", "kind", "youth-safe-list", "endpoint", "youth")));
         StubMonitor youthService = new StubMonitor(root, Map.of());
-        youthService.youthResponse = mapper.readTree("{\"pagingInfo\":{\"totPage\":1},\"resultList\":[{\"boardId\":\"10\",\"nttSj\":\"공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"2\",\"optn4\":\"2026.10.30\",\"optn5\":\"기관\"}]}");
+        youthService.youthResponse = mapper.readTree("{\"pagingInfo\":{\"totPage\":1},\"resultList\":[{\"boardId\":\"10\",\"nttSj\":\"공고\",\"optn1\":\"2026.10.22\",\"optn2\":\"1\",\"optn3\":\"서울청년주택운영사\",\"optn4\":\"2026.10.30\",\"optn5\":\"2\"}]}");
         youthService.refresh();
         Map<String, Object> youth = catalogItems().getFirst();
+        assertEquals("서울청년주택운영사", youth.get("provider"));
         assertEquals("접수중", youth.get("status"));
         assertEquals("2026-10-22", youth.get("announcedAt"));
         assertEquals("2026-10-30", youth.get("applicationEnd"));

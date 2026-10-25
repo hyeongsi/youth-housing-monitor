@@ -71,6 +71,9 @@ public class HousingMonitorService {
                     case "youth-safe-list" -> collectYouth(source, checkedAt);
                     default -> { get(String.valueOf(source.get("url"))); yield List.of(); }
                 };
+                if (!kind.equals("snapshot") && found.isEmpty() && !allowsEmptyResults(source)) {
+                    throw new IllegalStateException("Parser returned no records");
+                }
                 // Snapshot sources are availability checks, not structured catalog feeds.
                 if (!kind.equals("snapshot")) successfulRecords.put(id, found);
                 Map<String, Object> state = new LinkedHashMap<>();
@@ -122,7 +125,7 @@ public class HousingMonitorService {
             for (JsonNode row : json.path("resultList")) {
                 String boardId = row.path("boardId").asText();
                 String url = "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=" + enc(row.path("optn1").asText()) + "&boardId=" + boardId + "&menuNo=400008&pageIndex=" + page;
-                all.add(record(source, boardId, row.path("nttSj").asText(), row.path("optn2").asText().equals("1") ? "공공임대" : "민간임대", "목록 기재 없음", row.path("optn1").asText(), row.path("optn4").asText(), youthStatus(row.path("optn3").asText()), row.path("optn5").asText(), url, at));
+                all.add(record(source, boardId, row.path("nttSj").asText(), row.path("optn2").asText().equals("1") ? "공공임대" : "민간임대", "목록 기재 없음", row.path("optn1").asText(), row.path("optn4").asText(), youthStatus(row.path("optn5").asText()), row.path("optn3").asText(), url, at));
             }
             Thread.sleep(200);
         }
@@ -166,6 +169,7 @@ public class HousingMonitorService {
     private String text(String value){ return TAG.matcher(value==null?"":value).replaceAll(" ").replace("&nbsp;"," ").replace("&amp;","&").replaceAll("\\s+"," ").replaceFirst("^-->\\s*","").trim(); }
     private String cell(List<String> cells,int index){ return index<cells.size()?cells.get(index):"목록 기재 없음"; }
     private String blank(String value){ return value==null||value.isBlank()?"목록 기재 없음":value; }
+    private boolean allowsEmptyResults(Map<String, Object> source) { return Boolean.parseBoolean(String.valueOf(source.getOrDefault("allowEmptyResults", false))); }
     private List<String> lhHeaders(String html) { Matcher rows=ROW.matcher(html); while(rows.find()) { String row=rows.group(1); if(row.toLowerCase(Locale.ROOT).contains("<th")) return cells(row); } return List.of(); }
     private int column(List<String> headers, int fallback, String... names) { for(int i=0;i<headers.size();i++) for(String name:names) if(headers.get(i).replaceAll("\\s", "").contains(name.replaceAll("\\s", ""))) return i; return fallback; }
     private String youthStatus(String code) { return switch (code) { case "1" -> "접수예정"; case "2" -> "접수중"; default -> code; }; }
