@@ -18,6 +18,7 @@ import java.nio.file.*;
 import java.security.MessageDigest;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.regex.*;
 
@@ -27,9 +28,14 @@ public class HousingMonitorService {
     private static final Pattern CELL = Pattern.compile("<t[dh]\\b[^>]*>([\\s\\S]*?)</t[dh]>", Pattern.CASE_INSENSITIVE);
     private static final Pattern TAG = Pattern.compile("<[^>]+>");
     private static final Pattern DETAIL = Pattern.compile("getDetailView\\(\\s*['\\\"]?(\\d+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DATE = Pattern.compile("(\\d{4})[.\\-/](\\d{1,2})[.\\-/](\\d{1,2})");
+    private static final Set<String> ALLOWED_STATUSES = Set.of("공고중", "공고예정", "접수중", "접수예정", "접수마감", "모집중", "모집예정", "모집마감", "마감", "종료", "목록 기재 없음");
     private final ObjectMapper mapper;
     private final Path data;
-    private final HttpClient http = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+    private final HttpClient http = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build();
 
     public HousingMonitorService(ObjectMapper mapper, @Value("${housing.root}") String root) {
         this.mapper = mapper;
@@ -44,10 +50,11 @@ public class HousingMonitorService {
     public synchronized Map<String, Object> refresh() {
         String checkedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         List<Map<String, Object>> sources = read("sources.json", new TypeReference<>() {}, List.of());
-        List<Map<String, Object>> oldItems = read("all-announcements.json", new TypeReference<Map<String, Object>>() {}, Map.of()).containsKey("items")
-                ? mapper.convertValue(read("all-announcements.json", new TypeReference<Map<String, Object>>() {}, Map.of()).get("items"), new TypeReference<List<Map<String, Object>>>() {}) : List.of();
+        Map<String, Object> previousCatalog = read("all-announcements.json", new TypeReference<>() {}, Map.of());
+        List<Map<String, Object>> oldItems = previousCatalog.containsKey("items")
+                ? mapper.convertValue(previousCatalog.get("items"), new TypeReference<List<Map<String, Object>>>() {}) : List.of();
         Set<String> known = new HashSet<>(); oldItems.forEach(item -> known.add(String.valueOf(item.get("id"))));
-        List<Map<String, Object>> records = new ArrayList<>();
+        Map<String, List<Map<String, Object>>> successfulRecords = new LinkedHashMap<>();
         Map<String, Object> sourceState = new LinkedHashMap<>();
         List<Map<String, Object>> checked = new ArrayList<>();
         List<Map<String, Object>> failures = new ArrayList<>();
@@ -64,25 +71,34 @@ public class HousingMonitorService {
                     case "youth-safe-list" -> collectYouth(source, checkedAt);
                     default -> { get(String.valueOf(source.get("url"))); yield List.of(); }
                 };
-                records.addAll(found);
+                // Snapshot sources are availability checks, not structured catalog feeds.
+                if (!kind.equals("snapshot")) successfulRecords.put(id, found);
                 Map<String, Object> state = new LinkedHashMap<>();
                 state.put("checkedAt", checkedAt); state.put("recordCount", found.size()); state.put("mode", kind.equals("snapshot") ? "snapshot" : "full");
                 sourceState.put(id, state);
                 checked.add(Map.of("source", name, "recordCount", found.size(), "mode", state.get("mode")));
             } catch (Exception error) {
-                sourceState.put(id, Map.of("checkedAt", checkedAt, "error", error.getMessage()));
-                failures.add(Map.of("source", name, "error", error.getMessage()));
+                String message = errorMessage(error);
+                sourceState.put(id, Map.of("checkedAt", checkedAt, "error", message));
+                failures.add(Map.of("source", name, "error", message));
             }
         }
-        Map<String, Map<String, Object>> deduped = new LinkedHashMap<>(); records.forEach(item -> deduped.put(String.valueOf(item.get("id")), item));
+        // Replace only feeds that completed successfully; preserve every failed feed's last good data.
+        List<Map<String, Object>> merged = new ArrayList<>();
+        oldItems.stream().filter(item -> !successfulRecords.containsKey(String.valueOf(item.get("sourceId")))).forEach(merged::add);
+        successfulRecords.values().forEach(merged::addAll);
+        Map<String, Map<String, Object>> deduped = new LinkedHashMap<>(); merged.forEach(item -> deduped.put(String.valueOf(item.get("id")), item));
         List<Map<String, Object>> items = new ArrayList<>(deduped.values());
         items.sort(Comparator.comparing(item -> String.valueOf(item.getOrDefault("announcedAt", "")), Comparator.reverseOrder()));
         List<Map<String, Object>> newItems = items.stream().filter(item -> !known.contains(String.valueOf(item.get("id")))).toList();
-        write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
+        // A complete outage must never turn a useful catalog into an empty one.
+        if (!successfulRecords.isEmpty()) {
+            write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
+        }
         write("monitor-state.json", Map.of("schemaVersion", 3, "lastRunAt", checkedAt, "mode", "full", "runner", "spring", "sources", sourceState));
         write("auto-discovered.json", newItems);
         write("notifications.json", Map.of("checkedAt", checkedAt, "actionable", newItems, "sourceFailures", failures));
-        return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures, "catalogCount", items.size());
+        return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures, "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size());
     }
 
     private List<Map<String, Object>> collectPaged(Map<String, Object> source, String at, boolean sh) throws Exception {
@@ -106,20 +122,24 @@ public class HousingMonitorService {
             for (JsonNode row : json.path("resultList")) {
                 String boardId = row.path("boardId").asText();
                 String url = "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=" + enc(row.path("optn1").asText()) + "&boardId=" + boardId + "&menuNo=400008&pageIndex=" + page;
-                all.add(record(source, boardId, row.path("nttSj").asText(), row.path("optn2").asText().equals("1") ? "공공임대" : "민간임대", "목록 기재 없음", row.path("optn1").asText(), row.path("optn4").asText(), row.path("optn5").asText(), row.path("optn3").asText(), url, at));
+                all.add(record(source, boardId, row.path("nttSj").asText(), row.path("optn2").asText().equals("1") ? "공공임대" : "민간임대", "목록 기재 없음", row.path("optn1").asText(), row.path("optn4").asText(), youthStatus(row.path("optn3").asText()), row.path("optn5").asText(), url, at));
             }
             Thread.sleep(200);
         }
         return all;
     }
 
-    private List<Map<String, Object>> parseLh(String html, Map<String, Object> source, String at) {
+    List<Map<String, Object>> parseLh(String html, Map<String, Object> source, String at) {
+        List<String> headers = lhHeaders(html);
+        int announced = column(headers, 5, "공고일", "게시일");
+        int deadline = column(headers, 6, "접수마감", "마감일", "접수기간");
+        int status = column(headers, 7, "상태", "진행");
         List<Map<String, Object>> out = new ArrayList<>(); Matcher rows = ROW.matcher(html);
-        while (rows.find()) { String row = rows.group(1); if (!row.contains("wrtancInfoBtn")) continue; List<String> c = cells(row);
-            String pan = attr(row, "data-id1"), sys = attr(row, "data-id2"), upper = attr(row, "data-id3"), type = attr(row, "data-id4");
+        while (rows.find()) { String row = rows.group(1); String rowMarkup = rows.group(); if (!row.contains("wrtancInfoBtn")) continue; List<String> c = cells(row);
+            String pan = attr(rowMarkup, "data-id1"), sys = attr(rowMarkup, "data-id2"), upper = attr(rowMarkup, "data-id3"), type = attr(rowMarkup, "data-id4");
             Matcher anchor = Pattern.compile("wrtancInfoBtn[^>]*>([\\s\\S]*?)</a>", Pattern.CASE_INSENSITIVE).matcher(row); if (!anchor.find() || pan == null) continue;
             String url = "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=" + enc(pan) + "&ccrCnntSysDsCd=" + enc(sys) + "&uppAisTpCd=" + enc(upper) + "&aisTpCd=" + enc(type) + "&mi=1026";
-            out.add(record(source, pan, text(anchor.group(1)), cell(c,1), cell(c,3), cell(c,4), cell(c,5), cell(c,6), String.valueOf(source.get("name")), url, at)); }
+            out.add(record(source, pan, text(anchor.group(1)), cell(c,1), cell(c,3), cell(c,announced), cell(c,deadline), cell(c,status), String.valueOf(source.get("name")), url, at)); }
         return out;
     }
 
@@ -138,14 +158,21 @@ public class HousingMonitorService {
     }
 
     private Map<String,Object> record(Map<String,Object> source,String key,String title,String housing,String area,String announced,String end,String status,String provider,String url,String at){
-        Map<String,Object> r=new LinkedHashMap<>(); r.put("id",sha(String.valueOf(source.get("id"))+":"+key)); r.put("sourceId",source.get("id")); r.put("sourceName",source.get("name")); r.put("provider",provider); r.put("title",title); r.put("housingType",housing); r.put("area",area); r.put("announcedAt",blank(announced)); r.put("applicationEnd",blank(end)); r.put("status",blank(status)); r.put("officialUrl",url); r.put("retrievedAt",at); return r; }
-    private String get(String url) throws Exception { HttpRequest request=HttpRequest.newBuilder(URI.create(url)).header("User-Agent","SeoulHousingMonitor/1.0").GET().build(); HttpResponse<String> response=http.send(request,HttpResponse.BodyHandlers.ofString()); if(response.statusCode()/100!=2) throw new IOException("HTTP "+response.statusCode()); return response.body(); }
-    private JsonNode post(String url,String body) throws Exception { HttpRequest request=HttpRequest.newBuilder(URI.create(url)).header("Content-Type","application/x-www-form-urlencoded").header("User-Agent","SeoulHousingMonitor/1.0").POST(HttpRequest.BodyPublishers.ofString(body)).build(); HttpResponse<String> response=http.send(request,HttpResponse.BodyHandlers.ofString()); if(response.statusCode()/100!=2) throw new IOException("HTTP "+response.statusCode()); return mapper.readTree(response.body()); }
+        Map<String,Object> r=new LinkedHashMap<>(); r.put("id",sha(String.valueOf(source.get("id"))+":"+key)); r.put("sourceId",source.get("id")); r.put("sourceName",source.get("name")); r.put("provider",provider); r.put("title",title); r.put("housingType",housing); r.put("area",area); r.put("announcedAt",dateOrMissing(announced)); r.put("applicationEnd",dateOrMissing(end)); r.put("status",statusOrMissing(status)); r.put("officialUrl",url); r.put("retrievedAt",at); validateRecord(r); return r; }
+    protected String get(String url) throws Exception { HttpRequest request=HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(20)).header("User-Agent","SeoulHousingMonitor/1.0").GET().build(); HttpResponse<String> response=http.send(request,HttpResponse.BodyHandlers.ofString()); if(response.statusCode()/100!=2) throw new IOException("HTTP "+response.statusCode()); return response.body(); }
+    protected JsonNode post(String url,String body) throws Exception { HttpRequest request=HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(20)).header("Content-Type","application/x-www-form-urlencoded").header("User-Agent","SeoulHousingMonitor/1.0").POST(HttpRequest.BodyPublishers.ofString(body)).build(); HttpResponse<String> response=http.send(request,HttpResponse.BodyHandlers.ofString()); if(response.statusCode()/100!=2) throw new IOException("HTTP "+response.statusCode()); return mapper.readTree(response.body()); }
     private List<String> cells(String row){ List<String> out=new ArrayList<>(); Matcher m=CELL.matcher(row); while(m.find())out.add(text(m.group(1))); return out; }
     private String attr(String html,String name){ Matcher m=Pattern.compile(name+"\\s*=\\s*[\"']([^\"']+)[\"']",Pattern.CASE_INSENSITIVE).matcher(html); return m.find()?m.group(1):null; }
     private String text(String value){ return TAG.matcher(value==null?"":value).replaceAll(" ").replace("&nbsp;"," ").replace("&amp;","&").replaceAll("\\s+"," ").replaceFirst("^-->\\s*","").trim(); }
     private String cell(List<String> cells,int index){ return index<cells.size()?cells.get(index):"목록 기재 없음"; }
     private String blank(String value){ return value==null||value.isBlank()?"목록 기재 없음":value; }
+    private List<String> lhHeaders(String html) { Matcher rows=ROW.matcher(html); while(rows.find()) { String row=rows.group(1); if(row.toLowerCase(Locale.ROOT).contains("<th")) return cells(row); } return List.of(); }
+    private int column(List<String> headers, int fallback, String... names) { for(int i=0;i<headers.size();i++) for(String name:names) if(headers.get(i).replaceAll("\\s", "").contains(name.replaceAll("\\s", ""))) return i; return fallback; }
+    private String youthStatus(String code) { return switch (code) { case "1" -> "접수예정"; case "2" -> "접수중"; default -> code; }; }
+    private String dateOrMissing(String value) { if(value == null) return "목록 기재 없음"; Matcher m=DATE.matcher(value); if(!m.find()) return "목록 기재 없음"; try { return LocalDate.of(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))).toString(); } catch(DateTimeException e) { return "목록 기재 없음"; } }
+    private String statusOrMissing(String value) { String normalized=blank(value).replaceAll("\\s+", ""); return ALLOWED_STATUSES.contains(normalized) ? normalized : "목록 기재 없음"; }
+    private void validateRecord(Map<String,Object> record) { for(String field:List.of("announcedAt", "applicationEnd")) { String value=String.valueOf(record.get(field)); if(!value.equals("목록 기재 없음")) { try { LocalDate.parse(value); } catch(DateTimeParseException e) { throw new IllegalArgumentException("Invalid "+field); } } } if(!ALLOWED_STATUSES.contains(String.valueOf(record.get("status")))) throw new IllegalArgumentException("Invalid status"); }
+    private String errorMessage(Exception error) { if(error instanceof java.net.http.HttpTimeoutException || error instanceof java.net.ConnectException) return "HTTP timeout"; return error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage(); }
     private String enc(String value){ return URLEncoder.encode(value==null?"":value,StandardCharsets.UTF_8); }
     private String sha(String value){ try { byte[] bytes=MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8)); StringBuilder b=new StringBuilder(); for(byte x:bytes)b.append(String.format("%02x",x)); return b.toString(); } catch(Exception e){throw new IllegalStateException(e);} }
     private <T> T read(String file,TypeReference<T> type,T fallback){ try { Path path=data.resolve(file); return Files.exists(path)?mapper.readValue(path.toFile(),type):fallback; } catch(IOException e){ return fallback; } }

@@ -30,13 +30,13 @@ public class HousingDataController {
     @GetMapping("/overview")
     public Map<String, Object> overview() throws IOException {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("profile", read("profile.json", new TypeReference<Map<String, Object>>() {}));
-        result.put("programs", read("programs.json", new TypeReference<List<Object>>() {}));
-        result.put("notices", read("notices.json", new TypeReference<List<Object>>() {}));
-        result.put("monitor", read("monitor-state.json", new TypeReference<Object>() {}));
-        result.put("discoveries", read("auto-discovered.json", new TypeReference<List<Object>>() {}));
-        result.put("notifications", read("notifications.json", new TypeReference<Object>() {}));
-        result.put("allAnnouncements", read("all-announcements.json", new TypeReference<Map<String, Object>>() {}));
+        result.put("profile", read("profile.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
+        result.put("programs", read("programs.json", new TypeReference<List<Object>>() {}, List.of()));
+        result.put("notices", read("notices.json", new TypeReference<List<Object>>() {}, List.of()));
+        result.put("monitor", read("monitor-state.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
+        result.put("discoveries", read("auto-discovered.json", new TypeReference<List<Object>>() {}, List.of()));
+        result.put("notifications", read("notifications.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
+        result.put("allAnnouncements", read("all-announcements.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
         return result;
     }
 
@@ -56,10 +56,10 @@ public class HousingDataController {
         return Files.exists(path) ? (ObjectNode) mapper.readTree(path.toFile()) : mapper.createObjectNode();
     }
 
-    private <T> T read(String file, TypeReference<T> type) throws IOException {
+    private <T> T read(String file, TypeReference<T> type, T fallback) throws IOException {
         Path path = data.resolve(file);
         if (!Files.exists(path)) {
-            return mapper.convertValue(Map.of(), type);
+            return fallback;
         }
         return mapper.readValue(path.toFile(), type);
     }

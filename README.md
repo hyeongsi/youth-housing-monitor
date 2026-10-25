@@ -6,10 +6,9 @@
 
 - `data/programs.json`: LH, SH, 청년안심주택, 서울시·국가 월세지원, 보증금 이자지원, 주거급여, 주택바우처, 긴급·주거취약 지원, 주택도시기금 대출을 구분해 둔 제도 데이터베이스
 - `data/notices.json`: 2026-10-24에 공식 원문과 공고문으로 확인한 현재·예정 공고의 비용, 접수일, 입주 시점, 서류·자격 확인 항목
-- `npm run monitor`: 개인 조건이나 제목 키워드 없이 LH·SH·서울주거포털·청년안심주택 공개 목록의 모든 접근 가능한 페이지 행을 수집해 `data/all-announcements.json`에 저장. 나머지 공식 사이트는 목록 변경을 감시
-- `npm run serve`: 로컬 비교 대시보드. `http://127.0.0.1:4173`에서 열리며 프로필을 `data/profile.json`에만 저장
-- `npm run calendar`: 접수 마감일과 3일 전 확인일을 `output/housing-deadlines.ics`로 내보냄. Google Calendar·Outlook 등에 가져올 수 있음
-- `npm run status`: 미확인 조건과 수집 현황을 콘솔에 출력
+- Spring 수집기: 개인 조건이나 제목 키워드 없이 LH·SH·서울주거포털·청년안심주택 공개 목록을 수집해 `data/all-announcements.json`에 저장합니다. 일부 수집원이 실패하면 해당 수집원의 마지막 정상 데이터는 보존합니다.
+- Spring 대시보드: `http://127.0.0.1:4173`에서 열리며 프로필을 `data/profile.json`에만 저장합니다.
+- 기존 Node 스크립트(`src/`, `package.json`)는 레거시 자료이며 현재 실행 경로가 아닙니다.
 
 ## 실행
 
@@ -29,9 +28,9 @@ cd spring-app
 
 대시보드의 `내 조건 메모`에는 정확한 계좌·주민등록번호·상세 주소가 아니라 소득·자산 구간, 보증금·월세 상한, 무주택 여부, 자동차 보유, 원하는 지역·통근조건만 입력하세요. 이 메모는 공고 수집·표시를 자동으로 제외하거나 정렬하지 않습니다.
 
-## 매일 확인 방법
+## 정기 수집
 
-Spring 서버가 실행 중이면 평일 오전 9시에 전체 공개 목록을 자동 수집합니다. 수집 결과와 오류는 각각 `data/all-announcements.json`, `data/notifications.json`, `data/monitor-state.json`에 남습니다.
+Spring 서버가 실행 중이면 **매주 월요일 오전 9시(KST)** 전체 공개 목록을 자동 수집합니다. 수동 수집은 `scripts/run-monitor.ps1`로 실행할 수 있습니다. 수집 결과와 오류는 각각 `data/all-announcements.json`, `data/notifications.json`, `data/monitor-state.json`에 남습니다.
 
 Windows 작업 스케줄러, 이메일, 데스크톱 알림, 메신저 연동은 아직 연결하지 않았습니다. 인증 정보·수신 주소·메신저 웹훅은 저장하지 않으며, 연결과 테스트를 마치기 전에는 “작동 중”으로 표시하지 않습니다. `output/housing-deadlines.ics`는 지금 바로 캘린더에 가져와 알림을 설정할 수 있습니다.
 
@@ -45,9 +44,9 @@ Windows 작업 스케줄러, 이메일, 데스크톱 알림, 메신저 연동은
 
 ## 실행 환경
 
-- Windows의 로컬 폴더에서 실행되는 Node.js 기반 웹 도구입니다. 별도 프레임워크·데이터베이스·클라우드 계정·패키지 설치가 필요 없습니다.
-- 서버는 Node 내장 `http`로 `127.0.0.1:4173`에만 열립니다. 외부에 공개하지 않으며, 브라우저 UI는 정적 HTML·CSS·JavaScript입니다.
-- 상태와 프로필은 이 폴더의 JSON 파일에만 저장합니다. 수집기는 Node 내장 `fetch`로 공식 공개 페이지를 저빈도로 읽고, 로그인·캡차 우회·신청 제출·외부 알림 전송을 하지 않습니다.
+- Windows의 로컬 폴더에서 실행되는 Spring Boot 기반 도구입니다. Java 21과 Gradle Wrapper만 필요하며, 별도 데이터베이스·클라우드 계정은 사용하지 않습니다.
+- 서버는 Spring Boot로 `127.0.0.1:4173`에만 열립니다. 외부에 공개하지 않으며, 브라우저 UI는 정적 HTML·CSS·JavaScript입니다.
+- 상태와 프로필은 이 폴더의 JSON 파일에만 저장합니다. 수집기는 Java `HttpClient`로 공식 공개 페이지를 저빈도로 읽고, 로그인·캡차 우회·신청 제출·외부 알림 전송을 하지 않습니다.
 
 ## 공식 기준 출처
 
