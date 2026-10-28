@@ -53,7 +53,7 @@ function renderAllAnnouncements() {
   if (!items.length) {
     const message = document.createElement('p');
     message.className = 'muted';
-    message.textContent = '아직 구조화된 목록을 수집하지 않았습니다. 터미널에서 npm run monitor를 실행하면 공개 목록 전체를 불러옵니다.';
+    message.textContent = '아직 구조화된 목록을 수집하지 않았습니다. 지금 공고 수집을 눌러 공개 목록 전체를 불러올 수 있습니다.';
     target.append(message);
     return;
   }
@@ -103,7 +103,7 @@ function renderPrograms(programs) {
 
 function renderMonitor(monitor, discoveries) {
   const rows = Object.entries(monitor?.sources || {});
-  $('#monitor').innerHTML = monitor ? `<p>마지막 확인: <strong>${formatDate(monitor.lastRunAt)}</strong></p>${rows.map(([id, item]) => `<div class="monitor-row ${item.error ? 'monitor-error' : 'monitor-ok'}"><strong>${escapeHtml(id)}</strong><br>${item.error ? escapeHtml(item.error) : `정상 확인 · 후보 ${item.candidateCount || 0}건`}</div>`).join('')}` : '<p class="muted">아직 실행하지 않음. <code>npm run monitor</code>를 실행하세요.</p>';
+  $('#monitor').innerHTML = monitor ? `<p>마지막 확인: <strong>${formatDate(monitor.lastRunAt)}</strong></p>${rows.map(([id, item]) => `<div class="monitor-row ${item.error ? 'monitor-error' : 'monitor-ok'}"><strong>${escapeHtml(id)}</strong><br>${item.error ? escapeHtml(item.error) : `정상 확인 · ${item.recordCount || 0}건`}</div>`).join('')}` : '<p class="muted">아직 실행하지 않았습니다. 지금 공고 수집을 눌러 공식 목록을 확인하세요.</p>';
   $('#discoveries').innerHTML = discoveries.length ? `<div class="discovery"><strong>원문 확인 대기 ${discoveries.length}건</strong>${discoveries.slice(0, 8).map((item) => `<p><a target="_blank" rel="noreferrer" href="${escapeAttribute(item.officialUrl)}">${escapeHtml(item.name)}</a><br><span class="muted">${escapeHtml(item.reason)}</span></p>`).join('')}</div>` : '';
 }
 
@@ -131,6 +131,69 @@ async function load() {
 }
 
 $('#reload').addEventListener('click', load);
+const collectionButton = $('#collect-announcements');
+const collectionResult = $('#collection-result');
+
+function collectionMessage(message, disabled = false) {
+  collectionResult.textContent = message;
+  collectionButton.disabled = disabled;
+}
+
+function collectionSummary(job) {
+  const newCount = Number(job.newItemCount || 0).toLocaleString('ko-KR');
+  const total = job.catalogCount == null ? null : Number(job.catalogCount).toLocaleString('ko-KR');
+  const checked = (job.checked || []).map((item) => `${item.source} ${Number(item.recordCount || 0).toLocaleString('ko-KR')}건`).join(', ');
+  const checkedSummary = checked ? ` · ${checked}` : '';
+  if (job.status === 'SUCCEEDED') return `수집 완료: ${total ? `전체 ${total}건 · ` : ''}신규 ${newCount}건${checkedSummary}`;
+  if (job.status === 'SUCCEEDED_WITH_WARNINGS') {
+    const failures = job.failures || [];
+    const names = failures.map((item) => item.source).filter(Boolean);
+    const warning = names.length > 1 ? `${names[0]} 외 ${names.length - 1}개 출처 확인 실패` : names.length === 1 ? `${names[0]} 출처 확인 실패` : '일부 출처 확인 실패';
+    const detail = failures[0]?.error ? ` (${failures[0].error})` : '';
+    return `수집 완료: 신규 ${newCount}건 · ${warning}${detail}${checkedSummary}`;
+  }
+  return '수집을 완료하지 못했습니다. 기존 목록은 유지됩니다.';
+}
+
+async function trackCollection(startedAt = Date.now()) {
+  if (Date.now() - startedAt >= 10 * 60 * 1000) {
+    collectionMessage('수집은 계속될 수 있으니 화면 다시 불러오기로 결과를 확인하세요');
+    return;
+  }
+  try {
+    const response = await fetch('/api/monitor/refresh');
+    if (!response.ok) throw new Error('수집 상태를 확인하지 못했습니다.');
+    const job = await response.json();
+    if (job.status === 'RUNNING' || job.status === 'IDLE') {
+      collectionMessage('공식 목록을 수집 중입니다. 완료까지 잠시 걸릴 수 있습니다.', true);
+      window.setTimeout(() => trackCollection(startedAt), 2000);
+      return;
+    }
+    if (job.status === 'SUCCEEDED' || job.status === 'SUCCEEDED_WITH_WARNINGS') {
+      await load();
+      collectionMessage(collectionSummary(job));
+      return;
+    }
+    collectionMessage(collectionSummary(job));
+  } catch (error) {
+    collectionMessage(`수집 상태를 확인하지 못했습니다: ${error.message}`);
+  }
+}
+
+collectionButton.addEventListener('click', async () => {
+  collectionMessage('공식 목록을 수집 중입니다. 완료까지 잠시 걸릴 수 있습니다.', true);
+  try {
+    const response = await fetch('/api/monitor/refresh', { method: 'POST' });
+    if (response.status === 429) {
+      collectionMessage('최근 수집 직후에는 10분 뒤 다시 요청할 수 있습니다.');
+      return;
+    }
+    if (response.status !== 202 && response.status !== 409) throw new Error('수집을 시작하지 못했습니다.');
+    await trackCollection();
+  } catch (error) {
+    collectionMessage(`수집을 시작하지 못했습니다: ${error.message}`);
+  }
+});
 $('#announcement-source').addEventListener('change', renderAllAnnouncements);
 $('#announcement-status').addEventListener('change', renderAllAnnouncements);
 $('#announcement-query').addEventListener('input', renderAllAnnouncements);

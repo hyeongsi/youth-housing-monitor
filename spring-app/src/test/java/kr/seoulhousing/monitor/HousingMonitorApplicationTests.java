@@ -25,8 +25,9 @@ class HousingMonitorApplicationTests {
     @Test void preservesFailedSourceCatalogWhileReplacingSuccessfulSource() throws Exception {
         write("sources.json", List.of(source("good", "ok"), source("bad", "fail")));
         write("all-announcements.json", Map.of("items", List.of(old("good", "old-good"), old("bad", "old-bad"))));
-        new StubMonitor(root, Map.of("ok", lhPage())).refresh();
+        Map<String, Object> result = new StubMonitor(root, Map.of("ok", lhPage())).refresh();
         List<Map<String, Object>> items = catalogItems();
+        assertEquals(1, result.get("newItemCount"));
         assertEquals(2, items.size());
         assertTrue(items.stream().anyMatch(item -> item.get("sourceId").equals("bad") && item.get("title").equals("old-bad")));
         assertTrue(items.stream().anyMatch(item -> item.get("sourceId").equals("good") && item.get("title").equals("새 LH 공고")));

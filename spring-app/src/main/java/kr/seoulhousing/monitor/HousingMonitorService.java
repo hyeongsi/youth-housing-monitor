@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -40,11 +39,6 @@ public class HousingMonitorService {
     public HousingMonitorService(ObjectMapper mapper, @Value("${housing.root}") String root) {
         this.mapper = mapper;
         this.data = Path.of(root).resolve("data").normalize();
-    }
-
-    @Scheduled(cron = "0 0 9 * * MON", zone = "Asia/Seoul")
-    public void scheduledRefresh() {
-        refresh();
     }
 
     public synchronized Map<String, Object> refresh() {
@@ -101,7 +95,8 @@ public class HousingMonitorService {
         write("monitor-state.json", Map.of("schemaVersion", 3, "lastRunAt", checkedAt, "mode", "full", "runner", "spring", "sources", sourceState));
         write("auto-discovered.json", newItems);
         write("notifications.json", Map.of("checkedAt", checkedAt, "actionable", newItems, "sourceFailures", failures));
-        return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures, "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size());
+        return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures,
+                "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size(), "newItemCount", newItems.size());
     }
 
     private List<Map<String, Object>> collectPaged(Map<String, Object> source, String at, boolean sh) throws Exception {
