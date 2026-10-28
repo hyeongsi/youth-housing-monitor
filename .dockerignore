@@ -1,0 +1,15 @@
+.git
+.gitignore
+.agents
+.codex
+.gradle
+node_modules
+output
+src
+test
+scripts
+package.json
+package-lock.json
+data/profile.json
+**/.gradle
+**/build

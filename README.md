@@ -19,6 +19,19 @@ cd spring-app
 .\gradlew.bat bootRun --no-daemon
 ```
 
+### Docker
+
+Docker에서는 JSON 데이터 디렉터리를 볼륨으로 보존합니다. 아래 명령은 호스트의 `127.0.0.1`에서만 열므로 같은 PC에서만 접속할 수 있습니다.
+
+```powershell
+docker build -t seoul-housing-monitor .
+docker run --name seoul-housing-monitor --detach --restart unless-stopped --publish 127.0.0.1:4173:4173 --volume seoul-housing-data:/app/data seoul-housing-monitor
+```
+
+브라우저에서 `http://127.0.0.1:4173`을 열고, 컨테이너 로그는 `docker logs --follow seoul-housing-monitor`로 확인할 수 있습니다. `seoul-housing-data` 볼륨에는 수집 결과와 로컬 프로필 메모가 유지됩니다. 로컬의 `data/profile.json`은 개인정보가 될 수 있어 이미지 빌드에 포함하지 않습니다.
+
+현재 `PUT /api/profile`에는 인증이 없으므로, 외부에 공개하려면 포트를 모든 인터페이스에 바인딩하지 말고 먼저 인증·접근 제어를 추가해야 합니다.
+
 수동 전체 수집은 다음처럼 실행합니다.
 
 ```powershell
