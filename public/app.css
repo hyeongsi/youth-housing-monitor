@@ -70,6 +70,9 @@ button:disabled { background: #9aa8bb; border-color: #9aa8bb; color: white; curs
 .status, .verified-badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: .76rem; font-weight: 700; }
 .status { background: #e7f0ff; color: #164d98; }
 .verified-badge { background: #e2f5e9; color: #176341; }
+.announcement-scrollable { max-height: min(70vh, 760px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.announcement-scroll-sentinel { height: 1px; }
+.announcement-loading { margin: 10px 0 0; }
 .load-more { display: block; margin: 14px auto 0; }
 
 .programs { display: grid; gap: 10px; }
