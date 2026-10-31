@@ -13,15 +13,15 @@
       <p id="summary">개인 조건을 적용하지 않은 공개 공고 목록을 준비합니다.</p>
     </header>
     <main>
-      <section class="panel" aria-labelledby="priority-heading">
-        <div class="section-heading"><h2 id="priority-heading">상세 확인 완료 공고 <span id="verified-announcement-count" class="heading-count">0건</span></h2><span class="refresh-actions"><button id="reload" class="secondary">화면 다시 불러오기</button><button id="collect-announcements">지금 공고 수집</button></span></div>
+      <section class="panel overview-panel" aria-labelledby="priority-heading">
+        <div class="section-heading"><h2 id="priority-heading">상세 확인 완료 공고 <span id="verified-announcement-count" class="heading-count">0건</span></h2><span class="refresh-actions"><button id="reload" class="secondary" type="button"><svg class="reload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M20 11a8 8 0 1 0 2 5.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><span>화면 다시 불러오기</span></button><button id="collect-announcements">지금 공고 수집</button></span></div>
         <div id="collection-status" class="collection-status" aria-live="polite"></div>
         <p id="collection-result" class="muted" aria-live="polite"></p>
-        <p id="reload-result" class="muted" aria-live="polite"></p>
+        <p id="reload-result" class="sr-only" aria-live="polite"></p>
         <p class="muted">아래 카드는 검증일과 공식 원문 링크를 함께 가진 상세 데이터만 실제 수집 공고와 연결해 표시합니다. 전체 목록은 다음 섹션에서 계속 확인할 수 있습니다.</p>
         <div id="notices" class="cards"></div>
       </section>
-      <section class="panel" aria-labelledby="all-announcements-heading">
+      <section class="panel overview-panel" aria-labelledby="all-announcements-heading">
         <div class="section-heading"><h2 id="all-announcements-heading">조건 미적용: 수집한 전체 공고</h2><span id="announcement-count" class="muted"></span></div>
         <p class="muted">수집 단계에서는 나이·소득·자산·무주택 여부·선호 지역으로 제외하지 않습니다. 아래 필터는 화면 표시 기능이며, 해제하면 전체 수집 공고를 다시 볼 수 있습니다.</p>
         <div class="announcement-controls">
@@ -38,18 +38,18 @@
         <button id="load-more-announcements" class="secondary load-more" type="button" hidden>공고 더 보기</button>
       </section>
       <section class="grid">
-        <div class="panel">
+        <div class="panel overview-panel">
           <h2>지원 제도 데이터베이스</h2>
           <div id="programs" class="programs"></div>
         </div>
-        <div class="panel">
+        <div class="panel overview-panel">
           <h2>공식 사이트 모니터</h2>
           <div id="monitor"></div>
           <p class="muted">공개 목록만 저빈도로 읽습니다. 로그인, 캡차 우회, 청약 제출은 하지 않습니다.</p>
           <div id="discoveries"></div>
         </div>
       </section>
-      <section class="panel" aria-labelledby="profile-heading">
+      <section class="panel overview-panel" aria-labelledby="profile-heading">
         <h2 id="profile-heading">내 조건 메모 (자동 필터링 안 함)</h2>
         <p class="muted">비교할 때 참고할 로컬 메모입니다. 수집·스크롤 목록을 제외하거나 정렬하지 않습니다. 계좌번호·주민번호·상세 주소는 저장하지 마세요.</p>
         <form id="profile-form" class="profile-form">
@@ -87,6 +87,7 @@
         <p class="documents"></p><a class="official" target="_blank" rel="noreferrer">공식 공고문</a>
       </article>
     </template>
+    <div id="toast-region" aria-live="polite" aria-atomic="true"></div>
     <script type="module" src="/app.js"></script>
   </body>
 </html>

@@ -10,6 +10,8 @@ let announcementObserver;
 let announcementLoading = false;
 let announcementRenderVersion = 0;
 let announcementFrameId = null;
+let reloadInFlight = false;
+let toastTimer;
 
 function hasText(value) {
   return value != null && String(value).trim() !== '';
@@ -401,10 +403,10 @@ function renderAllAnnouncements(append = false, renderVersion = announcementRend
   setupAnnouncementObserver(visible.length > shown.length, renderVersion);
 }
 
-function setupAnnouncementCatalog() {
+function setupAnnouncementCatalog(view = null) {
   const items = state.allAnnouncements?.items || [];
   invalidateAnnouncementRender();
-  announcementLimit = ANNOUNCEMENT_PAGE_SIZE;
+  announcementLimit = view ? Math.max(ANNOUNCEMENT_PAGE_SIZE, view.limit) : ANNOUNCEMENT_PAGE_SIZE;
   setSelectOptions('#announcement-source', optionValues(items, 'sourceName'));
   setSelectOptions('#announcement-status', optionValues(items, 'status'));
   const newOnly = $('#announcement-new-only');
@@ -415,6 +417,7 @@ function setupAnnouncementCatalog() {
   const baselineText = baseline ? `신규는 직전 성공 수집(${formatDate(baseline)})과 비교해 새로 발견된 공고만을 뜻합니다.` : '신규 기준 수집 시각이 없어 신규 필터는 현재 사용할 수 없습니다.';
   $('#announcement-filter-note').textContent = `필터는 화면 표시 기능입니다. 필터를 해제하면 전체 수집 공고를 다시 볼 수 있습니다. ${baselineText}`;
   renderAllAnnouncements();
+  if (view) $('#all-announcements').scrollTop = view.scrollTop;
 }
 
 function failureNames(monitor) {
@@ -480,13 +483,109 @@ function populateForm(profile) {
   }
 }
 
-async function load() {
+function overviewPanels() {
+  return [...document.querySelectorAll('.overview-panel')];
+}
+
+function setOverviewRefreshing(refreshing) {
+  for (const panel of overviewPanels()) {
+    panel.classList.toggle('is-refreshing', refreshing);
+    if (refreshing) panel.setAttribute('aria-busy', 'true');
+    else panel.removeAttribute('aria-busy');
+  }
+}
+
+function announcementView() {
+  return state ? { limit: announcementLimit, scrollTop: $('#all-announcements').scrollTop } : null;
+}
+
+function skeletonBlock(className) {
+  const block = document.createElement('div');
+  block.className = `skeleton ${className}`;
+  block.setAttribute('aria-hidden', 'true');
+  return block;
+}
+
+function showInitialSkeleton() {
+  const notices = $('#notices');
+  notices.replaceChildren(...Array.from({ length: 3 }, () => skeletonBlock('skeleton-card')));
+  const list = $('#all-announcements');
+  list.replaceChildren(...Array.from({ length: 5 }, () => skeletonBlock('skeleton-row')));
+}
+
+function initialLoadError(error) {
+  const notices = $('#notices');
+  const message = document.createElement('div');
+  message.className = 'initial-load-error';
+  const heading = document.createElement('p');
+  heading.textContent = '데이터를 불러오지 못했습니다.';
+  const detail = document.createElement('p');
+  detail.className = 'muted';
+  detail.textContent = error.message || '네트워크 상태를 확인한 뒤 다시 시도하세요.';
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.className = 'secondary';
+  retry.textContent = '다시 시도';
+  retry.addEventListener('click', reloadPage);
+  message.append(heading, detail, retry);
+  notices.replaceChildren(message);
+  $('#all-announcements').replaceChildren();
+}
+
+function showToast({ type, message, detail = '', retry = false }) {
+  window.clearTimeout(toastTimer);
+  const region = $('#toast-region');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icon = document.createElement('span');
+  icon.className = 'toast-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = type === 'success' ? '✓' : '!';
+  const content = document.createElement('div');
+  content.className = 'toast-content';
+  const title = document.createElement('p');
+  title.className = 'toast-title';
+  title.textContent = message;
+  content.append(title);
+  if (detail) {
+    const supporting = document.createElement('p');
+    supporting.className = 'toast-detail';
+    supporting.textContent = detail;
+    content.append(supporting);
+  }
+  const actions = document.createElement('div');
+  actions.className = 'toast-actions';
+  if (retry) {
+    const retryButton = document.createElement('button');
+    retryButton.type = 'button';
+    retryButton.className = 'secondary';
+    retryButton.textContent = '다시 시도';
+    retryButton.addEventListener('click', reloadPage);
+    actions.append(retryButton);
+  }
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'toast-close';
+  close.setAttribute('aria-label', '알림 닫기');
+  close.textContent = '닫기';
+  close.addEventListener('click', () => { window.clearTimeout(toastTimer); region.replaceChildren(); });
+  actions.append(close);
+  toast.append(icon, content, actions);
+  region.replaceChildren(toast);
+  toastTimer = window.setTimeout(() => region.replaceChildren(), type === 'success' ? 3500 : 7500);
+}
+
+async function load({ refreshing = false } = {}) {
+  const priorView = announcementView();
+  if (!priorView) showInitialSkeleton();
+  if (refreshing && priorView) setOverviewRefreshing(true);
   const response = await fetch('/api/overview');
   if (!response.ok) throw new Error('저장된 화면 데이터를 불러오지 못했습니다.');
-  state = await response.json();
+  const nextState = await response.json();
+  state = nextState;
   $('#summary').textContent = `목표 입주: ${state.profile.targetMoveBy}. 전체 공고는 조건과 무관하게 수집하며, 신청 가능 여부는 원문을 보고 직접 판단하세요.`;
   renderVerifiedAnnouncements();
-  setupAnnouncementCatalog();
+  setupAnnouncementCatalog(priorView);
   renderCollectionState();
   renderPrograms(state.programs || []);
   renderMonitor(state.monitor, state.discoveries || []);
@@ -496,17 +595,26 @@ async function load() {
 const reloadButton = $('#reload');
 const reloadResult = $('#reload-result');
 async function reloadPage() {
+  if (reloadInFlight) return;
+  reloadInFlight = true;
   reloadButton.disabled = true;
-  reloadButton.textContent = '불러오는 중…';
+  reloadButton.setAttribute('aria-busy', 'true');
+  reloadButton.classList.add('is-loading');
   reloadResult.textContent = '';
   try {
-    await load();
-    reloadResult.textContent = '저장된 데이터를 다시 표시했습니다. 외부 수집은 시작하지 않았습니다.';
+    await load({ refreshing: true });
+    reloadResult.textContent = '최신 데이터로 업데이트되었습니다.';
+    showToast({ type: 'success', message: '최신 데이터로 업데이트되었습니다.' });
   } catch (error) {
-    reloadResult.textContent = `화면을 다시 불러오지 못했습니다: ${error.message}`;
+    if (!state) initialLoadError(error);
+    reloadResult.textContent = '데이터를 다시 불러오지 못했습니다.';
+    showToast({ type: 'error', message: '데이터를 다시 불러오지 못했습니다.', detail: error.message, retry: true });
   } finally {
+    setOverviewRefreshing(false);
+    reloadInFlight = false;
     reloadButton.disabled = false;
-    reloadButton.textContent = '화면 다시 불러오기';
+    reloadButton.removeAttribute('aria-busy');
+    reloadButton.classList.remove('is-loading');
   }
 }
 reloadButton.addEventListener('click', reloadPage);
@@ -593,4 +701,8 @@ $('#profile-form').addEventListener('submit', async (event) => {
   if (response.ok) await load();
 });
 
-load().catch((error) => { $('#summary').textContent = `대시보드를 불러오지 못했습니다: ${error.message}`; });
+load().catch((error) => {
+  $('#summary').textContent = `대시보드를 불러오지 못했습니다: ${error.message}`;
+  initialLoadError(error);
+  showToast({ type: 'error', message: '데이터를 다시 불러오지 못했습니다.', detail: error.message, retry: true });
+});
