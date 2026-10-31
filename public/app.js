@@ -8,6 +8,8 @@ let state;
 let announcementLimit = ANNOUNCEMENT_PAGE_SIZE;
 let announcementObserver;
 let announcementLoading = false;
+let announcementRenderVersion = 0;
+let announcementFrameId = null;
 
 function hasText(value) {
   return value != null && String(value).trim() !== '';
@@ -298,7 +300,35 @@ function announcementTable() {
   return table;
 }
 
-function setupAnnouncementObserver(hasMore) {
+function invalidateAnnouncementRender() {
+  announcementRenderVersion += 1;
+  announcementObserver?.disconnect();
+  announcementObserver = undefined;
+  if (announcementFrameId !== null) window.cancelAnimationFrame(announcementFrameId);
+  announcementFrameId = null;
+  announcementLoading = false;
+  $('#announcement-loading').hidden = true;
+}
+
+function queueAnnouncementAppend(renderVersion) {
+  if (announcementLoading || renderVersion !== announcementRenderVersion) return;
+  const total = filteredAnnouncements().length;
+  if (announcementLimit >= total) return;
+  announcementLoading = true;
+  $('#announcement-loading').hidden = false;
+  announcementFrameId = window.requestAnimationFrame(() => {
+    announcementFrameId = null;
+    if (renderVersion !== announcementRenderVersion) return;
+    const currentTotal = filteredAnnouncements().length;
+    if (announcementLimit < currentTotal) {
+      announcementLimit = Math.min(announcementLimit + ANNOUNCEMENT_PAGE_SIZE, currentTotal);
+      renderAllAnnouncements(true, renderVersion);
+    }
+    if (renderVersion === announcementRenderVersion) announcementLoading = false;
+  });
+}
+
+function setupAnnouncementObserver(hasMore, renderVersion) {
   announcementObserver?.disconnect();
   const target = $('#all-announcements');
   const sentinel = $('#announcement-scroll-sentinel', target);
@@ -311,21 +341,14 @@ function setupAnnouncementObserver(hasMore) {
     return;
   }
   announcementObserver = new IntersectionObserver((entries) => {
-    if (!entries.some((entry) => entry.isIntersecting) || announcementLoading) return;
-    const total = filteredAnnouncements().length;
-    if (announcementLimit >= total) return;
-    announcementLoading = true;
-    $('#announcement-loading').hidden = false;
-    window.requestAnimationFrame(() => {
-      announcementLimit = Math.min(announcementLimit + ANNOUNCEMENT_PAGE_SIZE, total);
-      renderAllAnnouncements(true);
-      announcementLoading = false;
-    });
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    queueAnnouncementAppend(renderVersion);
   }, { root: target, rootMargin: '0px 0px 240px 0px', threshold: 0.01 });
   if (sentinel) announcementObserver.observe(sentinel);
 }
 
-function renderAllAnnouncements(append = false) {
+function renderAllAnnouncements(append = false, renderVersion = announcementRenderVersion) {
+  if (append && renderVersion !== announcementRenderVersion) return;
   announcementObserver?.disconnect();
   $('#load-more-announcements').hidden = true;
   const catalog = state.allAnnouncements || { items: [] };
@@ -375,11 +398,12 @@ function renderAllAnnouncements(append = false) {
   sentinel.setAttribute('aria-hidden', 'true');
   target.querySelector('#announcement-scroll-sentinel')?.remove();
   target.append(sentinel);
-  setupAnnouncementObserver(visible.length > shown.length);
+  setupAnnouncementObserver(visible.length > shown.length, renderVersion);
 }
 
 function setupAnnouncementCatalog() {
   const items = state.allAnnouncements?.items || [];
+  invalidateAnnouncementRender();
   announcementLimit = ANNOUNCEMENT_PAGE_SIZE;
   setSelectOptions('#announcement-source', optionValues(items, 'sourceName'));
   setSelectOptions('#announcement-status', optionValues(items, 'status'));
@@ -546,6 +570,7 @@ collectionButton.addEventListener('click', async () => {
 });
 
 function resetAnnouncementLimit() {
+  invalidateAnnouncementRender();
   announcementLimit = ANNOUNCEMENT_PAGE_SIZE;
   renderAllAnnouncements();
 }
@@ -555,10 +580,7 @@ $('#announcement-verified-only').addEventListener('change', resetAnnouncementLim
 $('#announcement-new-only').addEventListener('change', resetAnnouncementLimit);
 $('#announcement-query').addEventListener('input', resetAnnouncementLimit);
 $('#load-more-announcements').addEventListener('click', () => {
-  const total = filteredAnnouncements().length;
-  if (announcementLoading || announcementLimit >= total) return;
-  announcementLimit = Math.min(announcementLimit + ANNOUNCEMENT_PAGE_SIZE, total);
-  renderAllAnnouncements(true);
+  queueAnnouncementAppend(announcementRenderVersion);
 });
 
 $('#profile-form').addEventListener('submit', async (event) => {
