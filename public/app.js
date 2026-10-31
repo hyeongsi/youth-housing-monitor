@@ -1,13 +1,29 @@
 const $ = (selector, root = document) => root.querySelector(selector);
+const INITIAL_PAGE_SIZE = 50;
+const MISSING_LIST_VALUE = '목록 미기재';
+const NEEDS_NOTICE = '공고문 확인 필요';
+
 let state;
+let announcementLimit = INITIAL_PAGE_SIZE;
+
+function hasText(value) {
+  return value != null && String(value).trim() !== '';
+}
+
+function isListMissing(value) {
+  return !hasText(value) || String(value).trim() === '목록 기재 없음' || String(value).trim() === MISSING_LIST_VALUE;
+}
+
+function listValue(value) {
+  return isListMissing(value) ? MISSING_LIST_VALUE : String(value);
+}
 
 function formatDate(value) {
-  if (!value) return '미확인';
-  return String(value).replace('T', ' ');
+  return hasText(value) ? String(value).replace('T', ' ') : '미확인';
 }
 
 function shortDate(value) {
-  if (!value) return '미확인';
+  if (!hasText(value)) return '미확인';
   const matched = String(value).match(/(\d{4})-(\d{2})-(\d{2})/);
   return matched ? `${Number(matched[2])}/${Number(matched[3])}` : formatDate(value);
 }
@@ -23,42 +39,58 @@ function formatWon(value) {
   return `${man.toLocaleString('ko-KR')}만 원`;
 }
 
-function formatWonRange(min, max) {
-  const first = formatWon(min);
-  const last = formatWon(max);
-  if (first && last) return first === last ? first : `${first.replace(' 원', '')} ~ ${last}`;
-  return first || last || '미확인';
-}
-
-function detailFor(item) {
+function verifiedDetailFor(item) {
   const details = state.announcementDetails?.items || {};
   const detail = details[item.id];
   return detail?.verificationStatus === 'VERIFIED' ? detail : null;
 }
 
-function locationText(detail) {
-  const values = [detail?.location?.district, detail?.location?.address].filter(Boolean);
-  return values.length ? values.join(' ') : '미확인';
+function verifiedCostOptions(detail) {
+  return Array.isArray(detail?.costOptions) ? detail.costOptions.filter((option) => option && (Number.isFinite(option.depositWon) || Number.isFinite(option.monthlyRentWon))) : [];
+}
+
+function safeLocation(detail, item) {
+  const values = [detail?.location?.district, detail?.location?.address].filter(hasText);
+  return values.length ? values.join(' ') : listValue(item?.area);
+}
+
+function listLocation(item, detail) {
+  const detailed = detail ? safeLocation(detail, item) : null;
+  return detailed && detailed !== MISSING_LIST_VALUE ? detailed : listValue(item.area);
+}
+
+function exclusiveArea(detail) {
+  return hasText(detail?.exclusiveAreaText) ? detail.exclusiveAreaText : NEEDS_NOTICE;
+}
+
+function applicationSchedule(item, detail) {
+  const application = detail?.application;
+  if (application?.start || application?.end) return `${shortDate(application.start)} ~ ${shortDate(application.end)}`;
+  const start = isListMissing(item.applicationStart) ? null : item.applicationStart;
+  const end = isListMissing(item.applicationEnd) ? null : item.applicationEnd;
+  return start || end ? `${start ? formatDate(start) : '시작 미기재'} ~ ${end ? formatDate(end) : '마감 미기재'}` : NEEDS_NOTICE;
+}
+
+function deadlineForList(item, detail) {
+  // Preserve a timestamp supplied by the collection source before using detail data.
+  if (!isListMissing(item.applicationEnd)) return formatDate(item.applicationEnd);
+  if (detail?.application?.end) return formatDate(detail.application.end);
+  return MISSING_LIST_VALUE;
+}
+
+function costForList(detail, field) {
+  if (!detail) return NEEDS_NOTICE;
+  const options = verifiedCostOptions(detail);
+  if (options.length !== 1) return '주택형·조건별 상이 · 공고문 확인';
+  return formatWon(options[0][field]) || NEEDS_NOTICE;
 }
 
 function newAnnouncementIds() {
   return new Set((state.discoveries || []).map((item) => item.id).filter(Boolean));
 }
 
-function applicationText(item, detail) {
-  const application = detail?.application;
-  if (application?.start || application?.end) return `${shortDate(application.start)} ~ ${shortDate(application.end)}`;
-  return item.applicationEnd && item.applicationEnd !== '목록 기재 없음' ? `목록상 마감 ${shortDate(item.applicationEnd)}` : '미확인';
-}
-
-function noticeDetail(notice) {
-  let boardId;
-  try { boardId = new URL(notice.officialUrl).searchParams.get('boardId'); } catch (_) { return null; }
-  if (!boardId) return null;
-  const item = (state.allAnnouncements?.items || []).find((candidate) => {
-    try { return new URL(candidate.officialUrl).searchParams.get('boardId') === boardId; } catch (_) { return false; }
-  });
-  return item ? { item, detail: detailFor(item) } : null;
+function newItemsBaselineAt() {
+  return state.notifications?.newItemsBaselineAt || null;
 }
 
 function fact(container, label, value) {
@@ -71,42 +103,93 @@ function fact(container, label, value) {
   container.append(group);
 }
 
-function renderNotices(notices) {
+function setOfficialLink(link, url, text, labelPrefix = '') {
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.textContent = text;
+  link.setAttribute('aria-label', `${labelPrefix ? `${labelPrefix} ` : ''}${text} (새 탭에서 열림)`);
+}
+
+function appendCostOptions(card, detail) {
+  const options = verifiedCostOptions(detail);
+  if (!options.length) return;
+  const group = document.createElement('div');
+  group.className = 'cost-options';
+  const heading = document.createElement('p');
+  heading.className = 'cost-options-heading';
+  heading.textContent = '주택형·조건별 보증금 / 월세 조합';
+  const list = document.createElement('ul');
+  for (const option of options) {
+    const item = document.createElement('li');
+    const context = [option.typeText || option.housingType, option.conditionText].filter(hasText).join(' · ');
+    const deposit = formatWon(option.depositWon) || NEEDS_NOTICE;
+    const rent = formatWon(option.monthlyRentWon) || NEEDS_NOTICE;
+    item.textContent = `${context || '공고 표 기재 조합'}: 보증금 ${deposit} / 월세 ${rent}`;
+    list.append(item);
+  }
+  group.append(heading, list);
+  card.append(group);
+}
+
+function renderVerifiedAnnouncements() {
   const target = $('#notices');
+  const joined = Array.isArray(state.verifiedAnnouncements) ? state.verifiedAnnouncements : [];
+  $('#verified-announcement-count').textContent = `${joined.length.toLocaleString('ko-KR')}건`;
   target.replaceChildren();
-  for (const notice of notices) {
-    const linked = noticeDetail(notice);
-    const detail = linked?.detail;
+
+  if (!joined.length) {
+    const message = document.createElement('p');
+    message.className = 'muted empty-state';
+    message.textContent = '검증일과 공식 원문 링크를 함께 가진 상세 확인 공고가 아직 없습니다.';
+    target.append(message);
+    return;
+  }
+
+  for (const joinedItem of joined) {
+    const item = joinedItem.announcement || {};
+    const detail = joinedItem.detail || {};
     const card = document.createElement('article');
     card.className = 'notice-card verified-card';
-    const header = document.createElement('div');
-    header.className = 'card-statuses';
-    for (const label of [notice.status || '상태 미확인', notice.provider || '출처 미확인']) {
-      const badge = document.createElement('span'); badge.className = 'status'; badge.textContent = label; header.append(badge);
-    }
-    const verified = document.createElement('span'); verified.className = 'verified-badge'; verified.textContent = '상세 확인 완료'; header.append(verified);
-    const title = document.createElement('h3'); title.textContent = notice.name;
-    const type = document.createElement('p'); type.className = 'card-type'; type.textContent = notice.housingType || '주택 유형 미확인';
-    const facts = document.createElement('dl'); facts.className = 'notice-facts';
-    fact(facts, '📍 위치', detail ? locationText(detail) : (notice.area || '미확인'));
-    if (detail) {
-      fact(facts, '💰 보증금', formatWonRange(detail.cost?.depositMinWon, detail.cost?.depositMaxWon));
-      fact(facts, '💳 월세', formatWonRange(detail.cost?.monthlyRentMinWon, detail.cost?.monthlyRentMaxWon));
-    } else {
-      fact(facts, '💰 비용', notice.cost || '공고문 확인 필요');
-    }
-    fact(facts, '📅 접수', detail ? applicationText(linked.item, detail) : `${shortDate(notice.applicationStart)} ~ ${shortDate(notice.applicationEnd)}`);
-    fact(facts, '🏠 입주', notice.moveIn || '미확인');
-    const management = document.createElement('p'); management.className = 'management-fee'; management.textContent = `관리비: ${detail?.cost?.managementFeeText || notice.managementFee || '공고문 확인 필요'}`;
-    const checked = document.createElement('p'); checked.className = 'verified-at'; checked.textContent = `확인일: ${detail?.verifiedAt || notice.verifiedAt || '미확인'}`;
-    const link = document.createElement('a'); link.className = 'official'; link.href = detail?.sourceUrl || notice.officialUrl; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = '공식 공고문 보기';
-    card.append(header, title, type, facts, management, checked, link);
+
+    const sourceStatus = document.createElement('p');
+    sourceStatus.className = 'source-status';
+    sourceStatus.textContent = `출처: ${listValue(item.sourceName)} · 목록 상태: ${listValue(item.status)}`;
+
+    const title = document.createElement('h3');
+    title.textContent = listValue(item.title);
+
+    const facts = document.createElement('dl');
+    facts.className = 'notice-facts';
+    const options = verifiedCostOptions(detail);
+    const singleOption = options.length === 1 ? options[0] : null;
+    fact(facts, '지역', safeLocation(detail, item));
+    fact(facts, '보증금', singleOption ? (formatWon(singleOption.depositWon) || NEEDS_NOTICE) : '주택형·조건별 상이 · 공고문 확인');
+    fact(facts, '월세', singleOption ? (formatWon(singleOption.monthlyRentWon) || NEEDS_NOTICE) : '주택형·조건별 상이 · 공고문 확인');
+    fact(facts, '전용면적', exclusiveArea(detail));
+
+    const schedule = document.createElement('p');
+    schedule.className = 'schedule';
+    schedule.textContent = `접수 일정: ${applicationSchedule(item, detail)}`;
+    const moveIn = document.createElement('p');
+    moveIn.className = 'move-in';
+    moveIn.textContent = `입주 정보: ${hasText(detail.moveInText) ? detail.moveInText : NEEDS_NOTICE}`;
+    const verified = document.createElement('p');
+    verified.className = 'verified-at';
+    verified.textContent = `검증일: ${formatDate(detail.verifiedAt)}`;
+    const link = document.createElement('a');
+    link.className = 'official';
+    setOfficialLink(link, detail.sourceUrl, '공식 공고문 보기', listValue(item.title));
+
+    card.append(sourceStatus, title, facts);
+    appendCostOptions(card, detail);
+    card.append(schedule, moveIn, verified, link);
     target.append(card);
   }
 }
 
 function optionValues(items, field) {
-  return [...new Set(items.map((item) => item[field]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), 'ko'));
+  return [...new Set(items.map((item) => item[field]).filter((value) => !isListMissing(value)))].sort((a, b) => String(a).localeCompare(String(b), 'ko'));
 }
 
 function setSelectOptions(selector, values) {
@@ -117,24 +200,80 @@ function setSelectOptions(selector, values) {
   select.value = values.includes(current) ? current : '';
 }
 
-function renderAllAnnouncements() {
+function filteredAnnouncements() {
   const catalog = state.allAnnouncements || { items: [] };
-  const items = catalog.items || [];
   const source = $('#announcement-source').value;
   const status = $('#announcement-status').value;
   const verifiedOnly = $('#announcement-verified-only').checked;
   const newOnly = $('#announcement-new-only').checked;
   const query = $('#announcement-query').value.trim().toLocaleLowerCase('ko');
   const newIds = newAnnouncementIds();
-  const visible = items.filter((item) => {
-    const detail = detailFor(item);
-    const text = [item.title, item.sourceName, item.provider, item.housingType, item.area, item.status, locationText(detail)].join(' ').toLocaleLowerCase('ko');
-    return (!source || item.sourceName === source) && (!status || item.status === status) && (!verifiedOnly || detail) && (!newOnly || newIds.has(item.id)) && (!query || text.includes(query));
+  return (catalog.items || []).filter((item) => {
+    const detail = verifiedDetailFor(item);
+    const text = [item.title, item.sourceName, item.provider, item.housingType, item.area, item.status, listLocation(item, detail)].join(' ').toLocaleLowerCase('ko');
+    return (!source || item.sourceName === source)
+      && (!status || item.status === status)
+      && (!verifiedOnly || detail)
+      && (!newOnly || newIds.has(item.id))
+      && (!query || text.includes(query));
   });
-  const heading = catalog.mode === 'full' ? '전체 목록 스캔' : catalog.mode || '아직 수집 전';
-  $('#announcement-count').textContent = `${visible.length.toLocaleString('ko-KR')} / ${items.length.toLocaleString('ko-KR')}건 · ${heading} · ${formatDate(catalog.checkedAt)}`;
+}
+
+function announcementTitleCell(item, detail, newIds) {
+  const cell = document.createElement('td');
+  cell.dataset.label = '공고';
+  const title = document.createElement('h3');
+  title.className = 'announcement-title';
+  if (hasText(item.officialUrl)) {
+    const link = document.createElement('a');
+    setOfficialLink(link, item.officialUrl, listValue(item.title), '공식 공고문');
+    title.append(link);
+  } else {
+    title.textContent = listValue(item.title);
+  }
+  const source = document.createElement('p');
+  source.className = 'announcement-source';
+  source.textContent = `${listValue(item.sourceName)} · ${listValue(item.housingType)} · ${listValue(item.provider)}`;
+  const badges = document.createElement('div');
+  badges.className = 'announcement-badges';
+  if (newIds.has(item.id)) {
+    const badge = document.createElement('span');
+    badge.className = 'status';
+    badge.textContent = '신규';
+    badges.append(badge);
+  }
+  if (detail) {
+    const badge = document.createElement('span');
+    badge.className = 'verified-badge';
+    badge.textContent = '상세 확인 완료';
+    badges.append(badge);
+  }
+  cell.append(title, source);
+  if (badges.childElementCount) cell.append(badges);
+  return cell;
+}
+
+function textCell(label, value) {
+  const cell = document.createElement('td');
+  cell.dataset.label = label;
+  cell.textContent = value;
+  return cell;
+}
+
+function renderAllAnnouncements() {
+  const catalog = state.allAnnouncements || { items: [] };
+  const items = catalog.items || [];
+  const visible = filteredAnnouncements();
+  const shown = visible.slice(0, announcementLimit);
+  const heading = catalog.mode === 'full' ? '전체 목록' : (catalog.mode || '아직 수집 전');
+  $('#announcement-count').textContent = `${heading} · 마지막 성공 수집 ${formatDate(catalog.checkedAt)}`;
+  $('#announcement-result-count').textContent = `검색 결과 ${visible.length.toLocaleString('ko-KR')}건 / 전체 ${items.length.toLocaleString('ko-KR')}건${visible.length > shown.length ? ` · ${shown.length.toLocaleString('ko-KR')}건 표시` : ''}`;
+
   const target = $('#all-announcements');
+  const more = $('#load-more-announcements');
   target.replaceChildren();
+  more.hidden = true;
+
   if (!items.length) {
     const message = document.createElement('p');
     message.className = 'muted';
@@ -145,41 +284,46 @@ function renderAllAnnouncements() {
   if (!visible.length) {
     const message = document.createElement('p');
     message.className = 'muted';
-    message.textContent = '화면 필터와 일치하는 공고가 없습니다. 수집 대상에서 제외된 것이 아니라 현재 보기 조건이 좁습니다.';
+    message.textContent = '화면 필터와 일치하는 공고가 없습니다. 필터를 해제하면 전체 수집 공고를 다시 볼 수 있습니다.';
     target.append(message);
     return;
   }
-  const fragment = document.createDocumentFragment();
-  for (const item of visible) {
-    const detail = detailFor(item);
-    const article = document.createElement('article');
-    article.className = `announcement-row ${detail ? 'has-details' : 'needs-details'}`;
-    const top = document.createElement('div'); top.className = 'announcement-topline';
-    const title = document.createElement('h3');
-    const link = document.createElement('a');
-    link.href = item.officialUrl;
-    link.target = '_blank';
-    link.rel = 'noreferrer';
-    link.textContent = item.title;
-    title.append(link);
-    const badges = document.createElement('div'); badges.className = 'announcement-badges';
-    for (const label of [item.status, newIds.has(item.id) ? '신규' : null, detail ? '상세 확인 완료' : null].filter(Boolean)) {
-      const badge = document.createElement('span'); badge.className = label === '상세 확인 완료' ? 'verified-badge' : 'status'; badge.textContent = label; badges.append(badge);
-    }
-    top.append(title, badges);
-    const sourceLine = document.createElement('p'); sourceLine.className = 'announcement-details'; sourceLine.textContent = `${item.sourceName || '출처 미확인'} · ${item.housingType || '주택 유형 미확인'} · ${item.provider || '기관 미확인'}`;
-    const facts = document.createElement('dl'); facts.className = 'announcement-facts';
-    fact(facts, '위치', locationText(detail));
-    fact(facts, '보증금', detail ? formatWonRange(detail.cost?.depositMinWon, detail.cost?.depositMaxWon) : '미확인');
-    fact(facts, '월세', detail ? formatWonRange(detail.cost?.monthlyRentMinWon, detail.cost?.monthlyRentMaxWon) : '미확인');
-    fact(facts, '접수', applicationText(item, detail));
-    fact(facts, '상태', item.status || '미확인');
-    const notice = document.createElement('p'); notice.className = detail ? 'detail-confirmed' : 'detail-needed';
-    notice.textContent = detail ? `확인일 ${detail.verifiedAt || '미확인'} · 관리비: ${detail.cost?.managementFeeText || '공고문 확인 필요'}` : '공고문에서 상세 확인 필요';
-    article.append(top, sourceLine, facts, notice);
-    fragment.append(article);
+
+  const table = document.createElement('table');
+  table.className = 'announcement-table';
+  table.setAttribute('aria-describedby', 'announcement-result-count');
+  const head = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  for (const label of ['공고', '지역', '보증금', '월세', '전용면적', '접수 마감', '상태']) {
+    const header = document.createElement('th');
+    header.scope = 'col';
+    header.textContent = label;
+    headerRow.append(header);
   }
-  target.append(fragment);
+  head.append(headerRow);
+  const body = document.createElement('tbody');
+  const newIds = newAnnouncementIds();
+  for (const item of shown) {
+    const detail = verifiedDetailFor(item);
+    const row = document.createElement('tr');
+    row.className = detail ? 'has-details' : 'needs-details';
+    row.append(
+      announcementTitleCell(item, detail, newIds),
+      textCell('지역', listLocation(item, detail)),
+      textCell('보증금', costForList(detail, 'depositWon')),
+      textCell('월세', costForList(detail, 'monthlyRentWon')),
+      textCell('전용면적', detail ? exclusiveArea(detail) : NEEDS_NOTICE),
+      textCell('접수 마감', deadlineForList(item, detail)),
+      textCell('상태', listValue(item.status)),
+    );
+    body.append(row);
+  }
+  table.append(head, body);
+  target.append(table);
+  if (visible.length > shown.length) {
+    more.hidden = false;
+    more.textContent = `공고 ${Math.min(INITIAL_PAGE_SIZE, visible.length - shown.length).toLocaleString('ko-KR')}건 더 보기`;
+  }
 }
 
 function setupAnnouncementCatalog() {
@@ -187,27 +331,67 @@ function setupAnnouncementCatalog() {
   setSelectOptions('#announcement-source', optionValues(items, 'sourceName'));
   setSelectOptions('#announcement-status', optionValues(items, 'status'));
   const newOnly = $('#announcement-new-only');
+  const baseline = newItemsBaselineAt();
   const hasNewItems = newAnnouncementIds().size > 0;
   newOnly.disabled = !hasNewItems;
   if (!hasNewItems) newOnly.checked = false;
-  $('#announcement-filter-note').textContent = hasNewItems ? '필터는 화면 표시만 바꾸며 수집 범위나 개인 조건 판정에는 영향을 주지 않습니다.' : '신규 공고 데이터가 없어 신규 필터는 현재 사용할 수 없습니다.';
+  const baselineText = baseline ? `신규는 직전 성공 수집(${formatDate(baseline)})과 비교해 새로 발견된 공고만을 뜻합니다.` : '신규 기준 수집 시각이 없어 신규 필터는 현재 사용할 수 없습니다.';
+  $('#announcement-filter-note').textContent = `필터는 화면 표시 기능입니다. 필터를 해제하면 전체 수집 공고를 다시 볼 수 있습니다. ${baselineText}`;
   renderAllAnnouncements();
+}
+
+function failureNames(monitor) {
+  if (Array.isArray(monitor?.failedSources) && monitor.failedSources.length) return monitor.failedSources;
+  return Object.entries(monitor?.sources || {})
+    .filter(([, source]) => source?.error)
+    .map(([source, value]) => ({ source, error: value.error }));
+}
+
+function renderCollectionState() {
+  const monitor = state.monitor || {};
+  const catalog = state.allAnnouncements || {};
+  const failures = failureNames(monitor);
+  const newCount = Array.isArray(state.notifications?.actionable) ? state.notifications.actionable.length : null;
+  const lastSuccess = catalog.checkedAt || monitor.lastSuccessfulAt;
+  const outcome = monitor.outcome || (failures.length ? 'SUCCEEDED_WITH_WARNINGS' : (lastSuccess ? 'SUCCEEDED' : 'IDLE'));
+  const status = $('#collection-status');
+  status.replaceChildren();
+  const last = document.createElement('p');
+  last.textContent = `마지막 성공 수집: ${lastSuccess ? formatDate(lastSuccess) : '아직 없음'}`;
+  const result = document.createElement('p');
+  result.className = `collection-outcome ${outcome.toLowerCase()}`;
+  if (outcome === 'FAILED') result.textContent = '상태: 수집 실패 · 기존 마지막 정상 목록 유지';
+  else if (outcome === 'SUCCEEDED_WITH_WARNINGS') result.textContent = '상태: 일부 출처 실패 · 해당 출처의 기존 마지막 정상 데이터 유지';
+  else if (outcome === 'SUCCEEDED') result.textContent = '상태: 수집 성공';
+  else result.textContent = '상태: 수집 기록 없음';
+  status.append(last, result);
+  if (newCount != null) {
+    const discovered = document.createElement('p');
+    discovered.textContent = `이번 수집 신규 공고: ${newCount.toLocaleString('ko-KR')}건`;
+    status.append(discovered);
+  }
+  if (failures.length) {
+    const failed = document.createElement('p');
+    failed.className = 'collection-failures';
+    failed.textContent = `실패 출처: ${failures.map((failure) => `${failure.source}${failure.error ? ` (${failure.error})` : ''}`).join(', ')}`;
+    status.append(failed);
+  }
 }
 
 function renderPrograms(programs) {
   $('#programs').innerHTML = programs.map((program) => `
     <article class="program"><h3>${escapeHtml(program.name)}</h3><p>${escapeHtml(program.type)} · ${escapeHtml(program.provider)}</p>
     <p><strong>${escapeHtml(program.status)}</strong></p><p>${escapeHtml(program.cost)}</p>
-    <p class="muted">${escapeHtml(program.eligibility)}</p><a href="${escapeAttribute(program.officialUrl)}" target="_blank" rel="noreferrer">공식 안내</a></article>`).join('');
+    <p class="muted">${escapeHtml(program.eligibility)}</p><a href="${escapeAttribute(program.officialUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeAttribute(program.name)} 공식 안내 (새 탭에서 열림)">공식 안내</a></article>`).join('');
 }
 
 function renderMonitor(monitor, discoveries) {
   const rows = Object.entries(monitor?.sources || {});
   $('#monitor').innerHTML = monitor ? `<p>마지막 확인: <strong>${formatDate(monitor.lastRunAt)}</strong></p>${rows.map(([id, item]) => `<div class="monitor-row ${item.error ? 'monitor-error' : 'monitor-ok'}"><strong>${escapeHtml(id)}</strong><br>${item.error ? escapeHtml(item.error) : `정상 확인 · ${item.recordCount || 0}건`}</div>`).join('')}` : '<p class="muted">아직 실행하지 않았습니다. 지금 공고 수집을 눌러 공식 목록을 확인하세요.</p>';
-  $('#discoveries').innerHTML = discoveries.length ? `<div class="discovery"><strong>원문 확인 대기 ${discoveries.length}건</strong>${discoveries.slice(0, 8).map((item) => `<p><a target="_blank" rel="noreferrer" href="${escapeAttribute(item.officialUrl)}">${escapeHtml(item.name)}</a><br><span class="muted">${escapeHtml(item.reason)}</span></p>`).join('')}</div>` : '';
+  $('#discoveries').innerHTML = discoveries.length ? `<div class="discovery"><strong>새로 발견된 공고 ${discoveries.length}건</strong>${discoveries.slice(0, 8).map((item) => `<p><a target="_blank" rel="noopener noreferrer" aria-label="${escapeAttribute(item.name)} 공식 공고문 (새 탭에서 열림)" href="${escapeAttribute(item.officialUrl)}">${escapeHtml(item.name)}</a><br><span class="muted">${escapeHtml(item.reason || '직전 성공 수집과 비교해 새로 발견')}</span></p>`).join('')}</div>` : '';
 }
 
-function escapeHtml(value) { return String(value || '').replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char])); }
+function escapeHtml(value) { return String(value || '').replace(/[&<>\"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char])); }
 function escapeAttribute(value) { return escapeHtml(value).replace(/'/g, '&#39;'); }
 
 function populateForm(profile) {
@@ -221,22 +405,41 @@ function populateForm(profile) {
 
 async function load() {
   const response = await fetch('/api/overview');
+  if (!response.ok) throw new Error('저장된 화면 데이터를 불러오지 못했습니다.');
   state = await response.json();
   $('#summary').textContent = `목표 입주: ${state.profile.targetMoveBy}. 전체 공고는 조건과 무관하게 수집하며, 신청 가능 여부는 원문을 보고 직접 판단하세요.`;
-  renderNotices(state.notices);
+  renderVerifiedAnnouncements();
   setupAnnouncementCatalog();
-  renderPrograms(state.programs);
-  renderMonitor(state.monitor, state.discoveries);
-  populateForm(state.profile);
+  renderCollectionState();
+  renderPrograms(state.programs || []);
+  renderMonitor(state.monitor, state.discoveries || []);
+  populateForm(state.profile || {});
 }
 
-$('#reload').addEventListener('click', load);
+const reloadButton = $('#reload');
+const reloadResult = $('#reload-result');
+async function reloadPage() {
+  reloadButton.disabled = true;
+  reloadButton.textContent = '불러오는 중…';
+  reloadResult.textContent = '';
+  try {
+    await load();
+    reloadResult.textContent = '저장된 데이터를 다시 표시했습니다. 외부 수집은 시작하지 않았습니다.';
+  } catch (error) {
+    reloadResult.textContent = `화면을 다시 불러오지 못했습니다: ${error.message}`;
+  } finally {
+    reloadButton.disabled = false;
+    reloadButton.textContent = '화면 다시 불러오기';
+  }
+}
+reloadButton.addEventListener('click', reloadPage);
+
 const collectionButton = $('#collect-announcements');
 const collectionResult = $('#collection-result');
-
-function collectionMessage(message, disabled = false) {
+function setCollectionRequest(message, busy = false) {
   collectionResult.textContent = message;
-  collectionButton.disabled = disabled;
+  collectionButton.disabled = busy;
+  collectionButton.textContent = busy ? '수집 요청 중…' : '지금 공고 수집';
 }
 
 function collectionSummary(job) {
@@ -244,20 +447,18 @@ function collectionSummary(job) {
   const total = job.catalogCount == null ? null : Number(job.catalogCount).toLocaleString('ko-KR');
   const checked = (job.checked || []).map((item) => `${item.source} ${Number(item.recordCount || 0).toLocaleString('ko-KR')}건`).join(', ');
   const checkedSummary = checked ? ` · ${checked}` : '';
-  if (job.status === 'SUCCEEDED') return `수집 완료: ${total ? `전체 ${total}건 · ` : ''}신규 ${newCount}건${checkedSummary}`;
+  if (job.status === 'SUCCEEDED') return `수집 성공: ${total ? `전체 ${total}건 · ` : ''}신규 ${newCount}건${checkedSummary}`;
   if (job.status === 'SUCCEEDED_WITH_WARNINGS') {
-    const failures = job.failures || [];
-    const names = failures.map((item) => item.source).filter(Boolean);
-    const warning = names.length > 1 ? `${names[0]} 외 ${names.length - 1}개 출처 확인 실패` : names.length === 1 ? `${names[0]} 출처 확인 실패` : '일부 출처 확인 실패';
-    const detail = failures[0]?.error ? ` (${failures[0].error})` : '';
-    return `수집 완료: 신규 ${newCount}건 · ${warning}${detail}${checkedSummary}`;
+    const names = (job.failures || []).map((item) => item.source).filter(Boolean);
+    const warning = names.length ? `실패 출처: ${names.join(', ')} · 기존 마지막 정상 데이터 유지` : '일부 출처 실패 · 기존 마지막 정상 데이터 유지';
+    return `수집 일부 성공: 신규 ${newCount}건 · ${warning}${checkedSummary}`;
   }
-  return '수집을 완료하지 못했습니다. 기존 목록은 유지됩니다.';
+  return '수집 실패: 기존 마지막 정상 목록은 유지됩니다.';
 }
 
 async function trackCollection(startedAt = Date.now()) {
   if (Date.now() - startedAt >= 10 * 60 * 1000) {
-    collectionMessage('수집은 계속될 수 있으니 화면 다시 불러오기로 결과를 확인하세요');
+    setCollectionRequest('수집 요청은 계속 처리 중일 수 있습니다. 화면 다시 불러오기로 결과를 확인하세요.');
     return;
   }
   try {
@@ -265,40 +466,47 @@ async function trackCollection(startedAt = Date.now()) {
     if (!response.ok) throw new Error('수집 상태를 확인하지 못했습니다.');
     const job = await response.json();
     if (job.status === 'RUNNING' || job.status === 'IDLE') {
-      collectionMessage('공식 목록을 수집 중입니다. 완료까지 잠시 걸릴 수 있습니다.', true);
+      setCollectionRequest('공식 목록을 수집 중입니다. 완료까지 잠시 걸릴 수 있습니다.', true);
       window.setTimeout(() => trackCollection(startedAt), 2000);
       return;
     }
-    if (job.status === 'SUCCEEDED' || job.status === 'SUCCEEDED_WITH_WARNINGS') {
-      await load();
-      collectionMessage(collectionSummary(job));
-      return;
-    }
-    collectionMessage(collectionSummary(job));
+    if (job.status === 'SUCCEEDED' || job.status === 'SUCCEEDED_WITH_WARNINGS') await load();
+    setCollectionRequest(collectionSummary(job));
   } catch (error) {
-    collectionMessage(`수집 상태를 확인하지 못했습니다: ${error.message}`);
+    setCollectionRequest(`수집 상태를 확인하지 못했습니다: ${error.message}`);
   }
 }
 
 collectionButton.addEventListener('click', async () => {
-  collectionMessage('공식 목록을 수집 중입니다. 완료까지 잠시 걸릴 수 있습니다.', true);
+  setCollectionRequest('수집 요청을 보냈습니다. 공식 목록을 수집 중입니다.', true);
   try {
     const response = await fetch('/api/monitor/refresh', { method: 'POST' });
     if (response.status === 429) {
-      collectionMessage('최근 수집 직후에는 10분 뒤 다시 요청할 수 있습니다.');
+      setCollectionRequest('최근 수집 직후에는 10분 뒤 다시 요청할 수 있습니다.');
       return;
     }
     if (response.status !== 202 && response.status !== 409) throw new Error('수집을 시작하지 못했습니다.');
     await trackCollection();
   } catch (error) {
-    collectionMessage(`수집을 시작하지 못했습니다: ${error.message}`);
+    setCollectionRequest(`수집을 시작하지 못했습니다: ${error.message}`);
   }
 });
-$('#announcement-source').addEventListener('change', renderAllAnnouncements);
-$('#announcement-status').addEventListener('change', renderAllAnnouncements);
-$('#announcement-verified-only').addEventListener('change', renderAllAnnouncements);
-$('#announcement-new-only').addEventListener('change', renderAllAnnouncements);
-$('#announcement-query').addEventListener('input', renderAllAnnouncements);
+
+function resetAnnouncementLimit() {
+  announcementLimit = INITIAL_PAGE_SIZE;
+  renderAllAnnouncements();
+}
+$('#announcement-source').addEventListener('change', resetAnnouncementLimit);
+$('#announcement-status').addEventListener('change', resetAnnouncementLimit);
+$('#announcement-verified-only').addEventListener('change', resetAnnouncementLimit);
+$('#announcement-new-only').addEventListener('change', resetAnnouncementLimit);
+$('#announcement-query').addEventListener('input', resetAnnouncementLimit);
+$('#load-more-announcements').addEventListener('click', () => {
+  announcementLimit += INITIAL_PAGE_SIZE;
+  renderAllAnnouncements();
+  $('#announcement-result-count').focus();
+});
+
 $('#profile-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(event.currentTarget));

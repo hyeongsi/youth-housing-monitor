@@ -45,6 +45,7 @@ public class HousingMonitorService {
         String checkedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         List<Map<String, Object>> sources = read("sources.json", new TypeReference<>() {}, List.of());
         Map<String, Object> previousCatalog = read("all-announcements.json", new TypeReference<>() {}, Map.of());
+        Map<String, Object> previousMonitor = read("monitor-state.json", new TypeReference<>() {}, Map.of());
         List<Map<String, Object>> oldItems = previousCatalog.containsKey("items")
                 ? mapper.convertValue(previousCatalog.get("items"), new TypeReference<List<Map<String, Object>>>() {}) : List.of();
         Set<String> known = new HashSet<>(); oldItems.forEach(item -> known.add(String.valueOf(item.get("id"))));
@@ -93,9 +94,28 @@ public class HousingMonitorService {
         if (!successfulRecords.isEmpty()) {
             write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
         }
-        write("monitor-state.json", Map.of("schemaVersion", 3, "lastRunAt", checkedAt, "mode", "full", "runner", "spring", "sources", sourceState));
+        boolean hasSuccessfulCatalog = !successfulRecords.isEmpty();
+        Map<String, Object> monitorState = new LinkedHashMap<>();
+        monitorState.put("schemaVersion", 3);
+        // lastRunAt is retained for clients that already use it. lastSuccessfulAt
+        // distinguishes a failed attempt from the most recent usable catalog.
+        monitorState.put("lastRunAt", checkedAt);
+        monitorState.put("lastSuccessfulAt", hasSuccessfulCatalog ? checkedAt
+                : previousMonitor.getOrDefault("lastSuccessfulAt", previousCatalog.get("checkedAt")));
+        monitorState.put("outcome", hasSuccessfulCatalog
+                ? (failures.isEmpty() ? "SUCCEEDED" : "SUCCEEDED_WITH_WARNINGS") : "FAILED");
+        monitorState.put("failedSources", failures);
+        monitorState.put("mode", "full");
+        monitorState.put("runner", "spring");
+        monitorState.put("sources", sourceState);
+        write("monitor-state.json", monitorState);
         write("auto-discovered.json", newItems);
-        write("notifications.json", Map.of("checkedAt", checkedAt, "actionable", newItems, "sourceFailures", failures));
+        Map<String, Object> notifications = new LinkedHashMap<>();
+        notifications.put("checkedAt", checkedAt);
+        notifications.put("newItemsBaselineAt", oldItems.isEmpty() ? null : previousCatalog.get("checkedAt"));
+        notifications.put("actionable", newItems);
+        notifications.put("sourceFailures", failures);
+        write("notifications.json", notifications);
         return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures,
                 "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size(), "newItemCount", newItems.size(), "newItems", newItems);
     }

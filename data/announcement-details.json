@@ -4,6 +4,7 @@
     "61cb273a0c9133c4afc5c0debf94462630aa853a6040be1ae6d75d43c7743f3b": {
       "verificationStatus": "VERIFIED",
       "verifiedAt": "2026-10-24",
+      "exclusiveAreaText": "42㎡",
       "location": { "district": "관악구", "address": "신림역" },
       "cost": {
         "depositMinWon": 98000000,
@@ -14,11 +15,15 @@
       },
       "application": { "start": "2026-10-23", "end": "2026-10-26" },
       "moveInText": "2026년 12월 18일 예정 (기존 입주자 퇴거일에 따라 변경 가능)",
+      "costOptions": [
+        { "typeText": "42㎡ 1세대", "conditionText": "공고 표 기준", "depositWon": 98000000, "monthlyRentWon": 789000 }
+      ],
       "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6705&menuNo=400008"
     },
     "f95c610ce5ecd45fbe1a5a0aecfd4b67c9ddf49f8bb6def85a408ca684127168": {
       "verificationStatus": "VERIFIED",
       "verifiedAt": "2026-10-24",
+      "exclusiveAreaText": "39.51㎡",
       "location": { "district": "중랑구", "address": "화랑대역" },
       "cost": {
         "depositMinWon": 93000000,
@@ -29,11 +34,17 @@
       },
       "application": { "start": "2026-10-23", "end": "2026-10-28" },
       "moveInText": "예비당첨자 순차 개별 연락",
+      "costOptions": [
+        { "typeText": "39.51㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 93000000, "monthlyRentWon": 780000 },
+        { "typeText": "39.51㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 155000000, "monthlyRentWon": 550000 },
+        { "typeText": "39.51㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 217400000, "monthlyRentWon": 330000 }
+      ],
       "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6703&menuNo=400008"
     },
     "3e5dcdc17055a8ca40594f5fae17b0821099f154c5fd4351dfe702acb58c64ee": {
       "verificationStatus": "VERIFIED",
       "verifiedAt": "2026-10-24",
+      "exclusiveAreaText": "20㎡",
       "location": { "district": "동대문구", "address": "청량리역" },
       "cost": {
         "depositMinWon": 88000000,
@@ -44,11 +55,17 @@
       },
       "application": { "start": "2026-10-26", "end": "2026-10-26" },
       "moveInText": "예비자 선정 후 개별 연락",
+      "costOptions": [
+        { "typeText": "20㎡ 청년 일반", "conditionText": "보증금·월세 전환 조합", "depositWon": 88000000, "monthlyRentWon": 549000 },
+        { "typeText": "20㎡ 청년 일반", "conditionText": "보증금·월세 전환 조합", "depositWon": 99000000, "monthlyRentWon": 500000 },
+        { "typeText": "20㎡ 청년 일반", "conditionText": "보증금·월세 전환 조합", "depositWon": 110000000, "monthlyRentWon": 450000 }
+      ],
       "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6707&menuNo=400008"
     },
     "75b479d0098df882e8be94d69197075733dcb7e3b5f80bca3a096fe77f8fa3dd": {
       "verificationStatus": "VERIFIED",
       "verifiedAt": "2026-10-24",
+      "exclusiveAreaText": "16.56㎡",
       "location": { "district": "관악구", "address": "구로디지털단지역" },
       "cost": {
         "depositMinWon": 71000000,
@@ -59,11 +76,17 @@
       },
       "application": { "start": "2026-10-26", "end": "2026-10-28" },
       "moveInText": "공실 발생 시 예비자 순차 개별 연락",
+      "costOptions": [
+        { "typeText": "16.56㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 71000000, "monthlyRentWon": 510000 },
+        { "typeText": "16.56㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 90000000, "monthlyRentWon": 420000 },
+        { "typeText": "16.56㎡ 예비자", "conditionText": "보증금·월세 전환 조합", "depositWon": 100000000, "monthlyRentWon": 380000 }
+      ],
       "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6706&menuNo=400008"
     },
     "639f6a41f4a028e857ce960a92d02a33ec10365e04ca7e9d97c1c37a7cde9e02": {
       "verificationStatus": "VERIFIED",
       "verifiedAt": "2026-10-24",
+      "exclusiveAreaText": "38.64㎡",
       "location": { "district": "중랑구", "address": "상봉역" },
       "cost": {
         "depositMinWon": 132000000,
@@ -74,6 +97,11 @@
       },
       "application": { "start": "2026-10-26", "end": "2026-10-26" },
       "moveInText": "2026년 11월 23일 ~ 12월 4일",
+      "costOptions": [
+        { "typeText": "38.64㎡ 특별공급 1세대", "conditionText": "보증금·월세 전환 조합", "depositWon": 132000000, "monthlyRentWon": 544500 },
+        { "typeText": "38.64㎡ 특별공급 1세대", "conditionText": "보증금·월세 전환 조합", "depositWon": 158400000, "monthlyRentWon": 445500 },
+        { "typeText": "38.64㎡ 특별공급 1세대", "conditionText": "보증금·월세 전환 조합", "depositWon": 211000000, "monthlyRentWon": 248200 }
+      ],
       "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6704&menuNo=400008"
     }
   }

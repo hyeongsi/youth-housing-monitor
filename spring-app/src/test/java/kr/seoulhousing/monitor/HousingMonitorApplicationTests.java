@@ -51,6 +51,17 @@ class HousingMonitorApplicationTests {
         assertTrue(mapper.readValue(data().resolve("auto-discovered.json").toFile(), List.class).isEmpty());
     }
 
+    @Test void recordsThePreviousSuccessfulCollectionAsTheNewAnnouncementBaseline() throws Exception {
+        write("sources.json", List.of(source("lh", "ok")));
+        write("all-announcements.json", Map.of("checkedAt", "2026-10-20T09:00:00", "items", List.of(old("lh", "old-lh"))));
+
+        new StubMonitor(root, Map.of("ok", lhPage())).refresh();
+
+        Map<?, ?> notifications = mapper.readValue(data().resolve("notifications.json").toFile(), Map.class);
+        assertEquals("2026-10-20T09:00:00", notifications.get("newItemsBaselineAt"));
+        assertEquals(1, ((List<?>) notifications.get("actionable")).size());
+    }
+
     @Test void emptyParserResultPreservesTheSourceLastGoodCatalog() throws Exception {
         write("sources.json", List.of(source("empty", "empty")));
         write("all-announcements.json", Map.of("items", List.of(old("empty", "last-good"))));
@@ -94,16 +105,37 @@ class HousingMonitorApplicationTests {
     }
 
     @Test void overviewReturnsManualDetailsSeparatelyFromCatalogForSafeClientJoin() throws Exception {
-        write("all-announcements.json", Map.of("items", List.of(Map.of("id", "verified-id", "title", "확인 공고"))));
+        write("all-announcements.json", Map.of("items", List.of(
+                Map.of("id", "verified-id", "title", "확인 공고", "area", "원본 지역", "officialUrl", "https://example.test/verified"),
+                Map.of("id", "partial-id", "title", "부분 상세 공고", "area", "원본 지역 2", "officialUrl", "https://example.test/partial"),
+                Map.of("id", "without-detail", "title", "상세 없는 공고", "area", "원본 지역 3", "officialUrl", "https://example.test/no-detail"))));
         write("announcement-details.json", Map.of("schemaVersion", 1, "items", Map.of("verified-id", Map.of(
-                "verificationStatus", "VERIFIED", "location", Map.of("district", "관악구"),
-                "cost", Map.of("depositMinWon", 23000000)))));
+                "verificationStatus", "VERIFIED", "verifiedAt", "2026-10-24", "sourceUrl", "https://example.test/source", "location", Map.of("district", "관악구"),
+                "cost", Map.of("depositMinWon", 23000000)),
+                "partial-id", Map.of("verificationStatus", "PARTIAL", "location", Map.of("district", "중랑구")))));
 
         Map<String, Object> overview = new HousingDataController(mapper, root.toString()).overview();
         Map<?, ?> details = (Map<?, ?>) overview.get("announcementDetails");
         Map<?, ?> items = (Map<?, ?>) details.get("items");
         assertEquals("VERIFIED", ((Map<?, ?>) items.get("verified-id")).get("verificationStatus"));
         assertEquals(23000000, ((Map<?, ?>) ((Map<?, ?>) items.get("verified-id")).get("cost")).get("depositMinWon"));
+        assertEquals("원본 지역 3", ((List<?>) ((Map<?, ?>) overview.get("allAnnouncements")).get("items")).stream()
+                .map(Map.class::cast).filter(item -> item.get("id").equals("without-detail")).findFirst().orElseThrow().get("area"));
+        List<Map<String, Object>> joined = (List<Map<String, Object>>) overview.get("verifiedAnnouncements");
+        assertEquals(1, joined.size());
+        assertEquals("verified-id", ((Map<?, ?>) joined.getFirst().get("announcement")).get("id"));
+    }
+
+    @Test void failedRunKeepsTheLastSuccessfulCollectionTime() throws Exception {
+        write("sources.json", List.of(source("one", "fail-one")));
+        write("all-announcements.json", Map.of("checkedAt", "2026-10-20T09:00:00", "items", List.of(old("one", "last-good"))));
+        write("monitor-state.json", Map.of("lastSuccessfulAt", "2026-10-20T09:00:00"));
+        new StubMonitor(root, Map.of()).refresh();
+
+        Map<?, ?> state = mapper.readValue(data().resolve("monitor-state.json").toFile(), Map.class);
+        assertEquals("FAILED", state.get("outcome"));
+        assertEquals("2026-10-20T09:00:00", state.get("lastSuccessfulAt"));
+        assertEquals(1, ((List<?>) state.get("failedSources")).size());
     }
 
     @Test void timeoutIsRecordedAsAFailedSourceAndDoesNotEraseItsData() throws Exception {
