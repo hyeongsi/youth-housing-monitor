@@ -37,6 +37,7 @@ public class HousingDataController {
         result.put("discoveries", read("auto-discovered.json", new TypeReference<List<Object>>() {}, List.of()));
         result.put("notifications", read("notifications.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
         result.put("allAnnouncements", read("all-announcements.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
+        result.put("announcementDetails", read("announcement-details.json", new TypeReference<Map<String, Object>>() {}, Map.of("schemaVersion", 1, "items", Map.of())));
         return result;
     }
 

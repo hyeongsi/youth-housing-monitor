@@ -1,0 +1,5 @@
+package kr.seoulhousing.alerts;
+import android.content.Intent; import android.os.Bundle; import androidx.appcompat.app.AppCompatActivity; import androidx.recyclerview.widget.*; import org.json.*; import java.util.*;
+public class InboxActivity extends AppCompatActivity {
+    @Override public void onCreate(Bundle state) { super.onCreate(state); setContentView(R.layout.activity_list); ((android.widget.TextView)findViewById(R.id.list_title)).setText("알림함"); RecyclerView list=findViewById(R.id.list); list.setLayoutManager(new LinearLayoutManager(this)); ApiClient.request(this,"GET","inbox",null,(json,error)->runOnUiThread(()-> { List<String> labels=new ArrayList<>(),ids=new ArrayList<>(); JSONArray items=json==null?new JSONArray():json.optJSONArray("items"); for(int i=0;items!=null&&i<items.length();i++){JSONObject item=items.optJSONObject(i); labels.add(item.optString("title")+"\n"+item.optString("body"));ids.add(item.optString("announcementId"));} list.setAdapter(new TextRowAdapter(labels,ids,id->startActivity(new Intent(this,AnnouncementDetailActivity.class).putExtra("announcementId",id)))); })); }
+}

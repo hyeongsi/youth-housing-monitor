@@ -6,21 +6,102 @@ function formatDate(value) {
   return String(value).replace('T', ' ');
 }
 
+function shortDate(value) {
+  if (!value) return '미확인';
+  const matched = String(value).match(/(\d{4})-(\d{2})-(\d{2})/);
+  return matched ? `${Number(matched[2])}/${Number(matched[3])}` : formatDate(value);
+}
+
+function formatWon(value) {
+  if (!Number.isFinite(value) || value < 0) return null;
+  const man = value / 10000;
+  if (man >= 10000) {
+    const eok = Math.floor(man / 10000);
+    const remainder = man % 10000;
+    return remainder ? `${eok}억 ${remainder.toLocaleString('ko-KR')}만 원` : `${eok}억 원`;
+  }
+  return `${man.toLocaleString('ko-KR')}만 원`;
+}
+
+function formatWonRange(min, max) {
+  const first = formatWon(min);
+  const last = formatWon(max);
+  if (first && last) return first === last ? first : `${first.replace(' 원', '')} ~ ${last}`;
+  return first || last || '미확인';
+}
+
+function detailFor(item) {
+  const details = state.announcementDetails?.items || {};
+  const detail = details[item.id];
+  return detail?.verificationStatus === 'VERIFIED' ? detail : null;
+}
+
+function locationText(detail) {
+  const values = [detail?.location?.district, detail?.location?.address].filter(Boolean);
+  return values.length ? values.join(' ') : '미확인';
+}
+
+function newAnnouncementIds() {
+  return new Set((state.discoveries || []).map((item) => item.id).filter(Boolean));
+}
+
+function applicationText(item, detail) {
+  const application = detail?.application;
+  if (application?.start || application?.end) return `${shortDate(application.start)} ~ ${shortDate(application.end)}`;
+  return item.applicationEnd && item.applicationEnd !== '목록 기재 없음' ? `목록상 마감 ${shortDate(item.applicationEnd)}` : '미확인';
+}
+
+function noticeDetail(notice) {
+  let boardId;
+  try { boardId = new URL(notice.officialUrl).searchParams.get('boardId'); } catch (_) { return null; }
+  if (!boardId) return null;
+  const item = (state.allAnnouncements?.items || []).find((candidate) => {
+    try { return new URL(candidate.officialUrl).searchParams.get('boardId') === boardId; } catch (_) { return false; }
+  });
+  return item ? { item, detail: detailFor(item) } : null;
+}
+
+function fact(container, label, value) {
+  const group = document.createElement('div');
+  const term = document.createElement('dt');
+  const description = document.createElement('dd');
+  term.textContent = label;
+  description.textContent = value;
+  group.append(term, description);
+  container.append(group);
+}
+
 function renderNotices(notices) {
   const target = $('#notices');
-  target.innerHTML = '';
+  target.replaceChildren();
   for (const notice of notices) {
-    const node = $('#notice-template').content.cloneNode(true);
-    $('.status', node).textContent = `${notice.status} · ${notice.priority}`;
-    $('h3', node).textContent = notice.name;
-    $('.meta', node).textContent = `${notice.housingType} | ${notice.area} | 접수 ${formatDate(notice.applicationStart)} ~ ${formatDate(notice.applicationEnd)}`;
-    $('.cost', node).textContent = `비용: ${notice.cost}`;
-    $('.move', node).textContent = `입주: ${notice.moveIn}`;
-    $('.fit', node).textContent = `일치: ${(notice.matched || []).join(', ') || '확인된 항목 없음'}`;
-    $('.need', node).textContent = `추가 확인: ${(notice.needsConfirmation || []).join(', ') || '없음'}`;
-    $('.documents', node).textContent = `서류: ${(notice.documents || []).join(', ')}`;
-    $('.official', node).href = notice.officialUrl;
-    target.append(node);
+    const linked = noticeDetail(notice);
+    const detail = linked?.detail;
+    const card = document.createElement('article');
+    card.className = 'notice-card verified-card';
+    const header = document.createElement('div');
+    header.className = 'card-statuses';
+    for (const label of [notice.status || '상태 미확인', notice.provider || '출처 미확인']) {
+      const badge = document.createElement('span'); badge.className = 'status'; badge.textContent = label; header.append(badge);
+    }
+    const verified = document.createElement('span'); verified.className = 'verified-badge'; verified.textContent = '상세 확인 완료'; header.append(verified);
+    const title = document.createElement('h3'); title.textContent = notice.name;
+    const type = document.createElement('p'); type.className = 'card-type'; type.textContent = notice.housingType || '주택 유형 미확인';
+    const facts = document.createElement('dl'); facts.className = 'notice-facts';
+    fact(facts, '📍 위치', detail ? locationText(detail) : (notice.area || '미확인'));
+    if (detail) {
+      fact(facts, '💰 보증금', formatWonRange(detail.cost?.depositMinWon, detail.cost?.depositMaxWon));
+      fact(facts, '💳 월세', formatWonRange(detail.cost?.monthlyRentMinWon, detail.cost?.monthlyRentMaxWon));
+    } else {
+      fact(facts, '💰 비용', notice.cost || '공고문 확인 필요');
+    }
+    fact(facts, '📅 접수', detail ? applicationText(linked.item, detail) : `${shortDate(notice.applicationStart)} ~ ${shortDate(notice.applicationEnd)}`);
+    fact(facts, '🏠 입주', notice.moveIn || '미확인');
+    const management = document.createElement('p'); management.className = 'management-fee'; management.textContent = `관리비: ${detail?.cost?.managementFeeText || notice.managementFee || '공고문 확인 필요'}`;
+    const checked = document.createElement('p'); checked.className = 'verified-at'; checked.textContent = `확인일: ${detail?.verifiedAt || notice.verifiedAt || '미확인'}`;
+    const link = document.createElement('a'); link.className = 'official'; link.href = detail?.sourceUrl || notice.officialUrl; link.target = '_blank'; link.rel = 'noreferrer'; link.textContent = '공식 공고문 보기';
+    card.append(header, title, type, facts, management, checked, link);
+    target.append(card);
   }
 }
 
@@ -41,10 +122,14 @@ function renderAllAnnouncements() {
   const items = catalog.items || [];
   const source = $('#announcement-source').value;
   const status = $('#announcement-status').value;
+  const verifiedOnly = $('#announcement-verified-only').checked;
+  const newOnly = $('#announcement-new-only').checked;
   const query = $('#announcement-query').value.trim().toLocaleLowerCase('ko');
+  const newIds = newAnnouncementIds();
   const visible = items.filter((item) => {
-    const text = [item.title, item.sourceName, item.provider, item.housingType, item.area, item.status].join(' ').toLocaleLowerCase('ko');
-    return (!source || item.sourceName === source) && (!status || item.status === status) && (!query || text.includes(query));
+    const detail = detailFor(item);
+    const text = [item.title, item.sourceName, item.provider, item.housingType, item.area, item.status, locationText(detail)].join(' ').toLocaleLowerCase('ko');
+    return (!source || item.sourceName === source) && (!status || item.status === status) && (!verifiedOnly || detail) && (!newOnly || newIds.has(item.id)) && (!query || text.includes(query));
   });
   const heading = catalog.mode === 'full' ? '전체 목록 스캔' : catalog.mode || '아직 수집 전';
   $('#announcement-count').textContent = `${visible.length.toLocaleString('ko-KR')} / ${items.length.toLocaleString('ko-KR')}건 · ${heading} · ${formatDate(catalog.checkedAt)}`;
@@ -66,8 +151,10 @@ function renderAllAnnouncements() {
   }
   const fragment = document.createDocumentFragment();
   for (const item of visible) {
+    const detail = detailFor(item);
     const article = document.createElement('article');
-    article.className = 'announcement-row';
+    article.className = `announcement-row ${detail ? 'has-details' : 'needs-details'}`;
+    const top = document.createElement('div'); top.className = 'announcement-topline';
     const title = document.createElement('h3');
     const link = document.createElement('a');
     link.href = item.officialUrl;
@@ -75,13 +162,21 @@ function renderAllAnnouncements() {
     link.rel = 'noreferrer';
     link.textContent = item.title;
     title.append(link);
-    const details = document.createElement('p');
-    details.className = 'announcement-details';
-    details.textContent = `${item.sourceName} · ${item.housingType} · ${item.area} · ${item.provider}`;
-    const dates = document.createElement('p');
-    dates.className = 'muted';
-    dates.textContent = `공고 ${formatDate(item.announcedAt)} · 목록상 마감 ${formatDate(item.applicationEnd)} · 상태 ${item.status}`;
-    article.append(title, details, dates);
+    const badges = document.createElement('div'); badges.className = 'announcement-badges';
+    for (const label of [item.status, newIds.has(item.id) ? '신규' : null, detail ? '상세 확인 완료' : null].filter(Boolean)) {
+      const badge = document.createElement('span'); badge.className = label === '상세 확인 완료' ? 'verified-badge' : 'status'; badge.textContent = label; badges.append(badge);
+    }
+    top.append(title, badges);
+    const sourceLine = document.createElement('p'); sourceLine.className = 'announcement-details'; sourceLine.textContent = `${item.sourceName || '출처 미확인'} · ${item.housingType || '주택 유형 미확인'} · ${item.provider || '기관 미확인'}`;
+    const facts = document.createElement('dl'); facts.className = 'announcement-facts';
+    fact(facts, '위치', locationText(detail));
+    fact(facts, '보증금', detail ? formatWonRange(detail.cost?.depositMinWon, detail.cost?.depositMaxWon) : '미확인');
+    fact(facts, '월세', detail ? formatWonRange(detail.cost?.monthlyRentMinWon, detail.cost?.monthlyRentMaxWon) : '미확인');
+    fact(facts, '접수', applicationText(item, detail));
+    fact(facts, '상태', item.status || '미확인');
+    const notice = document.createElement('p'); notice.className = detail ? 'detail-confirmed' : 'detail-needed';
+    notice.textContent = detail ? `확인일 ${detail.verifiedAt || '미확인'} · 관리비: ${detail.cost?.managementFeeText || '공고문 확인 필요'}` : '공고문에서 상세 확인 필요';
+    article.append(top, sourceLine, facts, notice);
     fragment.append(article);
   }
   target.append(fragment);
@@ -91,6 +186,11 @@ function setupAnnouncementCatalog() {
   const items = state.allAnnouncements?.items || [];
   setSelectOptions('#announcement-source', optionValues(items, 'sourceName'));
   setSelectOptions('#announcement-status', optionValues(items, 'status'));
+  const newOnly = $('#announcement-new-only');
+  const hasNewItems = newAnnouncementIds().size > 0;
+  newOnly.disabled = !hasNewItems;
+  if (!hasNewItems) newOnly.checked = false;
+  $('#announcement-filter-note').textContent = hasNewItems ? '필터는 화면 표시만 바꾸며 수집 범위나 개인 조건 판정에는 영향을 주지 않습니다.' : '신규 공고 데이터가 없어 신규 필터는 현재 사용할 수 없습니다.';
   renderAllAnnouncements();
 }
 
@@ -196,6 +296,8 @@ collectionButton.addEventListener('click', async () => {
 });
 $('#announcement-source').addEventListener('change', renderAllAnnouncements);
 $('#announcement-status').addEventListener('change', renderAllAnnouncements);
+$('#announcement-verified-only').addEventListener('change', renderAllAnnouncements);
+$('#announcement-new-only').addEventListener('change', renderAllAnnouncements);
 $('#announcement-query').addEventListener('input', renderAllAnnouncements);
 $('#profile-form').addEventListener('submit', async (event) => {
   event.preventDefault();

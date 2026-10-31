@@ -6,7 +6,8 @@
 
 - `data/programs.json`: LH, SH, 청년안심주택, 서울시·국가 월세지원, 보증금 이자지원, 주거급여, 주택바우처, 긴급·주거취약 지원, 주택도시기금 대출을 구분해 둔 제도 데이터베이스
 - `data/notices.json`: 2026-10-24에 공식 원문과 공고문으로 확인한 현재·예정 공고의 비용, 접수일, 입주 시점, 서류·자격 확인 항목
-- Spring 수집기: 개인 조건이나 제목 키워드 없이 LH·SH·서울주거포털·청년안심주택 공개 목록을 수집해 `data/all-announcements.json`에 저장합니다. 일부 수집원이 실패하면 해당 수집원의 마지막 정상 데이터는 보존합니다.
+- Spring 수집기: LH·SH·서울주거포털·청년안심주택 공개 목록을 수집해 `data/all-announcements.json`에 저장합니다. 일부 수집원이 실패하면 해당 수집원의 마지막 정상 데이터는 보존합니다.
+- Android 알림: `android-app/`의 Java/XML 네이티브 앱은 페어링한 개인 기기에만 FCM 알림을 보냅니다. 지역·주택 유형·상태·제목 키워드는 알림 조건일 뿐, 신청 자격 판정이 아닙니다.
 - Spring 대시보드: `http://127.0.0.1:4173`에서 열리며 프로필을 `data/profile.json`에만 저장합니다.
 - 기존 Node 스크립트(`src/`, `package.json`)는 레거시 자료이며 현재 실행 경로가 아닙니다.
 
@@ -41,9 +42,20 @@ cd spring-app
 
 대시보드의 `내 조건 메모`에는 정확한 계좌·주민등록번호·상세 주소가 아니라 소득·자산 구간, 보증금·월세 상한, 무주택 여부, 자동차 보유, 원하는 지역·통근조건만 입력하세요. 이 메모는 공고 수집·표시를 자동으로 제외하거나 정렬하지 않습니다.
 
-## 정기 수집
+## 정기 수집과 Android 알림
 
-Spring 서버가 실행 중이면 **매주 월요일 오전 9시(KST)** 전체 공개 목록을 자동 수집합니다. 수동 수집은 `scripts/run-monitor.ps1`로 실행할 수 있습니다. 수집 결과와 오류는 각각 `data/all-announcements.json`, `data/notifications.json`, `data/monitor-state.json`에 남습니다.
+Spring 서버가 실행 중이면 기본적으로 **3시간 간격(KST)**으로 전체 공개 목록을 자동 수집합니다. `HOUSING_MONITOR_CRON`과 `HOUSING_MONITOR_ZONE` 환경 변수로 바꿀 수 있습니다. 수동 수집은 대시보드의 `지금 공고 수집` 또는 Spring CLI 경로를 사용합니다. 수집 결과와 오류는 각각 `data/all-announcements.json`, `data/notifications.json`, `data/monitor-state.json`에 남습니다.
+
+Android 알림 이력·기기·조건은 Git에 포함되지 않는 `data/housing-monitor.db`에 저장됩니다. 첫 성공 수집은 기존 전체 공고를 알림으로 보내지 않고 기준 목록만 만들며, 이후 새 공고 ID에만 알림을 검토합니다.
+
+### Firebase 및 Android 앱 설정
+
+1. Firebase Console에서 Android 앱(`kr.seoulhousing.alerts`)을 등록하고 `android-app/app/google-services.json`을 내려받습니다. 이 파일은 Git에 넣지 않습니다.
+2. Firebase 서비스 계정 JSON을 안전한 로컬 경로에 보관한 뒤 Spring 실행 환경에 `FCM_SERVICE_ACCOUNT_PATH`를 지정합니다. 값이 없으면 서버는 FCM을 호출하지 않고 안전한 개발용 로그 전송기를 사용합니다.
+3. `android-app/gradle.properties.example`을 참고해 로컬 `gradle.properties` 또는 `-PserverBaseUrl=...`로 서버 주소를 정합니다. 에뮬레이터 기본값은 `http://10.0.2.2:4173/`입니다.
+4. 서버의 `POST /api/mobile/pairing-codes`로 10분짜리 6자리 코드를 발급하고 앱 첫 화면에 입력합니다. 로컬 PowerShell에서는 `Invoke-RestMethod -Method Post http://127.0.0.1:4173/api/mobile/pairing-codes`를 사용할 수 있습니다. 페어링 뒤 앱은 고유 기기 토큰으로 모바일 API를 호출합니다.
+
+실제 외부 사용 전에는 HTTPS, 인증된 페어링 코드 발급 화면, 네트워크 접근 제어를 추가해야 합니다. 현재 서버는 기본적으로 `127.0.0.1`에만 바인딩됩니다.
 
 Windows 작업 스케줄러, 이메일, 데스크톱 알림, 메신저 연동은 아직 연결하지 않았습니다. 인증 정보·수신 주소·메신저 웹훅은 저장하지 않으며, 연결과 테스트를 마치기 전에는 “작동 중”으로 표시하지 않습니다. `output/housing-deadlines.ics`는 지금 바로 캘린더에 가져와 알림을 설정할 수 있습니다.
 

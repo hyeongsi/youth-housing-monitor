@@ -1,0 +1,3 @@
+# Emulator development default. Override with -PserverBaseUrl=https://your-server.example/
+serverBaseUrl=http://10.0.2.2:4173/
+android.useAndroidX=true

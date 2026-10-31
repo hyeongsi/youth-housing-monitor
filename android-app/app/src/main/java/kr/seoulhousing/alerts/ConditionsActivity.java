@@ -1,0 +1,8 @@
+package kr.seoulhousing.alerts;
+import android.os.Bundle; import android.widget.*; import androidx.appcompat.app.AppCompatActivity; import org.json.*; import java.util.*;
+public class ConditionsActivity extends AppCompatActivity {
+    private EditText regions,types,statuses,keywords;
+    @Override public void onCreate(Bundle state) { super.onCreate(state); setContentView(R.layout.activity_conditions); regions=findViewById(R.id.regions);types=findViewById(R.id.housing_types);statuses=findViewById(R.id.statuses);keywords=findViewById(R.id.keywords); ApiClient.request(this,"GET","conditions",null,(json,error)->runOnUiThread(()-> {if(json!=null){regions.setText(csv(json.optJSONArray("regions")));types.setText(csv(json.optJSONArray("housingTypes")));statuses.setText(csv(json.optJSONArray("statuses")));keywords.setText(csv(json.optJSONArray("keywords")));}})); findViewById(R.id.save_conditions).setOnClickListener(v->save()); }
+    private void save(){ try{JSONObject value=new JSONObject().put("regions",array(regions)).put("housingTypes",array(types)).put("statuses",array(statuses)).put("keywords",array(keywords));ApiClient.request(this,"PUT","conditions",value,(json,error)->runOnUiThread(()->Toast.makeText(this,error==null?"저장했습니다.":"저장하지 못했습니다.",Toast.LENGTH_SHORT).show()));}catch(Exception ignored){}}
+    private JSONArray array(EditText field){JSONArray a=new JSONArray();for(String s:field.getText().toString().split(",")){s=s.trim();if(!s.isEmpty())a.put(s);}return a;} private String csv(JSONArray a){List<String>x=new ArrayList<>();for(int i=0;a!=null&&i<a.length();i++)x.add(a.optString(i));return String.join(", ",x);}
+}

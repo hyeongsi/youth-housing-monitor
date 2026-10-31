@@ -5,5 +5,9 @@ data/monitor-state.json
 data/auto-discovered.json
 data/notifications.json
 data/profile.json
+data/housing-monitor.db
+data/housing-monitor.db-*
+android-app/local.properties
+android-app/app/google-services.json
 output/
 research/

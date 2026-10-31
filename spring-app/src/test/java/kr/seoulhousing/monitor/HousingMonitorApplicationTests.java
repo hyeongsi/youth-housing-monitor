@@ -44,6 +44,13 @@ class HousingMonitorApplicationTests {
         assertEquals(2, ((List<?>) notifications.get("sourceFailures")).size());
     }
 
+    @Test void firstSuccessfulCatalogEstablishesBaselineWithoutAlertingEveryExistingAnnouncement() throws Exception {
+        write("sources.json", List.of(source("lh", "ok")));
+        Map<String, Object> result = new StubMonitor(root, Map.of("ok", lhPage())).refresh();
+        assertEquals(0, result.get("newItemCount"));
+        assertTrue(mapper.readValue(data().resolve("auto-discovered.json").toFile(), List.class).isEmpty());
+    }
+
     @Test void emptyParserResultPreservesTheSourceLastGoodCatalog() throws Exception {
         write("sources.json", List.of(source("empty", "empty")));
         write("all-announcements.json", Map.of("items", List.of(old("empty", "last-good"))));
@@ -82,7 +89,21 @@ class HousingMonitorApplicationTests {
                 .andExpect(jsonPath("$.profile").isMap()).andExpect(jsonPath("$.programs").isArray())
                 .andExpect(jsonPath("$.notices").isArray()).andExpect(jsonPath("$.monitor").isMap())
                 .andExpect(jsonPath("$.discoveries").isArray()).andExpect(jsonPath("$.notifications").isMap())
-                .andExpect(jsonPath("$.allAnnouncements").isMap());
+                .andExpect(jsonPath("$.allAnnouncements").isMap())
+                .andExpect(jsonPath("$.announcementDetails.items").isMap());
+    }
+
+    @Test void overviewReturnsManualDetailsSeparatelyFromCatalogForSafeClientJoin() throws Exception {
+        write("all-announcements.json", Map.of("items", List.of(Map.of("id", "verified-id", "title", "확인 공고"))));
+        write("announcement-details.json", Map.of("schemaVersion", 1, "items", Map.of("verified-id", Map.of(
+                "verificationStatus", "VERIFIED", "location", Map.of("district", "관악구"),
+                "cost", Map.of("depositMinWon", 23000000)))));
+
+        Map<String, Object> overview = new HousingDataController(mapper, root.toString()).overview();
+        Map<?, ?> details = (Map<?, ?>) overview.get("announcementDetails");
+        Map<?, ?> items = (Map<?, ?>) details.get("items");
+        assertEquals("VERIFIED", ((Map<?, ?>) items.get("verified-id")).get("verificationStatus"));
+        assertEquals(23000000, ((Map<?, ?>) ((Map<?, ?>) items.get("verified-id")).get("cost")).get("depositMinWon"));
     }
 
     @Test void timeoutIsRecordedAsAFailedSourceAndDoesNotEraseItsData() throws Exception {

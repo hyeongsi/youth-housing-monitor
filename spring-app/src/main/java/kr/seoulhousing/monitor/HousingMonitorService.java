@@ -87,7 +87,8 @@ public class HousingMonitorService {
         Map<String, Map<String, Object>> deduped = new LinkedHashMap<>(); merged.forEach(item -> deduped.put(String.valueOf(item.get("id")), item));
         List<Map<String, Object>> items = new ArrayList<>(deduped.values());
         items.sort(Comparator.comparing(item -> String.valueOf(item.getOrDefault("announcedAt", "")), Comparator.reverseOrder()));
-        List<Map<String, Object>> newItems = items.stream().filter(item -> !known.contains(String.valueOf(item.get("id")))).toList();
+        // The first successful catalog establishes a baseline. It is not an alert burst.
+        List<Map<String, Object>> newItems = oldItems.isEmpty() ? List.of() : items.stream().filter(item -> !known.contains(String.valueOf(item.get("id")))).toList();
         // A complete outage must never turn a useful catalog into an empty one.
         if (!successfulRecords.isEmpty()) {
             write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
@@ -96,7 +97,7 @@ public class HousingMonitorService {
         write("auto-discovered.json", newItems);
         write("notifications.json", Map.of("checkedAt", checkedAt, "actionable", newItems, "sourceFailures", failures));
         return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures,
-                "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size(), "newItemCount", newItems.size());
+                "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size(), "newItemCount", newItems.size(), "newItems", newItems);
     }
 
     private List<Map<String, Object>> collectPaged(Map<String, Object> source, String at, boolean sh) throws Exception {

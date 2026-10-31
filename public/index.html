@@ -26,6 +26,9 @@
           <label>출처<select id="announcement-source"><option value="">모든 출처</option></select></label>
           <label>상태<select id="announcement-status"><option value="">모든 상태</option></select></label>
           <label class="announcement-query">제목·기관·지역 검색<input id="announcement-query" type="search" placeholder="예: 매입임대, 강남, 추가모집" /></label>
+          <label class="filter-toggle"><input id="announcement-verified-only" type="checkbox" /> 상세 확인 완료 공고만</label>
+          <label class="filter-toggle"><input id="announcement-new-only" type="checkbox" /> 신규 공고만</label>
+          <p id="announcement-filter-note" class="muted filter-note"></p>
         </div>
         <div id="all-announcements" class="announcement-scroll" aria-live="polite"></div>
       </section>

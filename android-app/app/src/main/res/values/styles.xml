@@ -1,0 +1,1 @@
+<resources><style name="Theme.HousingAlerts" parent="Theme.Material3.DayNight.NoActionBar"><item name="android:fontFamily">sans</item><item name="android:colorAccent">#1565c0</item></style></resources>

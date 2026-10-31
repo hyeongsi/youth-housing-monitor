@@ -1,0 +1,24 @@
+plugins { id 'com.android.application'; id 'com.google.gms.google-services' }
+
+android {
+    namespace 'kr.seoulhousing.alerts'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'kr.seoulhousing.alerts'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+        def configuredUrl = providers.gradleProperty('serverBaseUrl').orElse('http://10.0.2.2:4173/').get()
+        buildConfigField 'String', 'SERVER_BASE_URL', '"' + configuredUrl + '"'
+    }
+    buildFeatures { buildConfig true }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+    implementation 'com.google.firebase:firebase-messaging'
+}

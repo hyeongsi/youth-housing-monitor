@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MonitorRunner implements ApplicationRunner {
     private final HousingMonitorService monitor;
+    private final NotificationDispatchService notifications;
     private final ApplicationContext context;
     private final boolean run;
-    public MonitorRunner(HousingMonitorService monitor, ApplicationContext context, @Value("${housing.monitor.run:false}") boolean run) { this.monitor = monitor; this.context = context; this.run = run; }
-    @Override public void run(ApplicationArguments args) { if (run) { monitor.refresh(); System.exit(org.springframework.boot.SpringApplication.exit(context)); } }
+    public MonitorRunner(HousingMonitorService monitor, NotificationDispatchService notifications, ApplicationContext context, @Value("${housing.monitor.run:false}") boolean run) { this.monitor = monitor; this.notifications=notifications; this.context = context; this.run = run; }
+    @Override public void run(ApplicationArguments args) { if (run) { notifications.dispatch(monitor.refresh()); System.exit(org.springframework.boot.SpringApplication.exit(context)); } }
 }

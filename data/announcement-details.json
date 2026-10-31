@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "items": {
+    "61cb273a0c9133c4afc5c0debf94462630aa853a6040be1ae6d75d43c7743f3b": {
+      "verificationStatus": "VERIFIED",
+      "verifiedAt": "2026-10-24",
+      "location": { "district": "관악구", "address": "신림역" },
+      "cost": {
+        "depositMinWon": 98000000,
+        "depositMaxWon": 98000000,
+        "monthlyRentMinWon": 789000,
+        "monthlyRentMaxWon": 789000,
+        "managementFeeText": "정액 관리비 미공개; 공고문 확인"
+      },
+      "application": { "start": "2026-10-23", "end": "2026-10-26" },
+      "moveInText": "2026년 12월 18일 예정 (기존 입주자 퇴거일에 따라 변경 가능)",
+      "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6705&menuNo=400008"
+    },
+    "f95c610ce5ecd45fbe1a5a0aecfd4b67c9ddf49f8bb6def85a408ca684127168": {
+      "verificationStatus": "VERIFIED",
+      "verifiedAt": "2026-10-24",
+      "location": { "district": "중랑구", "address": "화랑대역" },
+      "cost": {
+        "depositMinWon": 93000000,
+        "depositMaxWon": 217400000,
+        "monthlyRentMinWon": 330000,
+        "monthlyRentMaxWon": 780000,
+        "managementFeeText": "정액 관리비 미공개; 공고문 확인"
+      },
+      "application": { "start": "2026-10-23", "end": "2026-10-28" },
+      "moveInText": "예비당첨자 순차 개별 연락",
+      "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6703&menuNo=400008"
+    },
+    "3e5dcdc17055a8ca40594f5fae17b0821099f154c5fd4351dfe702acb58c64ee": {
+      "verificationStatus": "VERIFIED",
+      "verifiedAt": "2026-10-24",
+      "location": { "district": "동대문구", "address": "청량리역" },
+      "cost": {
+        "depositMinWon": 88000000,
+        "depositMaxWon": 110000000,
+        "monthlyRentMinWon": 450000,
+        "monthlyRentMaxWon": 549000,
+        "managementFeeText": "정액 관리비 미공개; 공고문 확인"
+      },
+      "application": { "start": "2026-10-26", "end": "2026-10-26" },
+      "moveInText": "예비자 선정 후 개별 연락",
+      "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6707&menuNo=400008"
+    },
+    "75b479d0098df882e8be94d69197075733dcb7e3b5f80bca3a096fe77f8fa3dd": {
+      "verificationStatus": "VERIFIED",
+      "verifiedAt": "2026-10-24",
+      "location": { "district": "관악구", "address": "구로디지털단지역" },
+      "cost": {
+        "depositMinWon": 71000000,
+        "depositMaxWon": 100000000,
+        "monthlyRentMinWon": 380000,
+        "monthlyRentMaxWon": 510000,
+        "managementFeeText": "정액 관리비 미공개; 공고문 확인"
+      },
+      "application": { "start": "2026-10-26", "end": "2026-10-28" },
+      "moveInText": "공실 발생 시 예비자 순차 개별 연락",
+      "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6706&menuNo=400008"
+    },
+    "639f6a41f4a028e857ce960a92d02a33ec10365e04ca7e9d97c1c37a7cde9e02": {
+      "verificationStatus": "VERIFIED",
+      "verifiedAt": "2026-10-24",
+      "location": { "district": "중랑구", "address": "상봉역" },
+      "cost": {
+        "depositMinWon": 132000000,
+        "depositMaxWon": 211000000,
+        "monthlyRentMinWon": 248200,
+        "monthlyRentMaxWon": 544500,
+        "managementFeeText": "정액 관리비 미공개; 공고문 확인"
+      },
+      "application": { "start": "2026-10-26", "end": "2026-10-26" },
+      "moveInText": "2026년 11월 23일 ~ 12월 4일",
+      "sourceUrl": "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6704&menuNo=400008"
+    }
+  }
+}

@@ -23,6 +23,7 @@ public class MonitorRefreshCoordinator {
     public record StartResult(StartOutcome outcome, RefreshJob job) { }
 
     private final HousingMonitorService monitor;
+    private final NotificationDispatchService notifications;
     private final Duration manualCooldown;
     private final ExecutorService executor = Executors.newSingleThreadExecutor(runnable -> {
         Thread thread = new Thread(runnable, "housing-monitor-refresh");
@@ -33,10 +34,15 @@ public class MonitorRefreshCoordinator {
 
     @Autowired
     public MonitorRefreshCoordinator(HousingMonitorService monitor,
-                                    @Value("${housing.monitor.manual-refresh-cooldown:PT10M}") Duration manualCooldown) {
+                                    @Value("${housing.monitor.manual-refresh-cooldown:PT10M}") Duration manualCooldown,
+                                    NotificationDispatchService notifications) {
         this.monitor = monitor;
         this.manualCooldown = manualCooldown;
+        this.notifications = notifications;
     }
+
+    /** Retained for focused coordinator tests and command-line integrations. */
+    public MonitorRefreshCoordinator(HousingMonitorService monitor, Duration manualCooldown) { this.monitor=monitor; this.manualCooldown=manualCooldown; this.notifications=null; }
 
     synchronized StartResult requestManual() {
         return request("MANUAL", true);
@@ -64,6 +70,7 @@ public class MonitorRefreshCoordinator {
     private void run(RefreshJob job) {
         try {
             Map<String, Object> result = monitor.refresh();
+            if (notifications != null) notifications.dispatch(result);
             List<Map<String, Object>> checked = list(result.get("checked"));
             List<Map<String, Object>> failures = list(result.get("failures"));
             current = new RefreshJob(job.jobId(), job.trigger(), failures.isEmpty() ? RefreshJobStatus.SUCCEEDED : RefreshJobStatus.SUCCEEDED_WITH_WARNINGS,

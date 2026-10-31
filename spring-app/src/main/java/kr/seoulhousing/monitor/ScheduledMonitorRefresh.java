@@ -11,8 +11,8 @@ public class ScheduledMonitorRefresh {
         this.coordinator = coordinator;
     }
 
-    @Scheduled(cron = "0 0 9 * * MON", zone = "Asia/Seoul")
-    public void refreshWeekly() {
+    @Scheduled(cron = "${housing.monitor.schedule.cron:0 0 */3 * * *}", zone = "${housing.monitor.schedule.zone:Asia/Seoul}")
+    public void refreshOnSchedule() {
         coordinator.requestScheduled();
     }
 }
