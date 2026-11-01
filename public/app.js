@@ -196,6 +196,38 @@ function appendCostOptions(card, detail) {
   card.append(group);
 }
 
+function appendVerifiedCardCostOptions(card, detail) {
+  const options = verifiedCostOptions(detail);
+  const group = document.createElement('div');
+  group.className = 'verified-card-cost';
+  if (!options.length) {
+    const missing = document.createElement('p');
+    missing.className = 'multi-line-ellipsis';
+    missing.textContent = NEEDS_NOTICE;
+    group.append(missing);
+    card.append(group);
+    return;
+  }
+  const list = document.createElement('ul');
+  for (const option of options.slice(0, 2)) {
+    const entry = document.createElement('li');
+    entry.className = 'multi-line-ellipsis';
+    const context = [option.typeText || option.housingType, option.conditionText].filter(hasText).join(' · ');
+    const deposit = formatWon(option.depositWon) || NEEDS_NOTICE;
+    const rent = formatWon(option.monthlyRentWon) || NEEDS_NOTICE;
+    entry.textContent = `${context || '공고 표 기재 조건'} · 보증금 ${deposit} / 월세 ${rent}`;
+    list.append(entry);
+  }
+  if (options.length > 2) {
+    const remainder = document.createElement('li');
+    remainder.className = 'single-line-ellipsis verified-card-cost-more';
+    remainder.textContent = `외 ${options.length - 2}개 조건`;
+    list.append(remainder);
+  }
+  group.append(list);
+  card.append(group);
+}
+
 function drawerFact(container, label, value) {
   const item = document.createElement('div');
   item.className = 'drawer-fact';
@@ -322,12 +354,17 @@ function renderVerifiedAnnouncements() {
     const card = document.createElement('article');
     card.className = 'notice-card verified-card';
 
+    const header = document.createElement('div');
+    header.className = 'verified-card-header';
+
     const sourceStatus = document.createElement('p');
-    sourceStatus.className = 'source-status';
+    sourceStatus.className = 'source-status single-line-ellipsis';
     sourceStatus.textContent = `출처: ${listValue(item.sourceName)} · 목록 상태: ${listValue(item.status)}`;
 
     const title = document.createElement('h3');
+    title.className = 'multi-line-ellipsis';
     title.textContent = listValue(item.title);
+    header.append(sourceStatus, title);
 
     const facts = document.createElement('dl');
     facts.className = 'notice-facts';
@@ -337,23 +374,29 @@ function renderVerifiedAnnouncements() {
     fact(facts, '보증금', singleOption ? (formatWon(singleOption.depositWon) || NEEDS_NOTICE) : '주택형·조건별 상이 · 공고문 확인');
     fact(facts, '월세', singleOption ? (formatWon(singleOption.monthlyRentWon) || NEEDS_NOTICE) : '주택형·조건별 상이 · 공고문 확인');
     fact(facts, '전용면적', exclusiveArea(detail));
+    facts.querySelectorAll('dd').forEach((value) => value.classList.add('multi-line-ellipsis'));
 
-    const schedule = document.createElement('p');
-    schedule.className = 'schedule';
-    schedule.textContent = `접수 일정: ${applicationSchedule(item, detail)}`;
-    const moveIn = document.createElement('p');
-    moveIn.className = 'move-in';
-    moveIn.textContent = `입주 정보: ${hasText(detail.moveInText) ? detail.moveInText : NEEDS_NOTICE}`;
-    const verified = document.createElement('p');
-    verified.className = 'verified-at';
-    verified.textContent = `검증일: ${formatDate(detail.verifiedAt)}`;
-    const link = document.createElement('a');
-    link.className = 'official';
-    setOfficialLink(link, detail.sourceUrl, '공식 공고문 보기', listValue(item.title));
+    const meta = document.createElement('div');
+    meta.className = 'verified-card-meta';
+    const metaText = document.createElement('p');
+    metaText.className = 'multi-line-ellipsis';
+    metaText.textContent = `접수 일정: ${applicationSchedule(item, detail)} · 입주 정보: ${hasText(detail.moveInText) ? detail.moveInText : NEEDS_NOTICE} · 검증일: ${formatDate(detail.verifiedAt)}`;
+    meta.append(metaText);
 
-    card.append(sourceStatus, title, facts);
-    appendCostOptions(card, detail);
-    card.append(schedule, moveIn, verified, drawerButton(item, detail), link);
+    const actions = document.createElement('div');
+    actions.className = 'verified-card-actions';
+    actions.append(drawerButton(item, detail));
+    const officialUrl = detail.sourceUrl || item.officialUrl;
+    if (hasText(officialUrl)) {
+      const link = document.createElement('a');
+      link.className = 'official';
+      setOfficialLink(link, officialUrl, '공식 공고문 보기', listValue(item.title));
+      actions.append(link);
+    }
+
+    card.append(header, facts);
+    appendVerifiedCardCostOptions(card, detail);
+    card.append(meta, actions);
     target.append(card);
   }
 }
