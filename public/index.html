@@ -3,128 +3,129 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>서울 청년 주거 추적기</title>
+    <title>청약 알림</title>
     <link rel="stylesheet" href="/app.css" />
   </head>
   <body>
     <div class="app-shell">
       <header class="app-header">
-        <div class="brand"><span class="brand-mark" aria-hidden="true">⌂</span><h1>서울 청년 주거 추적기</h1></div>
-        <div class="refresh-area">
-          <span id="last-successful" class="refresh-status">마지막 성공 수집: 확인 중</span>
-          <button id="reload" class="secondary" type="button"><svg class="reload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M20 11a8 8 0 1 0 2 5.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><span>화면 다시 불러오기</span></button>
-          <button id="collect-announcements" type="button">지금 공고 수집</button>
+        <div class="header-main">
+          <a class="brand" href="#home" aria-label="청약 알림 홈">청약<span>알림</span></a>
+          <form id="global-search" class="global-search" role="search">
+            <span aria-hidden="true">전국</span>
+            <input id="global-query" type="search" aria-label="통합 공고 검색" placeholder="지역이나 공고명을 검색해 보세요" />
+            <button type="submit" aria-label="공고 검색">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
+            </button>
+          </form>
+          <div class="header-actions"><span id="header-collection-time">최근 수집 확인 중</span><a href="#collection">수집 현황</a></div>
         </div>
       </header>
-      <main class="dashboard-layout">
-        <aside class="interest-panel" aria-labelledby="interest-heading">
-          <div class="section-title-row"><div><p class="eyebrow">공고 비교 기준</p><h2 id="interest-heading">관심 조건</h2></div><button id="reset-interest-preferences" class="text-button" type="button">초기화</button></div>
-          <p class="help">이 기준은 공고를 숨기거나 신청 자격을 판정하지 않습니다.</p>
-          <form id="interest-form" class="interest-form">
-            <label>관심 지역<input id="interest-regions" name="regions" placeholder="예: 관악구, 신림동, 신림역" /></label>
-            <label>보증금 상한<span class="input-with-unit"><input id="interest-deposit-max" name="depositMaxWon" type="text" inputmode="numeric" aria-describedby="interest-deposit-unit" data-numeric-format /><span id="interest-deposit-unit" class="input-unit">원</span></span></label>
-            <label>월세 상한<span class="input-with-unit"><input id="interest-rent-max" name="monthlyRentMaxWon" type="text" inputmode="numeric" aria-describedby="interest-rent-unit" data-numeric-format /><span id="interest-rent-unit" class="input-unit">원</span></span></label>
-            <label>전용면적 최소<span class="input-with-unit"><input id="interest-area-min" name="areaMin" type="text" inputmode="numeric" aria-describedby="interest-area-min-unit interest-area-error" data-numeric-format /><span id="interest-area-min-unit" class="input-unit">㎡</span></span></label>
-            <label>전용면적 최대<span class="input-with-unit"><input id="interest-area-max" name="areaMax" type="text" inputmode="numeric" aria-describedby="interest-area-max-unit interest-area-error" data-numeric-format /><span id="interest-area-max-unit" class="input-unit">㎡</span></span></label>
-            <p id="interest-area-error" class="field-error" role="alert" hidden></p>
-            <label class="filter-toggle check-row"><input id="interest-include-unknown" name="includeUnknown" type="checkbox" checked /> 위치·비용·면적 미기재 공고도 보기</label>
-            <div class="interest-actions"><button id="apply-interest-preferences" type="submit">이 조건으로 보기</button></div>
-            <p id="interest-save-status" class="muted"></p>
-          </form>
-          <p class="constraint-note"><strong>비교 기준</strong><br />지역 → 확인된 보증금·월세 조합 → 면적 → 마감일 순으로 정리합니다. 신청 자격은 원문에서 확인합니다.</p>
-        </aside>
-        <div class="dashboard-content">
-      <div class="page-heading">
-        <div><p class="eyebrow">공식 공고 비교</p><h2>오늘 확인할 공고</h2><p id="summary" class="help">개인 조건을 적용하지 않은 공개 공고 목록을 준비합니다.</p></div>
-        <div><div id="collection-status" class="collection-result" aria-live="polite"></div><p id="collection-result" class="sr-only" aria-live="polite"></p></div>
+      <div class="app-layout">
+        <nav id="app-navigation" class="app-navigation" aria-label="주요 메뉴">
+          <a href="#home" data-view-link="home">홈</a>
+          <a href="#announcements" data-view-link="announcements">공고 찾기</a>
+          <a href="#preferences" data-view-link="preferences">관심 조건</a>
+          <a href="#collection" data-view-link="collection">공고 수집</a>
+          <a href="#programs" data-view-link="programs">제도 안내</a>
+        </nav>
+        <main class="app-content">
+          <section id="home-view" class="app-view" data-view="home" aria-labelledby="home-heading">
+            <div class="view-heading">
+              <div><p class="eyebrow">오늘의 청약 정보</p><h1 id="home-heading">확인할 공고를 빠르게 살펴보세요</h1></div>
+              <button id="reload" class="secondary reload-button" type="button"><svg class="reload-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M20 11a8 8 0 1 0 2 5.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg><span>화면 다시 불러오기</span></button>
+            </div>
+            <div id="summary" class="summary-grid" aria-live="polite">저장된 공고 정보를 준비합니다.</div>
+            <p id="reload-result" class="sr-only" aria-live="polite"></p>
+            <section class="content-section overview-panel" aria-labelledby="priority-heading">
+              <div class="section-heading"><div><h2 id="priority-heading">관심 후보 <span id="interest-candidate-count" class="count">0건</span></h2><p class="muted">비교 가능한 공고와 추가 확인이 필요한 공고를 나눠 보여 줍니다.</p></div><a class="text-link" href="#announcements">전체 공고 보기</a></div>
+              <div id="interest-candidates" class="candidate-groups"></div>
+            </section>
+            <section class="content-section overview-panel" aria-labelledby="new-announcements-heading">
+              <div class="section-heading"><div><h2 id="new-announcements-heading">이번 수집 신규 공고 <span id="new-announcement-count" class="count"></span></h2><p id="new-announcement-note" class="muted"></p></div><a class="text-link" href="#announcements">전체 공고 보기</a></div>
+              <div id="new-announcements" class="new-grid"></div>
+            </section>
+            <section class="content-section overview-panel" aria-labelledby="verified-heading">
+              <div class="section-heading"><div><h2 id="verified-heading">상세 확인 완료 공고 <span id="verified-announcement-count" class="count">0건</span></h2><p class="muted">비용·위치·면적 정보를 확인할 수 있는 공고입니다.</p></div><a class="text-link" href="#announcements">전체 공고 보기</a></div>
+              <div id="notices" class="verified-announcement-grid"></div>
+            </section>
+          </section>
+
+          <section id="announcements-view" class="app-view" data-view="announcements" aria-labelledby="all-announcements-heading" hidden>
+            <div class="view-heading"><div><p class="eyebrow">공고 검색</p><h1 id="all-announcements-heading">전체 공고</h1><p>원하는 조건을 설정한 뒤 검색해 보세요.</p></div></div>
+            <section class="search-panel" aria-label="공고 검색 조건">
+              <div class="search-filter-grid announcement-controls">
+                <label class="announcement-query">통합 검색<input id="announcement-query" type="search" aria-describedby="announcement-search-help" placeholder="예: 청년안심 관악" /></label>
+                <label>지역<select id="announcement-region"><option value="">모든 지역</option></select></label>
+                <label>주택 유형<select id="announcement-housing-type"><option value="">모든 주택 유형</option></select></label>
+                <label>상태<select id="announcement-status"><option value="">모든 상태</option></select></label>
+              </div>
+              <button id="toggle-announcement-details" class="secondary filter-details-toggle" type="button" aria-expanded="false" aria-controls="announcement-detail-filters">상세 조건</button>
+              <div id="announcement-detail-filters" class="search-filter-grid detail-filter-grid" hidden>
+                <label>정보 상태<select id="announcement-information"><option value="">모든 정보 상태</option><option value="known">값 확인됨</option><option value="needs-info">정보 확인 필요</option></select></label>
+                <label>출처<select id="announcement-source"><option value="">모든 출처</option></select></label>
+                <label>보증금 상한<span class="input-with-unit"><input id="announcement-deposit-max" type="text" inputmode="numeric" data-numeric-format /><span class="input-unit">원</span></span></label>
+                <label>월세 상한<span class="input-with-unit"><input id="announcement-rent-max" type="text" inputmode="numeric" data-numeric-format /><span class="input-unit">원</span></span></label>
+                <label>전용면적 최소<span class="input-with-unit"><input id="announcement-area-min" type="text" inputmode="numeric" data-numeric-format /><span class="input-unit">㎡</span></span></label>
+                <label>전용면적 최대<span class="input-with-unit"><input id="announcement-area-max" type="text" inputmode="numeric" data-numeric-format /><span class="input-unit">㎡</span></span></label>
+                <label class="filter-toggle"><input id="announcement-new-only" type="checkbox" /> 신규 공고만</label>
+                <label class="filter-toggle"><input id="announcement-include-unknown" type="checkbox" checked /> 정보 미확인 공고 포함</label>
+              </div>
+              <p id="announcement-search-help" class="muted">여러 단어는 모두 포함해야 합니다.</p>
+              <div class="search-actions"><button id="reset-announcement-filters" class="secondary" type="button">초기화</button><button id="apply-announcement-filters" type="button">검색</button></div>
+              <p id="announcement-filter-note" class="muted"></p>
+            </section>
+            <div class="catalog-result-heading" aria-live="polite"><p id="announcement-result-count"></p><p id="announcement-count" class="muted"></p></div>
+            <div id="all-announcements" class="announcement-grid" aria-label="수집한 전체 공고 목록"></div>
+            <p id="announcement-loading" class="muted" aria-live="polite" hidden>공고를 더 불러오는 중입니다…</p>
+            <button id="load-more-announcements" class="secondary load-more" type="button" hidden>공고 더 보기</button>
+          </section>
+
+          <section id="preferences-view" class="app-view" data-view="preferences" aria-labelledby="interest-heading" hidden>
+            <div class="view-heading"><div><p class="eyebrow">나의 기준</p><h1 id="interest-heading">관심 조건</h1><p>내게 맞는 공고를 빠르게 찾기 위한 조건을 설정하세요.</p></div></div>
+            <aside class="interest-panel">
+              <form id="interest-form" class="interest-form">
+                <p id="interest-preference-summary" class="preference-summary" aria-live="polite">관심 조건을 불러오는 중입니다.</p>
+                <label>관심 지역<input id="interest-regions" name="regions" placeholder="예: 관악구, 신림동, 신림역" /></label>
+                <label>보증금 상한<span class="input-with-unit"><input id="interest-deposit-max" name="depositMaxWon" type="text" inputmode="numeric" aria-describedby="interest-deposit-unit" data-numeric-format /><span id="interest-deposit-unit" class="input-unit">원</span></span></label>
+                <label>월세 상한<span class="input-with-unit"><input id="interest-rent-max" name="monthlyRentMaxWon" type="text" inputmode="numeric" aria-describedby="interest-rent-unit" data-numeric-format /><span id="interest-rent-unit" class="input-unit">원</span></span></label>
+                <label>전용면적 최소<span class="input-with-unit"><input id="interest-area-min" name="areaMin" type="text" inputmode="numeric" aria-describedby="interest-area-min-unit interest-area-error" data-numeric-format /><span id="interest-area-min-unit" class="input-unit">㎡</span></span></label>
+                <label>전용면적 최대<span class="input-with-unit"><input id="interest-area-max" name="areaMax" type="text" inputmode="numeric" aria-describedby="interest-area-max-unit interest-area-error" data-numeric-format /><span id="interest-area-max-unit" class="input-unit">㎡</span></span></label>
+                <p id="interest-area-error" class="field-error" role="alert" hidden></p>
+                <label class="filter-toggle"><input id="interest-include-unknown" name="includeUnknown" type="checkbox" checked /> 정보 미기재 공고 포함</label>
+                <div class="form-actions"><button id="reset-interest-preferences" class="secondary" type="button">초기화</button><button id="apply-interest-preferences" type="submit">관심 조건 저장</button></div>
+                <p id="interest-save-status" class="muted"></p>
+              </form>
+            </aside>
+            <section class="content-section profile-section"><button id="profile-details-toggle" class="profile-details-toggle" type="button" aria-expanded="false" aria-controls="profile-form">추가 프로필 메모</button><p class="muted">자동 필터링에 사용하지 않는 개인 메모입니다.</p><form id="profile-form" class="profile-form" hidden>
+              <label>직업 상태<input name="employmentStatus" /></label><label>세전 소득 구간<input name="grossIncomeBand" /></label><label>자산 구간<input name="assetBand" /></label><label>보증금에 쓸 현금 구간<input name="cashForDepositBand" /></label>
+              <label>월 임대료 상한<span class="input-with-unit"><input type="text" inputmode="numeric" name="maxMonthlyRent" data-numeric-format /><span class="input-unit">원</span></span></label><label>보증금 상한<span class="input-with-unit"><input type="text" inputmode="numeric" name="maxDeposit" data-numeric-format /><span class="input-unit">원</span></span></label>
+              <label>무주택·소유 이력<input name="homeOwnership" /></label><label>혼인·가구 구성<input name="maritalAndHousehold" /></label><label>부모와 별도 거주<input name="livesSeparatelyFromParents" /></label><label>자동차 보유<input name="vehicleOwnership" /></label><label>선호 지역<input name="preferredAreas" /></label><label>이사 가능 시작일<input type="date" name="earliestMoveDate" /></label><label class="wide">출퇴근·통학 조건<input name="commuteOrSchoolCondition" /></label>
+              <button type="submit">로컬 프로필 저장</button><span id="save-result" class="muted"></span>
+            </form></section>
+          </section>
+
+          <section id="collection-view" class="app-view" data-view="collection" aria-labelledby="collection-heading" hidden>
+            <div class="view-heading"><div><p class="eyebrow">데이터 관리</p><h1 id="collection-heading">공고 수집</h1><p>공식 기관의 최신 공고를 직접 수집하고 결과를 확인합니다.</p></div><button id="collect-announcements" type="button"><svg class="collection-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M12 3a9 9 0 1 0 9 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/></svg><span>지금 공고 수집</span></button></div>
+            <section class="collection-overview overview-panel"><div id="collection-status" class="collection-status collection-summary" aria-live="polite"></div><p id="collection-result" class="collection-result" aria-live="polite"></p></section>
+            <section class="content-section"><h2>기관별 수집 현황</h2><div id="monitor" class="monitor-panel"></div><div id="discoveries"></div></section>
+          </section>
+
+          <section id="programs-view" class="app-view" data-view="programs" aria-labelledby="programs-heading" hidden>
+            <div class="view-heading"><div><p class="eyebrow">청약·임대 가이드</p><h1 id="programs-heading">제도 안내</h1><p>주거 지원 제도와 신청 전 확인할 내용을 살펴보세요.</p></div></div>
+            <div id="programs" class="program-grid"></div>
+            <button id="load-more-programs" class="secondary load-more" type="button" hidden>제도 더 보기</button>
+          </section>
+        </main>
       </div>
-      <p id="reload-result" class="sr-only" aria-live="polite"></p>
-      <section class="content-section candidate-section overview-panel" aria-labelledby="priority-heading">
-        <div class="section-title-row"><div><h3 id="priority-heading">관심 후보 <span id="interest-candidate-count" class="count">0건</span></h3><p class="help">후보가 된 이유와 미확인 항목을 표시합니다. 신청 권장이 아닙니다.</p></div></div>
-        <div id="interest-candidates" class="candidate-groups"></div>
-      </section>
-      <section class="content-section overview-panel" aria-labelledby="new-announcements-heading">
-        <div class="section-title-row"><div><h3 id="new-announcements-heading">이번 수집 신규 공고 <span id="new-announcement-count" class="count"></span></h3><p id="new-announcement-note" class="help"></p></div></div>
-        <div id="new-announcements" class="new-grid"></div>
-      </section>
-      <section class="content-section all-section overview-panel" aria-labelledby="all-announcements-heading">
-        <div class="section-title-row"><div><h3 id="all-announcements-heading">전체 공고</h3><p class="help">수집한 공고 전체는 유지하며, 아래 검색과 필터는 화면에만 적용됩니다.</p></div><span id="announcement-count" class="catalog-count"></span></div>
-        <div class="catalog-controls announcement-controls">
-          <label class="announcement-query">통합 검색<input id="announcement-query" type="search" aria-describedby="announcement-search-help" placeholder="예: 청년안심 관악" /></label>
-          <p id="announcement-search-help" class="muted search-help">제목·기관·주택 유형·명시 지역에서 찾습니다. 여러 단어는 모두 포함해야 합니다.</p>
-          <label>정보 상태<select id="announcement-information"><option value="">모든 정보 상태</option><option value="known">값 확인됨</option><option value="needs-info">정보 확인 필요</option></select></label>
-          <label>출처<select id="announcement-source"><option value="">모든 출처</option></select></label>
-          <label>상태<select id="announcement-status"><option value="">모든 상태</option></select></label>
-          <label class="filter-toggle"><input id="announcement-new-only" type="checkbox" /> 신규 공고만</label>
-          <button id="apply-announcement-filters" type="button">검색</button>
-          <button id="reset-announcement-filters" class="secondary filter-reset" type="button">필터 초기화</button>
-          <p id="announcement-filter-note" class="muted filter-note"></p>
-        </div>
-        <p id="announcement-result-count" class="announcement-result-count" aria-live="polite" tabindex="-1"></p>
-        <div id="all-announcements" aria-label="수집한 전체 공고 목록"></div>
-        <p id="announcement-loading" class="muted announcement-loading" aria-live="polite" hidden>공고를 더 불러오는 중입니다…</p>
-        <button id="load-more-announcements" class="secondary load-more" type="button" hidden>공고 더 보기</button>
-      </section>
-        </div>
-      </main>
     </div>
-    <main class="auxiliary-content">
-      <section class="grid">
-        <div class="panel overview-panel">
-          <h2>지원 제도 데이터베이스</h2>
-          <div id="programs" class="programs"></div>
-        </div>
-        <div class="panel overview-panel">
-          <h2>공식 사이트 모니터</h2>
-          <div id="monitor"></div>
-          <p class="muted">공개 목록만 저빈도로 읽습니다. 로그인, 캡차 우회, 청약 제출은 하지 않습니다.</p>
-          <div id="discoveries"></div>
-        </div>
-      </section>
-      <section class="panel overview-panel" aria-labelledby="verified-heading">
-        <h2 id="verified-heading">상세 확인 완료 공고 <span id="verified-announcement-count" class="heading-count">0건</span></h2>
-        <p class="muted">수동으로 확인된 상세 정보입니다. 관심 후보에 포함되지 않아도 전체 공고에서 계속 확인할 수 있습니다.</p>
-        <div id="notices" class="cards"></div>
-      </section>
-      <section class="panel overview-panel" aria-labelledby="profile-heading">
-        <h2 id="profile-heading">내 조건 메모 (자동 필터링 안 함)</h2>
-        <p class="muted">비교할 때 참고할 로컬 메모입니다. 수집·스크롤 목록을 제외하거나 정렬하지 않습니다. 계좌번호·주민번호·상세 주소는 저장하지 마세요.</p>
-        <form id="profile-form" class="profile-form">
-          <label>직업 상태<input name="employmentStatus" placeholder="예: 직장인, 학생, 구직자" /></label>
-          <label>세전 소득 구간<input name="grossIncomeBand" placeholder="예: 월 250~300만원" /></label>
-          <label>자산 구간<input name="assetBand" placeholder="예: 5천만원 미만" /></label>
-          <label>보증금에 쓸 현금 구간<input name="cashForDepositBand" placeholder="예: 1천~3천만원" /></label>
-          <label>월 임대료 상한<span class="input-with-unit"><input type="text" inputmode="numeric" name="maxMonthlyRent" aria-describedby="profile-rent-unit" data-numeric-format /><span id="profile-rent-unit" class="input-unit">원</span></span></label>
-          <label>보증금 상한<span class="input-with-unit"><input type="text" inputmode="numeric" name="maxDeposit" aria-describedby="profile-deposit-unit" data-numeric-format /><span id="profile-deposit-unit" class="input-unit">원</span></span></label>
-          <label>무주택·소유 이력<input name="homeOwnership" placeholder="예: 무주택, 과거 소유 없음" /></label>
-          <label>혼인·가구 구성<input name="maritalAndHousehold" placeholder="예: 미혼 1인가구" /></label>
-          <label>부모와 별도 거주<input name="livesSeparatelyFromParents" placeholder="예: 예" /></label>
-          <label>자동차 보유<input name="vehicleOwnership" placeholder="예: 미보유" /></label>
-          <label>선호 지역<input name="preferredAreas" placeholder="예: 관악구, 강남역 40분 이내" /></label>
-          <label>이사 가능 시작일<input type="date" name="earliestMoveDate" /></label>
-          <label class="wide">출퇴근·통학 조건<input name="commuteOrSchoolCondition" placeholder="예: 시청역 45분 이내" /></label>
-          <button type="submit">로컬 프로필 저장</button><span id="save-result" class="muted"></span>
-        </form>
-      </section>
-      <section class="panel">
-        <h2>2027년 12월 입주 역산 일정</h2>
-        <ol class="timeline">
-          <li><strong>지금–2027년 1월:</strong> 프로필 완성, LH·SH·청년안심주택 계정·알리미 확인, 상시·수시 제도 우선 판정.</li>
-          <li><strong>2027년 2–6월:</strong> 정기 모집과 월세·이사비 지원 공고를 추적하고, 서류 발급처·유효기간만 미리 정리.</li>
-          <li><strong>2027년 7–9월:</strong> 입주가 2027년 하반기인 공고를 최우선으로, 보증금 조달·대출 가능액은 계약 전 은행과 재확인.</li>
-          <li><strong>2027년 10월:</strong> 공공임대 결과가 없으면 청년안심주택 추가모집과 민간 소형주택을 병행 검토. 계약 종료 2개월 전 대체주거를 확보.</li>
-          <li><strong>2027년 11–12월:</strong> 계약·입주일 조정, 전입신고·확정일자·보증보험·등기부를 최종 점검.</li>
-        </ol>
-      </section>
-    </main>
-    <template id="notice-template">
-      <article class="notice-card">
-        <div class="status"></div><h3></h3><p class="meta"></p><p class="cost"></p>
-        <p class="move"></p><p class="fit"></p><p class="need"></p>
-        <p class="documents"></p><a class="official" target="_blank" rel="noreferrer">공식 공고문</a>
-      </article>
-    </template>
-    <div id="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <div id="announcement-drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <aside id="announcement-drawer" class="announcement-drawer" role="dialog" aria-modal="true" aria-labelledby="announcement-drawer-title" hidden>
+      <button id="announcement-drawer-close" class="secondary drawer-close" type="button" aria-label="공고 상세 닫기">닫기</button>
+      <div id="announcement-drawer-content" class="drawer-content"></div>
+      <div id="announcement-drawer-actions" class="drawer-actions"></div>
+    </aside>
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
     <script type="module" src="/app.js"></script>
   </body>
 </html>
