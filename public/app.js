@@ -17,7 +17,7 @@ let drawerTrigger = null;
 let interestPreferences = { regions: [], depositMaxWon: null, monthlyRentMaxWon: null, areaMin: null, areaMax: null, includeUnknown: true };
 let savedAnnouncementIds = new Set();
 function createDefaultCatalogFilters() {
-  return { source: '', status: '', information: '', newOnly: false, includeUnknown: true, query: '', region: '', housingType: '', depositMaxWon: '', monthlyRentMaxWon: '', areaMin: '', areaMax: '' };
+  return { source: '', status: '', information: '', newOnly: false, savedOnly: false, includeUnknown: true, includeClosed: false, query: '', region: '', housingType: '', depositMaxWon: '', monthlyRentMaxWon: '', areaMin: '', areaMax: '' };
 }
 const catalogState = { draftFilters: createDefaultCatalogFilters(), appliedFilters: createDefaultCatalogFilters() };
 
@@ -142,6 +142,71 @@ function deadlineForList(item, detail) {
   return MISSING_LIST_VALUE;
 }
 
+function dateValue(value) {
+  if (!hasText(value)) return null;
+  const match = String(value).match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (!match) return null;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 23, 59, 59);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function isClosedAnnouncement(item, detail) {
+  const status = String(item.status || '');
+  if (/(마감|종료)/.test(status)) return true;
+  const deadline = dateValue(detail?.application?.end || item.applicationEnd);
+  return deadline ? deadline.getTime() < Date.now() : false;
+}
+
+function announcementPriority(item, detail) {
+  if (isClosedAnnouncement(item, detail)) return 3;
+  const status = String(item.status || '');
+  if (/(접수중|모집중|추가모집|공고중)/.test(status)) return 0;
+  if (/(접수예정|모집예정|공고예정)/.test(status)) return 1;
+  return 2;
+}
+
+function normalizedValue(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('ko');
+}
+
+function duplicateKey(item) {
+  const source = normalizedValue(item.sourceId || item.sourceName || item.provider);
+  const title = normalizedValue(item.title);
+  const url = normalizedValue(item.officialUrl);
+  if (url) return `url:${source}|${url}`;
+  return `notice:${source}|${title}|${item.announcementDate || ''}|${item.applicationStart || ''}|${item.applicationEnd || ''}`;
+}
+
+function deduplicatedAnnouncements(items) {
+  const grouped = new Map();
+  for (const item of items || []) {
+    const key = duplicateKey(item);
+    const previous = grouped.get(key);
+    if (!previous) {
+      grouped.set(key, { ...item, duplicateIds: [item.id], duplicateCount: 1 });
+      continue;
+    }
+    previous.duplicateIds.push(item.id);
+    previous.duplicateCount += 1;
+    const currentDetail = verifiedDetailFor(item);
+    const previousDetail = verifiedDetailFor(previous);
+    const currentUpdated = String(item.updatedAt || item.announcementDate || '');
+    const previousUpdated = String(previous.updatedAt || previous.announcementDate || '');
+    if ((!previousDetail && currentDetail) || currentUpdated > previousUpdated) {
+      Object.assign(previous, item, { duplicateIds: previous.duplicateIds, duplicateCount: previous.duplicateCount });
+    }
+  }
+  return [...grouped.values()];
+}
+
+function savedIdsFor(item) {
+  return item.duplicateIds?.filter(Boolean) || [item.id].filter(Boolean);
+}
+
+function isSavedAnnouncement(item) {
+  return savedIdsFor(item).some((id) => savedAnnouncementIds.has(id));
+}
+
 function costForList(detail, field) {
   if (!detail) return NEEDS_NOTICE;
   const options = verifiedCostOptions(detail);
@@ -151,6 +216,18 @@ function costForList(detail, field) {
 
 function newAnnouncementIds() {
   return new Set((state.discoveries || []).map((item) => item.id).filter(Boolean));
+}
+
+function isNewAnnouncement(item, newIds = newAnnouncementIds()) {
+  return savedIdsFor(item).some((id) => newIds.has(id));
+}
+
+function deduplicatedNewAnnouncements() {
+  const catalogById = new Map((state?.allAnnouncements?.items || []).map((item) => [item.id, item]));
+  const discovered = (state?.discoveries || [])
+    .filter((item) => item?.id)
+    .map((item) => catalogById.get(item.id) || item);
+  return deduplicatedAnnouncements(discovered);
 }
 
 function newItemsBaselineAt() {
@@ -311,6 +388,7 @@ function openAnnouncementDrawer(item, detail, trigger) {
   const officialUrl = detail?.sourceUrl || item.officialUrl;
   const actions = $('#announcement-drawer-actions');
   actions.replaceChildren();
+  actions.append(favoriteButton(item, detail));
   if (hasText(officialUrl)) {
     const link = document.createElement('a');
     link.className = 'official drawer-official';
@@ -328,6 +406,7 @@ function drawerButton(item, detail) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'secondary open-announcement-detail';
+  button.dataset.announcementId = item.id || '';
   button.textContent = '상세 보기';
   button.setAttribute('aria-label', `${listValue(item.title)} 상세 보기`);
   button.addEventListener('click', () => openAnnouncementDrawer(item, detail, button));
@@ -438,9 +517,9 @@ function announcementInfoText(item, detail) {
 
 function filteredAnnouncements() {
   const catalog = state.allAnnouncements || { items: [] };
-  const { source, status, information, newOnly, includeUnknown, query, region, housingType, depositMaxWon, monthlyRentMaxWon, areaMin, areaMax } = catalogState.appliedFilters;
+  const { source, status, information, newOnly, savedOnly, includeUnknown, includeClosed, query, region, housingType, depositMaxWon, monthlyRentMaxWon, areaMin, areaMax } = catalogState.appliedFilters;
   const newIds = newAnnouncementIds();
-  return (catalog.items || []).filter((item) => {
+  return deduplicatedAnnouncements(catalog.items).filter((item) => {
     const detail = verifiedDetailFor(item);
     const options = verifiedOptions(detail);
     const area = areaSquareMeters(detail);
@@ -455,14 +534,23 @@ function filteredAnnouncements() {
     const numericMatches = !numericFilters || (hasComparableValues ? optionMatches && areaMatches : includeUnknown);
     const location = listLocation(item, detail);
     const regionMatches = !region || (location !== MISSING_LIST_VALUE && location.includes(region));
+    const infoMatches = information ? informationStatus(item, detail) === information : (includeUnknown || informationStatus(item, detail) === 'known');
     return (!source || item.sourceName === source)
       && (!status || item.status === status)
       && (!housingType || item.housingType === housingType)
       && regionMatches
-      && (!information || informationStatus(item, detail) === information)
-      && (!newOnly || newIds.has(item.id))
+      && infoMatches
+      && (!newOnly || isNewAnnouncement(item, newIds))
+      && (!savedOnly || isSavedAnnouncement(item))
+      && (includeClosed || /(마감|종료)/.test(status) || !isClosedAnnouncement(item, detail))
       && numericMatches
       && explorerSearchMatches(item, detail, query);
+  }).sort((left, right) => {
+    const leftDetail = verifiedDetailFor(left);
+    const rightDetail = verifiedDetailFor(right);
+    const priority = announcementPriority(left, leftDetail) - announcementPriority(right, rightDetail);
+    if (priority) return priority;
+    return String(left.applicationEnd || '9999-12-31').localeCompare(String(right.applicationEnd || '9999-12-31'));
   });
 }
 
@@ -472,7 +560,9 @@ function syncDraftFilters() {
     status: $('#announcement-status').value,
     information: $('#announcement-information').value,
     newOnly: $('#announcement-new-only').checked,
+    savedOnly: $('#announcement-saved-only').checked,
     includeUnknown: $('#announcement-include-unknown').checked,
+    includeClosed: $('#announcement-include-closed').checked,
     query: $('#announcement-query').value.trim(),
     region: $('#announcement-region').value,
     housingType: $('#announcement-housing-type').value,
@@ -489,7 +579,9 @@ function writeDraftFilters() {
   $('#announcement-status').value = filters.status;
   $('#announcement-information').value = filters.information;
   $('#announcement-new-only').checked = filters.newOnly;
+  $('#announcement-saved-only').checked = filters.savedOnly;
   $('#announcement-include-unknown').checked = filters.includeUnknown;
+  $('#announcement-include-closed').checked = filters.includeClosed;
   $('#announcement-query').value = filters.query;
   $('#announcement-region').value = filters.region;
   $('#announcement-housing-type').value = filters.housingType;
@@ -501,7 +593,7 @@ function writeDraftFilters() {
 
 function appliedFilterSummary() {
   const filters = catalogState.appliedFilters;
-  const labels = [filters.query, filters.region, filters.housingType, filters.information === 'known' ? '값 확인됨' : filters.information === 'needs-info' ? '정보 확인 필요' : '', filters.source, filters.status, hasText(filters.depositMaxWon) ? `보증금 ${formatNumericValue(filters.depositMaxWon)}원 이하` : '', hasText(filters.monthlyRentMaxWon) ? `월세 ${formatNumericValue(filters.monthlyRentMaxWon)}원 이하` : '', filters.newOnly ? '신규' : ''].filter(Boolean);
+  const labels = [filters.query, filters.region, filters.housingType, filters.information === 'known' ? '값 확인됨' : filters.information === 'needs-info' ? '정보 확인 필요' : '', filters.source, filters.status, hasText(filters.depositMaxWon) ? `보증금 ${formatNumericValue(filters.depositMaxWon)}원 이하` : '', hasText(filters.monthlyRentMaxWon) ? `월세 ${formatNumericValue(filters.monthlyRentMaxWon)}원 이하` : '', filters.newOnly ? '신규' : '', filters.savedOnly ? '관심 저장' : '', filters.includeUnknown ? '정보 미확인 포함' : '비교 정보 확인됨', filters.includeClosed ? '마감 공고 포함' : '마감 공고 제외'].filter(Boolean);
   return labels.length ? `${labels.join(' · ')} 조건의 ` : '';
 }
 
@@ -561,24 +653,34 @@ function saveInterestPreferences() {
   return true;
 }
 
-function toggleSavedAnnouncement(id) {
-  if (savedAnnouncementIds.has(id)) savedAnnouncementIds.delete(id);
-  else savedAnnouncementIds.add(id);
+function toggleSavedAnnouncement(item, detail = null) {
+  const ids = savedIdsFor(item);
+  const saved = isSavedAnnouncement(item);
+  ids.forEach((id) => {
+    if (saved) savedAnnouncementIds.delete(id);
+    else savedAnnouncementIds.add(id);
+  });
   try { localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify([...savedAnnouncementIds])); } catch { /* Local storage is optional. */ }
   renderInterestCandidates();
   renderNewAnnouncements();
+  renderHomeSummary();
   invalidateAnnouncementRender();
   renderAllAnnouncements();
+  if (!$('#announcement-drawer').hidden && drawerTrigger?.dataset.announcementId === item.id) openAnnouncementDrawer(item, detail || verifiedDetailFor(item), drawerTrigger);
+  showToast(saved
+    ? { type: 'success', message: '관심 저장을 취소했습니다.' }
+    : { type: 'success', message: '관심 저장했습니다.', detail: '전체 공고에서 관심 저장만 필터로 바로 확인할 수 있습니다.', action: { label: '관심 저장 목록으로 이동', run: showSavedAnnouncements } });
 }
 
-function favoriteButton(item) {
+function favoriteButton(item, detail = null) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'secondary save-announcement';
-  const saved = savedAnnouncementIds.has(item.id);
-  button.textContent = saved ? '관심 저장됨' : '관심 저장';
+  button.dataset.announcementId = item.id || '';
+  const saved = isSavedAnnouncement(item);
+  button.textContent = saved ? '관심 저장됨 · 취소' : '관심 저장';
   button.setAttribute('aria-pressed', String(saved));
-  button.addEventListener('click', () => toggleSavedAnnouncement(item.id));
+  button.addEventListener('click', () => toggleSavedAnnouncement(item, detail));
   return button;
 }
 
@@ -623,7 +725,7 @@ function candidateCard(item, detail, candidate) {
   } else main.append(titleLine, source, facts, reasons);
   const actions = document.createElement('div');
   actions.className = 'candidate-actions announcement-actions';
-  actions.append(drawerButton(item, detail), favoriteButton(item));
+  actions.append(drawerButton(item, detail), favoriteButton(item, detail));
   if (hasText(item.officialUrl)) {
     const link = document.createElement('a');
     link.className = 'official';
@@ -636,14 +738,17 @@ function candidateCard(item, detail, candidate) {
 
 function renderInterestCandidates() {
   const target = $('#interest-candidates');
-  const entries = (state?.allAnnouncements?.items || []).map((item) => ({ item, detail: verifiedDetailFor(item) }))
+  const entries = deduplicatedAnnouncements(state?.allAnnouncements?.items).map((item) => ({ item, detail: verifiedDetailFor(item) }))
     .map((entry) => ({ ...entry, candidate: classifyInterest(entry.item, entry.detail, interestPreferences) }))
     .filter((entry) => entry.candidate.kind !== 'NONE')
     .filter((entry) => interestPreferences.includeUnknown || entry.candidate.kind !== 'NEEDS_INFO');
-  const byDeadline = (left, right) => String(left.item.applicationEnd || '9999-12-31').localeCompare(String(right.item.applicationEnd || '9999-12-31'));
+  const byDeadline = (left, right) => {
+    const priority = announcementPriority(left.item, left.detail) - announcementPriority(right.item, right.detail);
+    return priority || String(left.item.applicationEnd || '9999-12-31').localeCompare(String(right.item.applicationEnd || '9999-12-31'));
+  };
   const comparable = entries.filter((entry) => entry.candidate.kind === 'COMPARABLE').sort(byDeadline);
   const incomplete = entries.filter((entry) => entry.candidate.kind === 'NEEDS_INFO').sort(byDeadline);
-  $('#interest-candidate-count').textContent = `${entries.length.toLocaleString('ko-KR')}건`;
+  $('#interest-candidate-count').textContent = `비교 가능 ${comparable.length.toLocaleString('ko-KR')}건 · 정보 확인 필요 ${incomplete.length.toLocaleString('ko-KR')}건`;
   target.replaceChildren();
   if (!entries.length) {
     const message = document.createElement('p');
@@ -652,16 +757,18 @@ function renderInterestCandidates() {
     target.append(message);
     return;
   }
-  let remaining = HOME_PREVIEW_SIZE;
+  const previewLimits = comparable.length && incomplete.length
+    ? { '비교 가능': Math.max(1, HOME_PREVIEW_SIZE - 1), '정보 확인 필요': 1 }
+    : { '비교 가능': HOME_PREVIEW_SIZE, '정보 확인 필요': HOME_PREVIEW_SIZE };
   for (const [heading, items] of [['비교 가능', comparable], ['정보 확인 필요', incomplete]]) {
     if (!items.length) continue;
     const group = document.createElement('section');
     group.className = 'candidate-group';
     const title = document.createElement('h3');
-    const previewed = items.slice(0, remaining);
-    remaining -= previewed.length;
-    if (!previewed.length) continue;
-    title.textContent = `${heading} ${items.length.toLocaleString('ko-KR')}건${previewed.length < items.length ? ` · ${previewed.length}건 표시` : ''}`;
+    const previewed = items.slice(0, previewLimits[heading]);
+    title.textContent = heading === '비교 가능'
+      ? `조건 일치 공고 ${items.length.toLocaleString('ko-KR')}건${previewed.length < items.length ? ` · ${previewed.length}건 표시` : ''}`
+      : `정보 확인 필요 공고 ${items.length.toLocaleString('ko-KR')}건${previewed.length < items.length ? ` · ${previewed.length}건 표시` : ''}`;
     const cards = document.createElement('div');
     cards.className = 'candidate-cards';
     previewed.forEach((entry) => cards.append(candidateCard(entry.item, entry.detail, entry.candidate)));
@@ -678,7 +785,7 @@ function renderInterestCandidates() {
 
 function renderNewAnnouncements() {
   const target = $('#new-announcements');
-  const discovered = (state?.discoveries || []).filter((item) => item?.id);
+  const discovered = deduplicatedNewAnnouncements();
   const baseline = newItemsBaselineAt();
   const failures = failureNames(state?.monitor || {});
   $('#new-announcement-count').textContent = `${discovered.length.toLocaleString('ko-KR')}건`;
@@ -691,9 +798,8 @@ function renderNewAnnouncements() {
     target.append(empty);
     return;
   }
-  const catalog = new Map((state.allAnnouncements?.items || []).map((item) => [item.id, item]));
   for (const discovery of discovered.slice(0, HOME_PREVIEW_SIZE)) {
-    const item = catalog.get(discovery.id) || discovery;
+    const item = discovery;
     const detail = verifiedDetailFor(item);
     const card = document.createElement('article');
     card.className = 'compact-announcement';
@@ -707,7 +813,7 @@ function renderNewAnnouncements() {
     note.textContent = announcementInfoText(item, detail);
     const actions = document.createElement('div');
     actions.className = 'announcement-actions';
-    actions.append(drawerButton(item, detail), favoriteButton(item));
+    actions.append(drawerButton(item, detail), favoriteButton(item, detail));
     if (hasText(item.officialUrl)) {
       const link = document.createElement('a');
       link.className = 'official';
@@ -736,16 +842,18 @@ function summaryCard(title, count, description, hash) {
 }
 
 function renderHomeSummary() {
-  const catalogItems = state?.allAnnouncements?.items || [];
-  const candidates = catalogItems
-    .map((item) => classifyInterest(item, verifiedDetailFor(item), interestPreferences))
-    .filter((candidate) => candidate.kind !== 'NONE')
-    .filter((candidate) => interestPreferences.includeUnknown || candidate.kind !== 'NEEDS_INFO');
+  const candidateEntries = deduplicatedAnnouncements(state?.allAnnouncements?.items)
+    .map((item) => ({ item, candidate: classifyInterest(item, verifiedDetailFor(item), interestPreferences) }))
+    .filter((entry) => entry.candidate.kind !== 'NONE')
+    .filter((entry) => interestPreferences.includeUnknown || entry.candidate.kind !== 'NEEDS_INFO');
+  const comparable = candidateEntries.filter((entry) => entry.candidate.kind === 'COMPARABLE');
+  const incomplete = candidateEntries.filter((entry) => entry.candidate.kind === 'NEEDS_INFO');
   const verified = (state?.verifiedAnnouncements || []).length;
   const summary = $('#summary');
   summary.replaceChildren(
-    summaryCard('이번 수집 신규 공고', (state?.discoveries || []).filter((item) => item?.id).length, '직전 성공 수집과 비교한 새 공고', '#announcements'),
-    summaryCard('관심 조건 일치 공고', candidates.length, '비교 가능 또는 정보 확인 필요 공고', '#announcements'),
+    summaryCard('이번 수집 신규 공고', deduplicatedNewAnnouncements().length, '직전 성공 수집과 비교한 새 공고', '#announcements'),
+    summaryCard('관심 조건 일치 공고', comparable.length, '실제 조건을 비교할 수 있는 공고', '#announcements'),
+    summaryCard('정보 확인 필요 공고', incomplete.length, '비교 전 위치·비용·면적 확인 필요', '#announcements'),
     summaryCard('상세 확인 완료 공고', verified, '비용·위치·면적을 확인한 공고', '#announcements'),
   );
 }
@@ -765,9 +873,12 @@ function announcementTitleCell(item, detail, newIds) {
   const source = document.createElement('p');
   source.className = 'announcement-source';
   source.textContent = `${listValue(item.sourceName)} · ${listValue(item.housingType)} · ${listValue(item.provider)}`;
+  const identity = document.createElement('p');
+  identity.className = 'announcement-identity';
+  identity.textContent = `공고일 ${isListMissing(item.announcementDate) ? MISSING_LIST_VALUE : formatDate(item.announcementDate)} · 접수 ${applicationSchedule(item, detail)}`;
   const badges = document.createElement('div');
   badges.className = 'announcement-badges';
-  if (newIds.has(item.id)) {
+  if (isNewAnnouncement(item, newIds)) {
     const badge = document.createElement('span');
     badge.className = 'status';
     badge.textContent = '신규';
@@ -779,10 +890,16 @@ function announcementTitleCell(item, detail, newIds) {
     badge.textContent = '상세 확인 완료';
     badges.append(badge);
   }
-  cell.append(title, source);
+  if (item.duplicateCount > 1) {
+    const badge = document.createElement('span');
+    badge.className = 'status';
+    badge.textContent = `수집 이력 ${item.duplicateCount}건 통합`;
+    badges.append(badge);
+  }
+  cell.append(title, source, identity);
   if (badges.childElementCount) cell.append(badges);
   cell.append(drawerButton(item, detail));
-  cell.append(favoriteButton(item));
+  cell.append(favoriteButton(item, detail));
   return cell;
 }
 
@@ -926,7 +1043,9 @@ function setupAnnouncementCatalog(view = null) {
 function updateAnnouncementFilterNote() {
   const baseline = newItemsBaselineAt();
   const baselineText = baseline ? `신규는 직전 성공 수집(${formatDate(baseline)})과 비교해 새로 발견된 공고만을 뜻합니다.` : '신규 기준 수집 시각이 없어 신규 필터는 현재 사용할 수 없습니다.';
-  $('#announcement-filter-note').textContent = `필터는 화면 표시 기능이며, 수집 대상이나 개인 프로필을 바꾸지 않습니다. ${baselineText}`;
+  const unknownText = catalogState.appliedFilters.includeUnknown ? '정보 미확인 공고를 함께 표시합니다. 비교 가능한 공고는 목록의 정보 확인 상태에서 구분됩니다.' : '정보 미확인 공고를 제외하고, 확인된 값으로 바로 비교할 수 있는 공고만 표시합니다.';
+  const closedText = catalogState.appliedFilters.includeClosed ? '마감 공고를 함께 표시합니다.' : '마감 공고는 기본 결과에서 제외되며, 필요하면 마감 공고 포함을 선택할 수 있습니다.';
+  $('#announcement-filter-note').textContent = `필터는 화면 표시 기능이며, 수집 대상이나 개인 프로필을 바꾸지 않습니다. ${unknownText} ${closedText} ${baselineText}`;
 }
 
 function failureNames(monitor) {
@@ -1099,7 +1218,7 @@ function initialLoadError(error) {
   $('#all-announcements').replaceChildren();
 }
 
-function showToast({ type, message, detail = '', retry = false }) {
+function showToast({ type, message, detail = '', retry = false, action = null }) {
   window.clearTimeout(toastTimer);
   const region = $('#toast-region');
   const toast = document.createElement('div');
@@ -1130,6 +1249,17 @@ function showToast({ type, message, detail = '', retry = false }) {
     retryButton.addEventListener('click', reloadPage);
     actions.append(retryButton);
   }
+  if (action) {
+    const actionButton = document.createElement('button');
+    actionButton.type = 'button';
+    actionButton.className = 'secondary';
+    actionButton.textContent = action.label;
+    actionButton.addEventListener('click', () => {
+      region.replaceChildren();
+      action.run();
+    });
+    actions.append(actionButton);
+  }
   const close = document.createElement('button');
   close.type = 'button';
   close.className = 'toast-close';
@@ -1140,6 +1270,15 @@ function showToast({ type, message, detail = '', retry = false }) {
   toast.append(icon, content, actions);
   region.replaceChildren(toast);
   toastTimer = window.setTimeout(() => region.replaceChildren(), type === 'success' ? 3500 : 7500);
+}
+
+function showSavedAnnouncements() {
+  catalogState.draftFilters.savedOnly = true;
+  catalogState.appliedFilters.savedOnly = true;
+  announcementLimit = ANNOUNCEMENT_PAGE_SIZE;
+  writeDraftFilters();
+  window.location.hash = '#announcements';
+  renderAllAnnouncements();
 }
 
 async function load({ refreshing = false } = {}) {
@@ -1282,7 +1421,7 @@ function resetAnnouncementFilters() {
   writeDraftFilters();
   resetAnnouncementLimit();
 }
-for (const selector of ['#announcement-source', '#announcement-status', '#announcement-information', '#announcement-new-only', '#announcement-include-unknown', '#announcement-region', '#announcement-housing-type', '#announcement-deposit-max', '#announcement-rent-max', '#announcement-area-min', '#announcement-area-max']) {
+for (const selector of ['#announcement-source', '#announcement-status', '#announcement-information', '#announcement-new-only', '#announcement-saved-only', '#announcement-include-unknown', '#announcement-include-closed', '#announcement-region', '#announcement-housing-type', '#announcement-deposit-max', '#announcement-rent-max', '#announcement-area-min', '#announcement-area-max']) {
   $(selector).addEventListener('change', syncDraftFilters);
 }
 $('#announcement-query').addEventListener('input', syncDraftFilters);
