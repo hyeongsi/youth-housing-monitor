@@ -1,0 +1,34 @@
+.admin-shell { min-height: 100vh; }
+.admin-label { padding: 4px 8px; color: #1555a5; font-size: .72rem; font-weight: 700; background: #edf3fc; border-radius: 5px; }
+.admin-back-link { display: inline-flex; align-items: center; min-height: 44px; margin-left: auto; color: var(--primary); font-size: .8rem; font-weight: 650; text-decoration: none; }
+.admin-main { width: min(100% - 40px, 1120px); margin: 0 auto; padding: 32px 0 68px; }
+.admin-heading { align-items: center; }
+.admin-security-note { padding: 12px 14px; margin-bottom: 20px; color: #72510f; font-size: .78rem; background: var(--warning-bg); border: 1px solid #ebd4a5; border-radius: 9px; }
+.admin-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 13px; }
+.admin-summary > div { min-width: 0; padding: 20px; border-right: 1px solid var(--line); }
+.admin-summary > div:last-child { border-right: 0; }
+.admin-summary span { display: block; color: var(--muted); font-size: .74rem; }
+.admin-summary strong { display: block; margin-top: 7px; overflow-wrap: anywhere; font-size: 1rem; }
+.admin-result { min-height: 24px; margin-bottom: 18px; color: var(--muted); font-size: .82rem; }
+.admin-panel { padding: 22px; margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 13px; }
+.admin-panel .section-heading { margin-bottom: 10px; }
+.admin-discovery { padding: 12px 0; border-bottom: 1px solid #e7e8eb; }
+.admin-discovery:last-child { border-bottom: 0; }
+.admin-discovery a { font-size: .84rem; font-weight: 650; text-decoration: none; }
+.admin-discovery p { margin-top: 4px; }
+
+@media (max-width: 720px) {
+  .admin-main { width: 100%; padding: 26px 16px 54px; }
+  .admin-heading { align-items: stretch; }
+  .admin-heading > button { width: 100%; }
+  .admin-summary { grid-template-columns: 1fr 1fr; }
+  .admin-summary > div:nth-child(2) { border-right: 0; }
+  .admin-summary > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+
+@media (max-width: 420px) {
+  .admin-label { display: none; }
+  .admin-summary { grid-template-columns: 1fr; }
+  .admin-summary > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .admin-summary > div:last-child { border-bottom: 0; }
+}

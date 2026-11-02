@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>청약찾기 UI 목업</title>
+    <link rel="stylesheet" href="./housing-menu-reference.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <div class="header-main">
+          <a class="wordmark" href="#home" aria-label="청약찾기 홈"><span>청약</span>찾기</a>
+          <form id="global-search" class="global-search" role="search">
+            <span>전국</span>
+            <input id="global-query" type="search" placeholder="지역이나 공고명을 검색해 보세요" aria-label="통합 공고 검색" />
+            <button type="submit" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg></button>
+          </form>
+          <div class="header-actions"><span>최근 수집 11.01 15:00</span><a href="#collection">수집 현황</a></div>
+        </div>
+      </header>
+      <div class="app-layout">
+        <nav class="app-navigation" aria-label="주요 메뉴">
+          <a href="#home" data-view-link="home"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3l8.5 7.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5zM9 21v-7h6v7" /></svg>홈</a>
+          <a href="#announcements" data-view-link="announcements"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>공고 찾기</a>
+          <a href="#preferences" data-view-link="preferences"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z" /></svg>관심 조건</a>
+          <a href="#collection" data-view-link="collection"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3" /><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" /></svg>공고 수집</a>
+          <a href="#programs" data-view-link="programs"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h11a3 3 0 0 1 3 3v15H7a3 3 0 0 1-3-3V4a1 1 0 0 1 1-1Z" /><path d="M7 16h12M8 7h7M8 11h7" /></svg>제도 안내</a>
+        </nav>
+
+        <main class="app-content">
+          <section class="app-view" data-view="home" aria-labelledby="home-title">
+            <div class="view-heading">
+              <div>
+                <p class="eyebrow">오늘의 청약 정보</p>
+                <h1 id="home-title">오늘 확인할 공고</h1>
+                <p class="view-description">새로 들어온 공고와 저장한 조건에 맞는 공고를 모았습니다.</p>
+              </div>
+              <button id="reload" class="button secondary reload-button" type="button"><span class="reload-icon" aria-hidden="true">↻</span>화면 다시 불러오기</button>
+            </div>
+
+            <div class="summary-grid" aria-label="공고 요약">
+              <a class="summary-card" href="#announcements"><span>새로 들어온 공고</span><strong>12</strong><small>이번 수집 기준 <b aria-hidden="true">›</b></small></a>
+              <a class="summary-card" href="#announcements"><span>관심 조건에 맞는 공고</span><strong>8</strong><small>저장한 조건 기준 <b aria-hidden="true">›</b></small></a>
+              <a class="summary-card" href="#announcements"><span>비용·면적 확인 완료</span><strong>5</strong><small>바로 비교 가능 <b aria-hidden="true">›</b></small></a>
+            </div>
+
+            <div class="section-heading">
+              <div><h2>주요 공고</h2><p>비용·위치·면적을 확인할 수 있는 공고입니다.</p></div>
+              <a class="text-link" href="#announcements">전체 보기</a>
+            </div>
+            <div class="featured-grid">
+              <button class="listing-card" type="button" data-open-detail="verified">
+                <img class="listing-image image-a" src="./assets/housing-seoul.png" alt="서울 지역 공공임대 아파트 전경" />
+                <span class="badge">청년임대</span>
+                <strong>서울 청년 행복주택 입주자 모집</strong>
+                <span>서울특별시 강남구</span>
+                <small>보증금 8,000,000원 · 월세 320,000원 · 29㎡</small>
+                <em>2026.11.02 ~ 2026.11.15 <b aria-hidden="true">›</b></em>
+              </button>
+              <button class="listing-card" type="button" data-open-detail="verified">
+                <img class="listing-image image-b" src="./assets/housing-gyeonggi.png" alt="경기 지역 공공주택 아파트 전경" />
+                <span class="badge">공공분양</span>
+                <strong>경기 신혼부부 공공분양</strong>
+                <span>경기도 화성시</span>
+                <small>보증금 12,000,000원 · 월세 410,000원 · 36㎡</small>
+                <em>2026.11.04 ~ 2026.11.18 <b aria-hidden="true">›</b></em>
+              </button>
+              <button class="listing-card" type="button" data-open-detail="verified">
+                <img class="listing-image image-c" src="./assets/housing-incheon.png" alt="인천 지역 매입임대 아파트 전경" />
+                <span class="badge">매입임대</span>
+                <strong>인천 청년 매입임대주택</strong>
+                <span>인천광역시 부평구</span>
+                <small>보증금 6,500,000원 · 월세 280,000원 · 31㎡</small>
+                <em>2026.11.05 ~ 2026.11.20 <b aria-hidden="true">›</b></em>
+              </button>
+            </div>
+          </section>
+
+          <section class="app-view" data-view="announcements" aria-labelledby="announcements-title" hidden>
+            <div class="view-heading compact-heading">
+              <div><p class="eyebrow">공고 검색</p><h1 id="announcements-title">공고 찾기</h1><p class="view-description">조건을 선택하고 원하는 공고를 검색하세요.</p></div>
+            </div>
+
+            <form id="search-form" class="filter-panel">
+              <div class="filter-grid primary-filters">
+                <label>지역<select id="filter-region"><option value="">전체</option><option>서울특별시</option><option>경기도</option><option>인천광역시</option></select></label>
+                <label>주택 유형<select id="filter-type"><option value="">전체 유형</option><option>행복주택</option><option>매입임대</option><option>공공분양</option></select></label>
+                <label>모집 상태<select id="filter-status"><option value="">전체</option><option>접수중</option><option>모집예정</option></select></label>
+                <label class="search-field">공고명 검색<input id="filter-query" placeholder="공고명 또는 지역 입력" /></label>
+              </div>
+              <div class="filter-grid range-filters">
+                <label>보증금 상한 (원)<span class="range"><input id="filter-deposit" inputmode="numeric" placeholder="최대" data-number /></span></label>
+                <label>월세 상한 (원)<span class="range"><input id="filter-rent" inputmode="numeric" placeholder="최대" data-number /></span></label>
+                <label>전용면적 (㎡)<span class="range"><input id="filter-area-min" inputmode="numeric" placeholder="최소" data-number /><i>~</i><input id="filter-area-max" inputmode="numeric" placeholder="최대" data-number /></span></label>
+                <label class="checkbox-field"><input id="filter-unknown" type="checkbox" checked /> 정보 미확인 공고 포함</label>
+              </div>
+              <div class="filter-actions"><button class="button secondary" id="reset-search" type="button">초기화</button><button class="button" type="submit">검색</button></div>
+            </form>
+
+            <div class="result-heading" aria-live="polite"><strong id="result-count">검색 결과 <b>24건</b></strong><span id="applied-filter">전체 조건 · 최신순</span></div>
+            <div class="announcement-list">
+              <button class="announcement-row" type="button" data-open-detail="verified">
+                <img class="row-thumbnail image-a" src="./assets/housing-seoul.png" alt="" /><span class="row-main"><small class="badge">행복주택</small><strong>서울 청년 행복주택 입주자 모집</strong></span><span data-label="지역">서울특별시 강남구</span><span data-label="비용">8,000,000원<br />320,000원</span><span data-label="면적">29㎡</span><span data-label="마감">11.15 마감</span><b aria-hidden="true">›</b>
+              </button>
+              <button class="announcement-row" type="button" data-open-detail="verified">
+                <img class="row-thumbnail image-b" src="./assets/housing-gyeonggi.png" alt="" /><span class="row-main"><small class="badge">공공분양</small><strong>경기 신혼부부 공공분양</strong></span><span data-label="지역">경기도 화성시</span><span data-label="비용">12,000,000원<br />410,000원</span><span data-label="면적">36㎡</span><span data-label="마감">11.18 마감</span><b aria-hidden="true">›</b>
+              </button>
+              <button class="announcement-row" type="button" data-open-detail="unknown">
+                <img class="row-thumbnail image-c" src="./assets/housing-incheon.png" alt="" /><span class="row-main"><small class="badge neutral">매입임대</small><strong>인천 청년 매입임대주택</strong></span><span data-label="지역">인천광역시 부평구</span><span data-label="비용">공고문 확인 필요</span><span data-label="면적">확인 필요</span><span data-label="마감">11.20 마감</span><b aria-hidden="true">›</b>
+              </button>
+              <button class="announcement-row" type="button" data-open-detail="unknown">
+                <img class="row-thumbnail image-a" src="./assets/housing-seoul.png" alt="" /><span class="row-main"><small class="badge neutral">국민임대</small><strong>대전 국민임대주택 예비입주자 모집</strong></span><span data-label="지역">대전광역시 유성구</span><span data-label="비용">공고문 확인 필요</span><span data-label="면적">확인 필요</span><span data-label="마감">11.23 마감</span><b aria-hidden="true">›</b>
+              </button>
+            </div>
+            <button class="button secondary more-button" type="button">공고 10건 더 보기</button>
+          </section>
+
+          <section class="app-view" data-view="preferences" aria-labelledby="preferences-title" hidden>
+            <div class="view-heading compact-heading"><div><p class="eyebrow">나의 기준</p><h1 id="preferences-title">관심 조건</h1><p class="view-description">저장한 조건은 홈의 관심 공고 판별에 사용합니다.</p></div></div>
+            <form id="preference-form" class="preference-panel">
+              <p class="saved-condition">현재 조건 · 서울특별시 · 보증금 10,000,000원 이하 · 전용 25~45㎡</p>
+              <div class="preference-grid">
+                <label class="full">관심 지역<select><option>서울특별시</option><option>경기도</option><option>인천광역시</option></select></label>
+                <label>보증금 상한<span class="input-unit"><input value="10,000,000" inputmode="numeric" data-number /><b>원</b></span></label>
+                <label>월세 상한<span class="input-unit"><input value="400,000" inputmode="numeric" data-number /><b>원</b></span></label>
+                <label>전용면적 최소<span class="input-unit"><input id="preference-area-min" value="25" inputmode="numeric" data-number /><b>㎡</b></span></label>
+                <label>전용면적 최대<span class="input-unit"><input id="preference-area-max" value="45" inputmode="numeric" data-number /><b>㎡</b></span></label>
+              </div>
+              <p id="preference-error" class="field-error" role="alert" hidden>전용면적 최소는 최대보다 클 수 없습니다.</p>
+              <label class="checkbox-field"><input type="checkbox" checked /> 정보 미기재 공고 포함</label>
+              <div class="filter-actions"><button class="button secondary" type="reset">초기화</button><button class="button" type="submit">관심 조건 저장</button></div>
+            </form>
+            <details class="profile-details"><summary>추가 프로필 메모 <span>자동 필터링에는 사용하지 않음</span></summary><div class="profile-placeholder">직업·소득·자산·입주 희망일 등 참고용 프로필 입력 영역</div></details>
+          </section>
+
+          <section class="app-view" data-view="collection" aria-labelledby="collection-title" hidden>
+            <div class="view-heading"><div><p class="eyebrow">데이터 관리</p><h1 id="collection-title">공고 수집</h1><p class="view-description">마지막 수집 결과와 기관별 상태를 확인합니다.</p></div><button id="collect" class="button" type="button"><span class="reload-icon" aria-hidden="true">↻</span>지금 공고 수집</button></div>
+            <div class="collection-summary">
+              <div><span>마지막 수집일</span><strong id="last-collected">2026.11.01 15:00</strong></div>
+              <div><span>수집 상태</span><strong id="collection-state">진행 완료</strong></div>
+              <div><span>수집된 공고 수</span><strong id="collection-count">2,386</strong></div>
+            </div>
+            <div id="collection-progress" class="collection-progress" hidden><span><i></i></span><strong>수집 중</strong></div>
+            <section class="source-panel"><div class="section-heading"><div><h2>기관별 수집 현황</h2><p>최근 수집 결과입니다.</p></div></div><div class="source-row"><strong>LH <small>한국토지주택공사</small></strong><span class="source-status"><i></i>완료</span><time>15:00</time></div><div class="source-row"><strong>SH <small>서울주택도시개발공사</small></strong><span class="source-status"><i></i>완료</span><time>14:58</time></div><div class="source-row"><strong>서울시 공공임대</strong><span class="source-status"><i></i>완료</span><time>14:57</time></div><div class="source-row"><strong>청년안심주택</strong><span class="source-status"><i></i>완료</span><time>14:56</time></div></section>
+          </section>
+
+          <section class="app-view" data-view="programs" aria-labelledby="programs-title" hidden>
+            <div class="view-heading compact-heading"><div><p class="eyebrow">청약·임대 가이드</p><h1 id="programs-title">제도 안내</h1><p class="view-description">제도별 대상과 신청 전 확인할 내용을 정리했습니다.</p></div></div>
+            <div class="program-grid">
+              <article class="program-card"><h2>행복주택</h2><p>청년, 신혼부부, 고령자 등을 위한 공공임대주택 제도입니다.</p><button type="button" aria-expanded="false">자세히 보기 <span aria-hidden="true">›</span></button><div hidden>소득·자산 기준과 공급 지역은 공고마다 다르므로 개별 공고문을 확인해야 합니다.</div></article>
+              <article class="program-card"><h2>국민임대주택</h2><p>무주택 서민의 주거 안정을 위한 장기 공공임대주택입니다.</p><button type="button" aria-expanded="false">자세히 보기 <span aria-hidden="true">›</span></button><div hidden>가구원 수와 소득·자산 기준에 따라 신청 가능 여부가 달라집니다.</div></article>
+              <article class="program-card"><h2>공공분양주택</h2><p>생애주기별 내 집 마련을 지원하는 공공분양 제도입니다.</p><button type="button" aria-expanded="false">자세히 보기 <span aria-hidden="true">›</span></button><div hidden>청약통장, 무주택 기간, 특별공급 자격 등 공고별 조건을 확인해야 합니다.</div></article>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <aside id="detail-drawer" class="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="detail-title" hidden>
+      <button id="drawer-close" class="drawer-close" type="button" aria-label="공고 상세 닫기">×</button>
+      <span id="detail-status" class="badge">접수중</span>
+      <h2 id="detail-title">서울 청년 행복주택 입주자 모집</h2>
+      <p id="detail-location" class="detail-location">서울특별시 강남구 · 행복주택</p>
+      <dl id="detail-facts" class="detail-facts"><div><dt>보증금</dt><dd>8,000,000원</dd></div><div><dt>월세</dt><dd>320,000원</dd></div><div><dt>전용면적</dt><dd>29㎡</dd></div><div><dt>접수 마감</dt><dd>11월 15일 18:00</dd></div></dl>
+      <div class="drawer-note"><h3>신청 전 확인</h3><p id="detail-note">공급 호수와 세부 자격은 공고문 기준으로 확인해야 합니다. 주택형에 따라 비용이 달라질 수 있습니다.</p></div>
+      <div class="drawer-action"><a class="button" href="#" role="button">공식 공고문 보기</a></div>
+    </aside>
+
+    <div class="toast-region" aria-live="polite" aria-atomic="true"><div id="toast" class="toast" hidden><span aria-hidden="true">✓</span><strong id="toast-message"></strong><button type="button" aria-label="알림 닫기">×</button></div></div>
+
+    <script>
+      const viewNames = ['home', 'announcements', 'preferences', 'collection', 'programs'];
+      const drawer = document.querySelector('#detail-drawer');
+      const backdrop = document.querySelector('#drawer-backdrop');
+      let drawerTrigger = null;
+      let toastTimer;
+
+      function activateView(name) {
+        const active = viewNames.includes(name) ? name : 'home';
+        document.querySelectorAll('[data-view]').forEach((view) => { view.hidden = view.dataset.view !== active; });
+        document.querySelectorAll('[data-view-link]').forEach((link) => { if (link.dataset.viewLink === active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); });
+        document.title = `${document.querySelector(`[data-view="${active}"] h1`).textContent} | 청약 알림`;
+      }
+
+      function showToast(message) {
+        const toast = document.querySelector('#toast');
+        document.querySelector('#toast-message').textContent = message;
+        toast.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { toast.hidden = true; }, 3200);
+      }
+
+      function closeDrawer() {
+        drawer.hidden = true;
+        backdrop.hidden = true;
+        document.body.classList.remove('drawer-open');
+        drawerTrigger?.focus();
+        drawerTrigger = null;
+      }
+
+      function openDrawer(kind, trigger) {
+        drawerTrigger = trigger;
+        const unknown = kind === 'unknown';
+        document.querySelector('#detail-title').textContent = unknown ? '인천 청년 매입임대주택' : '서울 청년 행복주택 입주자 모집';
+        document.querySelector('#detail-location').textContent = unknown ? '인천광역시 부평구 · 매입임대' : '서울특별시 강남구 · 행복주택';
+        document.querySelector('#detail-status').textContent = unknown ? '정보 확인 필요' : '접수중';
+        document.querySelector('#detail-facts').innerHTML = unknown
+          ? '<div><dt>보증금</dt><dd>공고문 확인 필요</dd></div><div><dt>월세</dt><dd>공고문 확인 필요</dd></div><div><dt>전용면적</dt><dd>공고문 확인 필요</dd></div><div><dt>접수 마감</dt><dd>11월 20일</dd></div>'
+          : '<div><dt>보증금</dt><dd>8,000,000원</dd></div><div><dt>월세</dt><dd>320,000원</dd></div><div><dt>전용면적</dt><dd>29㎡</dd></div><div><dt>접수 마감</dt><dd>11월 15일 18:00</dd></div>';
+        document.querySelector('#detail-note').textContent = unknown ? '비용과 면적은 목록에서 확인되지 않았습니다. 공식 공고문에서 상세 조건을 확인하세요.' : '공급 호수와 세부 자격은 공고문 기준으로 확인해야 합니다. 주택형에 따라 비용이 달라질 수 있습니다.';
+        backdrop.hidden = false;
+        drawer.hidden = false;
+        document.body.classList.add('drawer-open');
+        document.querySelector('#drawer-close').focus();
+      }
+
+      function formatNumber(input) {
+        const digits = input.value.replace(/\D/g, '');
+        input.value = digits ? Number(digits).toLocaleString('ko-KR') : '';
+      }
+
+      function validateArea() {
+        const min = Number(document.querySelector('#preference-area-min').value.replace(/,/g, ''));
+        const max = Number(document.querySelector('#preference-area-max').value.replace(/,/g, ''));
+        const invalid = Boolean(min && max && min > max);
+        document.querySelector('#preference-error').hidden = !invalid;
+        document.querySelector('#preference-area-min').setAttribute('aria-invalid', String(invalid));
+        document.querySelector('#preference-area-max').setAttribute('aria-invalid', String(invalid));
+        return !invalid;
+      }
+
+      window.addEventListener('hashchange', () => activateView(location.hash.slice(1)));
+      document.querySelector('#global-search').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = document.querySelector('#global-query').value.trim();
+        document.querySelector('#filter-query').value = query;
+        location.hash = 'announcements';
+        document.querySelector('#result-count').innerHTML = query ? '검색 결과 <b>3건</b>' : '검색 결과 <b>24건</b>';
+        document.querySelector('#applied-filter').textContent = query ? `공고명 ‘${query}’ · 최신순` : '전체 조건 · 최신순';
+      });
+      document.querySelectorAll('[data-open-detail]').forEach((button) => button.addEventListener('click', () => openDrawer(button.dataset.openDetail, button)));
+      document.querySelector('#drawer-close').addEventListener('click', closeDrawer);
+      backdrop.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !drawer.hidden) closeDrawer(); });
+      document.querySelectorAll('[data-number]').forEach((input) => input.addEventListener('input', () => { formatNumber(input); if (input.id.startsWith('preference-area')) validateArea(); }));
+      document.querySelector('#search-form').addEventListener('submit', (event) => { event.preventDefault(); document.querySelector('#result-count').innerHTML = '검색 결과 <b>3건</b>'; document.querySelector('#applied-filter').textContent = '입력한 조건 · 최신순'; showToast('검색 조건을 적용했습니다.'); });
+      document.querySelector('#reset-search').addEventListener('click', () => { document.querySelector('#search-form').reset(); document.querySelector('#result-count').innerHTML = '검색 결과 <b>24건</b>'; document.querySelector('#applied-filter').textContent = '전체 조건 · 최신순'; });
+      document.querySelector('#preference-form').addEventListener('submit', (event) => { event.preventDefault(); if (!validateArea()) { document.querySelector('#preference-area-min').focus(); return; } showToast('관심 조건이 저장되었습니다.'); });
+      document.querySelector('#reload').addEventListener('click', (event) => { const button = event.currentTarget; button.disabled = true; button.classList.add('is-loading'); setTimeout(() => { button.disabled = false; button.classList.remove('is-loading'); showToast('최신 데이터로 업데이트되었습니다.'); }, 900); });
+      document.querySelector('#collect').addEventListener('click', (event) => { const button = event.currentTarget; const progress = document.querySelector('#collection-progress'); button.disabled = true; button.classList.add('is-loading'); progress.hidden = false; document.querySelector('#collection-state').textContent = '수집 중'; setTimeout(() => { button.disabled = false; button.classList.remove('is-loading'); progress.hidden = true; document.querySelector('#collection-state').textContent = '진행 완료'; document.querySelector('#last-collected').textContent = '방금 전'; document.querySelector('#collection-count').textContent = '2,389'; showToast('공고 수집이 완료되었습니다.'); }, 1800); });
+      document.querySelectorAll('.program-card > button').forEach((button) => button.addEventListener('click', () => { const expanded = button.getAttribute('aria-expanded') !== 'true'; button.setAttribute('aria-expanded', String(expanded)); button.nextElementSibling.hidden = !expanded; button.lastElementChild.textContent = expanded ? '⌃' : '›'; }));
+      document.querySelector('#toast button').addEventListener('click', () => { document.querySelector('#toast').hidden = true; });
+      activateView(location.hash.slice(1));
+      validateArea();
+    </script>
+  </body>
+</html>
