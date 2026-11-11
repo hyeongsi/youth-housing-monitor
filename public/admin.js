@@ -61,7 +61,6 @@ function renderMonitor(state) {
   const target = $('#monitor');
   const monitor = state.monitor || {};
   const rows = Object.entries(monitor.sources || {});
-  const sourceNames = new Map((state.allAnnouncements?.items || []).filter((item) => hasText(item.sourceId) && hasText(item.sourceName)).map((item) => [item.sourceId, item.sourceName]));
   target.replaceChildren();
   if (!rows.length) {
     const empty = document.createElement('p');
@@ -74,7 +73,7 @@ function renderMonitor(state) {
     const row = document.createElement('div');
     row.className = `monitor-row ${source.error ? 'monitor-error' : 'monitor-ok'}`;
     const name = document.createElement('strong');
-    name.textContent = sourceNames.get(id) || source.sourceName || id;
+    name.textContent = source.sourceName || id;
     const status = document.createElement('span');
     status.textContent = source.error ? `실패 · ${source.error} · 기존 데이터 유지` : `정상 · ${Number(source.recordCount || 0).toLocaleString('ko-KR')}건`;
     row.append(name, status);
@@ -111,11 +110,11 @@ function renderDiscoveries(discoveries = []) {
 }
 
 function renderOverview(state) {
-  const catalog = state.allAnnouncements || {};
+  const catalog = state.catalogSummary || {};
   const monitor = state.monitor || {};
   const failures = failureList(monitor);
   $('#last-success').textContent = formatDate(catalog.checkedAt || monitor.lastSuccessfulAt);
-  $('#catalog-count').textContent = `${Number(catalog.itemCount ?? catalog.items?.length ?? 0).toLocaleString('ko-KR')}건`;
+  $('#catalog-count').textContent = `${Number(catalog.itemCount || 0).toLocaleString('ko-KR')}건`;
   $('#new-count').textContent = `${(state.discoveries || []).length.toLocaleString('ko-KR')}건`;
   const lastOutcome = failures.length ? `일부 출처 실패: ${failures.map((item) => item.source).join(', ')}` : (catalog.checkedAt ? '최근 수집 정상' : '수집 기록 없음');
   if (!button.disabled) result.textContent = lastOutcome;
