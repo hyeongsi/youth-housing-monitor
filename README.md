@@ -9,7 +9,8 @@
 - Spring 수집기: LH·SH·서울주거포털·청년안심주택 공개 목록을 수집해 `data/all-announcements.json`에 저장합니다. 일부 수집원이 실패하면 해당 수집원의 마지막 정상 데이터는 보존합니다.
 - Android 알림: `android-app/`의 Java/XML 네이티브 앱은 페어링한 개인 기기에만 FCM 알림을 보냅니다. 지역·주택 유형·상태·제목 키워드는 알림 조건일 뿐, 신청 자격 판정이 아닙니다.
 - Spring 대시보드: `http://127.0.0.1:4173`에서 열리며 프로필을 `data/profile.json`에만 저장합니다.
-- 기존 Node 스크립트(`src/`, `package.json`)는 레거시 자료이며 현재 실행 경로가 아닙니다.
+- 관리자 PDF 상세 입력: `http://127.0.0.1:4173/admin-import.html`에서 기존 공고와 PDF를 연결해 단지·주택형·임대조건·일정·신청조건을 추출하고, 원문 근거를 검토한 뒤 SQLite에 확정 저장합니다. 현재 서울 청년안심주택 민간임대 PDF 형식을 지원합니다.
+- Node는 프론트 개발용 서버와 상태·캘린더 도구에만 사용하며, 공고 수집은 Spring 수집기만 담당합니다.
 
 ## 실행
 
@@ -30,6 +31,8 @@ docker run --name seoul-housing-monitor --detach --restart unless-stopped --publ
 ```
 
 브라우저에서 `http://127.0.0.1:4173`을 열고, 컨테이너 로그는 `docker logs --follow seoul-housing-monitor`로 확인할 수 있습니다. `seoul-housing-data` 볼륨에는 수집 결과와 로컬 프로필 메모가 유지됩니다. 로컬의 `data/profile.json`은 개인정보가 될 수 있어 이미지 빌드에 포함하지 않습니다.
+
+관리자 수집 화면은 `http://127.0.0.1:4173/admin.html`, PDF 상세 입력 화면은 `http://127.0.0.1:4173/admin-import.html`에서 확인합니다. PDF 자동 추출은 초안만 생성하므로, 원문·금액 단위·공고 연결을 검토한 뒤 `확정 저장`해야 운영 상세정보에 반영됩니다.
 
 현재 `PUT /api/profile`에는 인증이 없으므로, 외부에 공개하려면 포트를 모든 인터페이스에 바인딩하지 말고 먼저 인증·접근 제어를 추가해야 합니다.
 
