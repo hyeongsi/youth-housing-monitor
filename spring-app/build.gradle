@@ -23,6 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.jsoup:jsoup:1.18.3'
+	implementation 'org.apache.pdfbox:pdfbox:3.0.3'
 	implementation 'com.google.firebase:firebase-admin:9.4.3'
 	runtimeOnly 'org.xerial:sqlite-jdbc:3.47.1.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'

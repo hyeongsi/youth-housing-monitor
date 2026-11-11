@@ -3,6 +3,7 @@ package kr.seoulhousing.monitor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +32,35 @@ public class HousingMonitorService {
     static final Set<String> ALLOWED_STATUSES = Set.of("공고중", "공고예정", "접수중", "접수예정", "접수마감", "모집", "추가모집", "모집중", "모집예정", "모집마감", "마감", "종료", "목록 기재 없음");
     private final ObjectMapper mapper;
     private final Path data;
+    private final AnnouncementRepository announcements;
+    private final HousingDetailCollector detailCollector;
     private final HttpClient http = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build();
 
-    public HousingMonitorService(ObjectMapper mapper, @Value("${housing.root}") String root) {
+    @Autowired
+    public HousingMonitorService(ObjectMapper mapper, @Value("${housing.root}") String root, AnnouncementRepository announcements,
+                                 HousingDetailCollector detailCollector) {
         this.mapper = mapper;
         this.data = Path.of(root).resolve("data").normalize();
+        this.announcements = announcements;
+        this.detailCollector = detailCollector;
+    }
+
+    HousingMonitorService(ObjectMapper mapper, String root, AnnouncementRepository announcements) {
+        this.mapper = mapper;
+        this.data = Path.of(root).resolve("data").normalize();
+        this.announcements = announcements;
+        this.detailCollector = null;
+    }
+
+    /** Retained for focused parser tests that do not start Spring or SQLite. */
+    HousingMonitorService(ObjectMapper mapper, String root) {
+        this.mapper = mapper;
+        this.data = Path.of(root).resolve("data").normalize();
+        this.announcements = null;
+        this.detailCollector = null;
     }
 
     public synchronized Map<String, Object> refresh() {
@@ -46,13 +68,17 @@ public class HousingMonitorService {
         List<Map<String, Object>> sources = read("sources.json", new TypeReference<>() {}, List.of());
         Map<String, Object> previousCatalog = read("all-announcements.json", new TypeReference<>() {}, Map.of());
         Map<String, Object> previousMonitor = read("monitor-state.json", new TypeReference<>() {}, Map.of());
-        List<Map<String, Object>> oldItems = previousCatalog.containsKey("items")
+        List<Map<String, Object>> oldItems = announcements == null && previousCatalog.containsKey("items")
                 ? mapper.convertValue(previousCatalog.get("items"), new TypeReference<List<Map<String, Object>>>() {}) : List.of();
         Set<String> known = new HashSet<>(); oldItems.forEach(item -> known.add(String.valueOf(item.get("id"))));
         Map<String, List<Map<String, Object>>> successfulRecords = new LinkedHashMap<>();
         Map<String, Object> sourceState = new LinkedHashMap<>();
         List<Map<String, Object>> checked = new ArrayList<>();
         List<Map<String, Object>> failures = new ArrayList<>();
+        String collectionRunId = announcements == null ? null : announcements.startRun("FULL", checkedAt);
+        int dbNewCount = 0;
+        int dbChangedCount = 0;
+        List<Map<String,Object>> dbNewItems = new ArrayList<>();
 
         for (Map<String, Object> source : sources) {
             String id = String.valueOf(source.get("id"));
@@ -69,6 +95,12 @@ public class HousingMonitorService {
                 if (!kind.equals("snapshot") && found.isEmpty() && !allowsEmptyResults(source)) {
                     throw new IllegalStateException("Parser returned no records");
                 }
+                if (announcements != null && !kind.equals("snapshot")) {
+                    AnnouncementRepository.SourceResult stored = announcements.saveSuccessfulSource(collectionRunId, source, found, checkedAt);
+                    dbNewCount += stored.newCount();
+                    dbChangedCount += stored.changedCount();
+                    dbNewItems.addAll(stored.newItems());
+                }
                 // Snapshot sources are availability checks, not structured catalog feeds.
                 if (!kind.equals("snapshot")) successfulRecords.put(id, found);
                 Map<String, Object> state = new LinkedHashMap<>();
@@ -77,6 +109,7 @@ public class HousingMonitorService {
                 checked.add(Map.of("source", name, "recordCount", found.size(), "mode", state.get("mode")));
             } catch (Exception error) {
                 String message = errorMessage(error);
+                if (announcements != null) announcements.saveFailedSource(collectionRunId, source, checkedAt, message);
                 sourceState.put(id, Map.of("checkedAt", checkedAt, "error", message));
                 failures.add(Map.of("source", name, "error", message));
             }
@@ -89,12 +122,21 @@ public class HousingMonitorService {
         List<Map<String, Object>> items = new ArrayList<>(deduped.values());
         items.sort(Comparator.comparing(item -> String.valueOf(item.getOrDefault("announcedAt", "")), Comparator.reverseOrder()));
         // The first successful catalog establishes a baseline. It is not an alert burst.
-        List<Map<String, Object>> newItems = oldItems.isEmpty() ? List.of() : items.stream().filter(item -> !known.contains(String.valueOf(item.get("id")))).toList();
-        // A complete outage must never turn a useful catalog into an empty one.
-        if (!successfulRecords.isEmpty()) {
-            write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
-        }
+        List<Map<String, Object>> newItems = announcements == null
+                ? (oldItems.isEmpty() ? List.of() : items.stream().filter(item -> !known.contains(String.valueOf(item.get("id")))).toList())
+                : List.copyOf(dbNewItems);
         boolean hasSuccessfulCatalog = !successfulRecords.isEmpty();
+        if (announcements != null) announcements.finishRun(collectionRunId, checkedAt,
+                hasSuccessfulCatalog ? (failures.isEmpty() ? "SUCCEEDED" : "SUCCEEDED_WITH_WARNINGS") : "FAILED",
+                dbNewCount, dbChangedCount);
+        Map<String,Object> detailCollection = Map.of();
+        if (detailCollector != null) {
+            try { detailCollection = detailCollector.collect(); }
+            catch (RuntimeException error) { detailCollection = Map.of("attempted", 0, "failed", 1, "error", errorMessage(error)); }
+        }
+        // A complete outage must never turn a useful catalog into an empty one.
+        if (announcements != null) announcements.exportCompatibilityJson();
+        else if (!successfulRecords.isEmpty()) write("all-announcements.json", Map.of("schemaVersion", 1, "checkedAt", checkedAt, "mode", "full", "itemCount", items.size(), "items", items));
         Map<String, Object> monitorState = new LinkedHashMap<>();
         monitorState.put("schemaVersion", 3);
         // lastRunAt is retained for clients that already use it. lastSuccessfulAt
@@ -112,12 +154,15 @@ public class HousingMonitorService {
         write("auto-discovered.json", newItems);
         Map<String, Object> notifications = new LinkedHashMap<>();
         notifications.put("checkedAt", checkedAt);
-        notifications.put("newItemsBaselineAt", oldItems.isEmpty() ? null : previousCatalog.get("checkedAt"));
+        notifications.put("newItemsBaselineAt", announcements == null && !oldItems.isEmpty() ? previousCatalog.get("checkedAt") : null);
         notifications.put("actionable", newItems);
         notifications.put("sourceFailures", failures);
         write("notifications.json", notifications);
-        return Map.of("checkedAt", checkedAt, "checked", checked, "failures", failures,
-                "catalogCount", successfulRecords.isEmpty() ? oldItems.size() : items.size(), "newItemCount", newItems.size(), "newItems", newItems);
+        Map<String,Object> result = new LinkedHashMap<>();
+        result.put("checkedAt", checkedAt); result.put("checked", checked); result.put("failures", failures);
+        result.put("catalogCount", announcements == null ? (successfulRecords.isEmpty() ? oldItems.size() : items.size()) : announcements.catalog().get("itemCount"));
+        result.put("newItemCount", newItems.size()); result.put("newItems", newItems); result.put("detailCollection", detailCollection);
+        return result;
     }
 
     private List<Map<String, Object>> collectPaged(Map<String, Object> source, String at, boolean sh) throws Exception {

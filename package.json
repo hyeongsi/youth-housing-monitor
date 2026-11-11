@@ -5,7 +5,6 @@
   "description": "A local, privacy-first monitor for Seoul youth housing opportunities.",
   "type": "module",
   "scripts": {
-    "monitor": "node src/monitor-v2.mjs",
     "serve": "node src/server.mjs",
     "calendar": "node src/export-calendar.mjs",
     "status": "node src/status.mjs",

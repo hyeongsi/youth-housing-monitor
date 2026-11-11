@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,11 +22,21 @@ import java.util.*;
 public class HousingDataController {
     private final ObjectMapper mapper;
     private final Path data;
+    private final AnnouncementRepository announcements;
     private static final Set<String> PROFILE_FIELDS = Set.of("employmentStatus", "grossIncomeBand", "assetBand", "cashForDepositBand", "maxMonthlyRent", "maxDeposit", "homeOwnership", "maritalAndHousehold", "livesSeparatelyFromParents", "vehicleOwnership", "preferredAreas", "commuteOrSchoolCondition", "currentLeaseEnd", "earliestMoveDate", "notes");
 
-    public HousingDataController(ObjectMapper mapper, @Value("${housing.root}") String root) {
+    @Autowired
+    public HousingDataController(ObjectMapper mapper, @Value("${housing.root}") String root, AnnouncementRepository announcements) {
         this.mapper = mapper;
         this.data = Path.of(root).resolve("data").normalize();
+        this.announcements = announcements;
+    }
+
+    /** Retained for standalone controller tests. */
+    HousingDataController(ObjectMapper mapper, String root) {
+        this.mapper = mapper;
+        this.data = Path.of(root).resolve("data").normalize();
+        this.announcements = null;
     }
 
     @GetMapping("/overview")
@@ -36,42 +48,45 @@ public class HousingDataController {
         result.put("monitor", read("monitor-state.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
         result.put("discoveries", read("auto-discovered.json", new TypeReference<List<Object>>() {}, List.of()));
         result.put("notifications", read("notifications.json", new TypeReference<Map<String, Object>>() {}, Map.of()));
-        Map<String, Object> catalog = read("all-announcements.json", new TypeReference<Map<String, Object>>() {}, Map.of());
-        Map<String, Object> details = read("announcement-details.json", new TypeReference<Map<String, Object>>() {}, Map.of("schemaVersion", 1, "items", Map.of()));
-        result.put("allAnnouncements", catalog);
-        result.put("announcementDetails", details);
-        // The featured area has a stricter contract than the catalog.  Keep the
-        // raw catalog and optional details available for existing clients, while
-        // also returning only verified, dated detail records safely joined to an
-        // actual collected announcement.
-        result.put("verifiedAnnouncements", verifiedAnnouncements(catalog, details));
+        result.put("homeAnnouncements",announcements==null?List.of():announcements.home(12));
+        result.put("catalogFacets",announcements==null?Map.of():announcements.facets());
+        result.put("catalogSummary",announcements==null?Map.of("itemCount",0):announcements.catalogSummary());
         return result;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> verifiedAnnouncements(Map<String, Object> catalog, Map<String, Object> details) {
-        Object rawItems = catalog.get("items");
-        Object rawDetails = details.get("items");
-        if (!(rawItems instanceof List<?> items) || !(rawDetails instanceof Map<?, ?> detailItems)) return List.of();
-
-        List<Map<String, Object>> joined = new ArrayList<>();
-        for (Object rawAnnouncement : items) {
-            if (!(rawAnnouncement instanceof Map<?, ?> announcement)) continue;
-            Object id = announcement.get("id");
-            if (id == null || !(detailItems.get(String.valueOf(id)) instanceof Map<?, ?> detail)) continue;
-            if (!"VERIFIED".equals(String.valueOf(detail.get("verificationStatus")))
-                    || !hasText(detail.get("verifiedAt"))
-                    || !hasText(detail.get("sourceUrl"))
-                    || !hasText(announcement.get("officialUrl"))) continue;
-            joined.add(Map.of("announcement", new LinkedHashMap<>((Map<String, Object>) announcement),
-                    "detail", new LinkedHashMap<>((Map<String, Object>) detail)));
-        }
-        return joined;
+    @GetMapping("/announcements")
+    public Map<String,Object> announcements(@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="10") int size,
+            @RequestParam(defaultValue="") String region,@RequestParam(defaultValue="") String housingType,@RequestParam(defaultValue="") String status,
+            @RequestParam(defaultValue="") String source,@RequestParam(defaultValue="") String query,@RequestParam(required=false) Long depositMaxWon,
+            @RequestParam(required=false) Long rentMaxWon,@RequestParam(required=false) Double areaMin,@RequestParam(required=false) Double areaMax,
+            @RequestParam(defaultValue="LATEST") String sort,@RequestParam(defaultValue="false") boolean includeClosed,@RequestParam(defaultValue="true") boolean includeUnknown,
+            @RequestParam(defaultValue="false") boolean savedOnly,@RequestParam(name="savedId",required=false) List<String> savedIds,@RequestParam(defaultValue="false") boolean interestOnly,@RequestParam(name="interestRegion",required=false) List<String> interestRegions,
+            @RequestParam(required=false) Long interestDepositMaxWon,@RequestParam(required=false) Long interestRentMaxWon,@RequestParam(required=false) Double interestAreaMin,@RequestParam(required=false) Double interestAreaMax,@RequestParam(defaultValue="true") boolean interestIncludeUnknown){
+        if(page<1||size<1||size>50||negative(depositMaxWon)||negative(rentMaxWon)||negative(areaMin)||negative(areaMax)||negative(interestDepositMaxWon)||negative(interestRentMaxWon)||negative(interestAreaMin)||negative(interestAreaMax)||!finite(areaMin)||!finite(areaMax)||!finite(interestAreaMin)||!finite(interestAreaMax)||(areaMin!=null&&areaMax!=null&&areaMin>areaMax)||(interestAreaMin!=null&&interestAreaMax!=null&&interestAreaMin>interestAreaMax)||invalidSavedIds(savedIds))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"검색 조건이 올바르지 않습니다.");
+        String normalizedSort="DEADLINE".equals(sort)?"DEADLINE":"LATEST";if(!"LATEST".equals(sort)&&!"DEADLINE".equals(sort))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"정렬 조건이 올바르지 않습니다.");
+        if(announcements==null)throw new org.springframework.web.server.ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"공고 저장소를 사용할 수 없습니다.");
+        return announcements.page(new AnnouncementRepository.CatalogQuery(page,size,region,housingType,status,source,query,depositMaxWon,rentMaxWon,areaMin,areaMax,normalizedSort,includeClosed,includeUnknown,savedOnly,savedIds,new AnnouncementRepository.InterestQuery(interestOnly,interestRegions,interestDepositMaxWon,interestRentMaxWon,interestAreaMin,interestAreaMax,interestIncludeUnknown)));
     }
 
-    private boolean hasText(Object value) {
-        return value != null && !String.valueOf(value).isBlank();
+    @GetMapping("/config")
+    public Map<String, String> config() {
+        return Map.of("kakaoMapAppKey", Optional.ofNullable(System.getenv("KAKAO_MAP_APP_KEY")).orElse(""));
     }
+
+    @GetMapping("/announcements/{id}")
+    public ResponseEntity<Map<String,Object>> announcement(@PathVariable String id) {
+        if (announcements == null) return ResponseEntity.notFound().build();
+        Map<String,Object> item = announcements.announcement(id);
+        if (item == null) return ResponseEntity.notFound().build();
+        Map<String,Object> result = new LinkedHashMap<>();
+        result.put("announcement", item);
+        result.put("details", Optional.ofNullable(announcements.detail(id)).orElse(Map.of()));
+        return ResponseEntity.ok(result);
+    }
+
+    private boolean negative(Number value){return value!=null&&value.doubleValue()<0;}
+    private boolean finite(Double value){return value==null||Double.isFinite(value);}
+    private boolean invalidSavedIds(List<String> values){return values!=null&&(values.size()>250||values.stream().anyMatch(value->value==null||value.isBlank()||value.length()>128));}
 
     @PutMapping("/profile")
     public ResponseEntity<ObjectNode> updateProfile(@RequestBody JsonNode input) throws IOException {

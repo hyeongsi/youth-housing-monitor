@@ -100,11 +100,18 @@ class HousingMonitorApplicationTests {
                 .andExpect(jsonPath("$.profile").isMap()).andExpect(jsonPath("$.programs").isArray())
                 .andExpect(jsonPath("$.notices").isArray()).andExpect(jsonPath("$.monitor").isMap())
                 .andExpect(jsonPath("$.discoveries").isArray()).andExpect(jsonPath("$.notifications").isMap())
-                .andExpect(jsonPath("$.allAnnouncements").isMap())
-                .andExpect(jsonPath("$.announcementDetails.items").isMap());
+                .andExpect(jsonPath("$.homeAnnouncements").isArray())
+                .andExpect(jsonPath("$.catalogFacets").isMap())
+                .andExpect(jsonPath("$.allAnnouncements").doesNotExist())
+                .andExpect(jsonPath("$.announcementDetails").doesNotExist());
+        mvc.perform(get("/api/config")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.kakaoMapAppKey").isString());
+        mvc.perform(get("/api/announcements").param("size","0")).andExpect(status().isBadRequest());
+        mvc.perform(get("/api/announcements").param("areaMin","NaN")).andExpect(status().isBadRequest());
+        mvc.perform(get("/api/announcements").param("areaMax","Infinity")).andExpect(status().isBadRequest());
     }
 
-    @Test void overviewReturnsManualDetailsSeparatelyFromCatalogForSafeClientJoin() throws Exception {
+    @Test void overviewDoesNotReturnTheEntireCatalogOrDetailMap() throws Exception {
         write("all-announcements.json", Map.of("items", List.of(
                 Map.of("id", "verified-id", "title", "확인 공고", "area", "원본 지역", "officialUrl", "https://example.test/verified"),
                 Map.of("id", "partial-id", "title", "부분 상세 공고", "area", "원본 지역 2", "officialUrl", "https://example.test/partial"),
@@ -115,15 +122,10 @@ class HousingMonitorApplicationTests {
                 "partial-id", Map.of("verificationStatus", "PARTIAL", "location", Map.of("district", "중랑구")))));
 
         Map<String, Object> overview = new HousingDataController(mapper, root.toString()).overview();
-        Map<?, ?> details = (Map<?, ?>) overview.get("announcementDetails");
-        Map<?, ?> items = (Map<?, ?>) details.get("items");
-        assertEquals("VERIFIED", ((Map<?, ?>) items.get("verified-id")).get("verificationStatus"));
-        assertEquals(23000000, ((Map<?, ?>) ((Map<?, ?>) items.get("verified-id")).get("cost")).get("depositMinWon"));
-        assertEquals("원본 지역 3", ((List<?>) ((Map<?, ?>) overview.get("allAnnouncements")).get("items")).stream()
-                .map(Map.class::cast).filter(item -> item.get("id").equals("without-detail")).findFirst().orElseThrow().get("area"));
-        List<Map<String, Object>> joined = (List<Map<String, Object>>) overview.get("verifiedAnnouncements");
-        assertEquals(1, joined.size());
-        assertEquals("verified-id", ((Map<?, ?>) joined.getFirst().get("announcement")).get("id"));
+        assertFalse(overview.containsKey("allAnnouncements"));
+        assertFalse(overview.containsKey("announcementDetails"));
+        assertFalse(overview.containsKey("verifiedAnnouncements"));
+        assertEquals(List.of(), overview.get("homeAnnouncements"), "저장소 없이 만든 컨트롤러는 빈 홈 목록을 반환한다");
     }
 
     @Test void failedRunKeepsTheLastSuccessfulCollectionTime() throws Exception {

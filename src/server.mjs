@@ -1,5 +1,5 @@
 import { createReadStream } from 'node:fs';
-import { readFile, stat } from 'node:fs/promises';
+import { stat } from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import { ROOT, readJson, writeJson } from './shared.mjs';
@@ -57,6 +57,7 @@ function profilePatch(input) {
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host}`);
+    if (url.pathname === '/api/config' && request.method === 'GET') return send(response, 200, { kakaoMapAppKey: process.env.KAKAO_MAP_APP_KEY || '' });
     if (url.pathname === '/api/overview' && request.method === 'GET') return send(response, 200, await overview());
     if (url.pathname === '/api/profile' && request.method === 'PUT') {
       const current = await readJson('profile.json', {});
