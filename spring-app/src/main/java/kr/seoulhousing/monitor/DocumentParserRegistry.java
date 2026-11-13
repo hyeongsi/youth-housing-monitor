@@ -16,5 +16,6 @@ class DocumentParserRegistry {
         parsers=Map.copyOf(found);
     }
     Optional<DocumentParser> find(String siteCode,String documentType){return Optional.ofNullable(parsers.get(new Key(siteCode,documentType)));}
+    List<Key> keys(){return parsers.keySet().stream().sorted(Comparator.comparing(Key::siteCode).thenComparing(Key::documentType)).toList();}
     record Key(String siteCode,String documentType){}
 }

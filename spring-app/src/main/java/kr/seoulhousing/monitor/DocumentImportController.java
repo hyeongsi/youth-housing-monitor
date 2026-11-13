@@ -16,8 +16,12 @@ class DocumentImportController {
 
     @GetMapping("/announcements") List<Map<String,Object>> announcements(@RequestParam(defaultValue="") String query){return service.announcements(query);}
     @PostMapping(value="/document-imports",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<Map<String,Object>> create(@RequestParam String siteCode,@RequestParam String documentType,@RequestParam String announcementId,@RequestPart("file") MultipartFile file){return ResponseEntity.status(HttpStatus.CREATED).body(service.create(siteCode,documentType,announcementId,file));}
+    ResponseEntity<Map<String,Object>> create(@RequestParam String siteCode,@RequestParam String documentType,@RequestParam String announcementId,@RequestPart("file") MultipartFile file){Map<String,Object> result=service.create(siteCode,documentType,announcementId,file);return ResponseEntity.status(Boolean.TRUE.equals(result.get("duplicate"))?HttpStatus.OK:HttpStatus.CREATED).body(result);}
+    @GetMapping("/announcements/{announcementId}") Map<String,Object> announcement(@PathVariable String announcementId){return service.announcement(announcementId);}
+    @GetMapping("/document-parser-options") List<Map<String,Object>> parserOptions(@RequestParam String announcementId){return service.parserOptions(announcementId);}
     @GetMapping("/document-imports/{id}") Map<String,Object> get(@PathVariable String id){return service.get(id);}
+    @GetMapping("/document-imports") Map<String,Object> list(@RequestParam(defaultValue="") String status,@RequestParam(defaultValue="") String query,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="20") int size){if(page<1||size<1||size>50)throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"페이지 조건이 올바르지 않습니다.");return service.list(status,query,page,size);}
+    @GetMapping("/announcement-work-items") Map<String,Object> workItems(@RequestParam(defaultValue="") String status,@RequestParam(defaultValue="") String query,@RequestParam(defaultValue="1") int page,@RequestParam(defaultValue="20") int size){if(page<1||size<1||size>50)throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"페이지 조건이 올바르지 않습니다.");return service.workItems(status,query,page,size);}
     @PatchMapping("/document-imports/{id}") Map<String,Object> update(@PathVariable String id,@RequestBody Map<String,Object> draft){return service.update(id,draft);}
     @PostMapping("/document-imports/{id}/validate") Map<String,Object> validate(@PathVariable String id){return service.validate(id);}
     @PostMapping("/document-imports/{id}/commit") Map<String,Object> commit(@PathVariable String id){return service.commit(id);}

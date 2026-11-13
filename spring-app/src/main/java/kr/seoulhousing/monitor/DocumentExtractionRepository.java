@@ -48,14 +48,42 @@ class DocumentExtractionRepository {
         result.put("evidence",jdbc.query("SELECT id,field_path,page_number,bounding_box_json,raw_text,method,review_status FROM extraction_evidence WHERE extraction_id=? ORDER BY page_number,id",(rs,row)->{Map<String,Object> item=new LinkedHashMap<>();item.put("id",rs.getString(1));item.put("fieldPath",rs.getString(2));item.put("pageNumber",rs.getInt(3));item.put("boundingBox",map(rs.getString(4)));item.put("rawText",rs.getString(5));item.put("method",rs.getString(6));item.put("reviewStatus",rs.getString(7));return item;},id));
         return result;
     }
+    Map<String,Object> list(String status,String query,int page,int size){
+        String where=" WHERE 1=1";List<Object> args=new ArrayList<>();
+        if(!status.isBlank()){where+=" AND e.status=?";args.add(status);}
+        if(!query.isBlank()){where+=" AND (a.title LIKE ? OR e.site_code LIKE ? OR e.document_type LIKE ?)";for(int i=0;i<3;i++)args.add("%"+query.trim()+"%");}
+        int total=jdbc.queryForObject("SELECT COUNT(*) FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id JOIN announcements a ON a.id=d.announcement_id"+where,Integer.class,args.toArray());
+        List<Object> pageArgs=new ArrayList<>(args);pageArgs.add(size);pageArgs.add((page-1)*size);
+        List<Map<String,Object>> items=jdbc.query("SELECT e.id,e.site_code,e.document_type,e.status,e.parser_id,e.created_at,a.title,COUNT(CASE WHEN v.review_status='NEEDS_REVIEW' THEN 1 END) AS review_count FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id JOIN announcements a ON a.id=d.announcement_id LEFT JOIN extraction_evidence v ON v.extraction_id=e.id"+where+" GROUP BY e.id ORDER BY e.created_at DESC LIMIT ? OFFSET ?",(rs,row)->Map.of("id",rs.getString("id"),"siteCode",rs.getString("site_code"),"documentType",rs.getString("document_type"),"status",rs.getString("status"),"parserId",rs.getString("parser_id"),"createdAt",rs.getString("created_at"),"title",rs.getString("title"),"needsReviewCount",rs.getInt("review_count")),pageArgs.toArray());
+        return Map.of("items",items,"page",page,"size",size,"totalCount",total,"hasNext",page*size<total);
+    }
+    List<Map<String,Object>> workItemRows(String query){
+        String where=" WHERE a.active=1 AND a.content_kind='ANNOUNCEMENT'";List<Object> args=new ArrayList<>();
+        if(!query.isBlank()){where+=" AND (a.title LIKE ? OR s.name LIKE ? OR a.housing_type LIKE ?)";for(int i=0;i<3;i++)args.add("%"+query.trim()+"%");}
+        return jdbc.query("SELECT a.id,a.title,a.housing_type,a.status,a.announcement_date,a.official_url,a.source_id,s.name AS source_name,a.detail_status,"+
+                        "(SELECT e.id FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE d.announcement_id=a.id ORDER BY e.created_at DESC LIMIT 1) AS extraction_id,"+
+                        "(SELECT e.status FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE d.announcement_id=a.id ORDER BY e.created_at DESC LIMIT 1) AS extraction_status,"+
+                        "(SELECT COUNT(*) FROM extraction_evidence v WHERE v.extraction_id=(SELECT e.id FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE d.announcement_id=a.id ORDER BY e.created_at DESC LIMIT 1) AND v.review_status NOT IN ('CONFIRMED','MANUALLY_REVIEWED')) AS unreviewed_count,"+
+                        "EXISTS(SELECT 1 FROM announcement_sites ast WHERE ast.announcement_id=a.id) AS has_detail " +
+                        "FROM announcements a JOIN announcement_sources s ON s.id=a.source_id"+where+" ORDER BY COALESCE(a.announcement_date,'') DESC,a.first_seen_at DESC",
+                (rs,row)->{Map<String,Object> value=new LinkedHashMap<>();value.put("id",rs.getString("id"));value.put("title",rs.getString("title"));value.put("housingType",rs.getString("housing_type"));value.put("status",rs.getString("status"));value.put("announcementDate",rs.getString("announcement_date"));value.put("officialUrl",rs.getString("official_url"));value.put("sourceId",rs.getString("source_id"));value.put("sourceName",rs.getString("source_name"));value.put("detailStatus",rs.getString("detail_status"));value.put("extractionId",rs.getString("extraction_id"));value.put("extractionStatus",rs.getString("extraction_status"));value.put("unreviewedCount",rs.getInt("unreviewed_count"));value.put("hasDetail",rs.getBoolean("has_detail"));return value;},args.toArray());
+    }
     void updateDraft(String id,Map<String,Object> draft){ jdbc.update("UPDATE document_extractions SET extracted_json=?,status='DRAFT',reviewed_at=? WHERE id=?",json(draft),Instant.now().toString(),id); }
+    void invalidateAutomaticEvidence(String extractionId,Collection<String> changedPaths){
+        if(changedPaths.isEmpty())return;
+        for(Map<String,Object> evidence:jdbc.query("SELECT id,field_path,method,review_status FROM extraction_evidence WHERE extraction_id=?",(rs,row)->Map.<String,Object>of("id",rs.getString(1),"fieldPath",rs.getString(2),"method",rs.getString(3),"reviewStatus",rs.getString(4)),extractionId)){
+            String path=text(evidence.get("fieldPath"));
+            boolean related=changedPaths.stream().anyMatch(changed->relatedPath(path,changed));
+            if(related&&!("MANUAL".equals(evidence.get("method"))&&"MANUALLY_REVIEWED".equals(evidence.get("reviewStatus")))) jdbc.update("UPDATE extraction_evidence SET review_status='NEEDS_REVIEW' WHERE id=? AND extraction_id=?",evidence.get("id"),extractionId);
+        }
+    }
     void updateEvidenceReviews(String extractionId,List<Map<String,Object>> reviews){
         Set<String> allowed=Set.of("MATCHED","NEEDS_REVIEW","CONFIRMED","MANUALLY_REVIEWED");
         for(Map<String,Object> review:reviews){String evidenceId=text(review.get("id")),status=text(review.get("reviewStatus")),fieldPath=text(review.get("fieldPath"));if(Boolean.TRUE.equals(review.get("deleted"))&&!evidenceId.isBlank()){jdbc.update("DELETE FROM extraction_evidence WHERE id=? AND extraction_id=?",evidenceId,extractionId);continue;}if(!allowed.contains(status)||fieldPath.isBlank())continue;if(evidenceId.isBlank()){jdbc.update("INSERT INTO extraction_evidence(id,extraction_id,field_path,page_number,bounding_box_json,raw_text,method,review_status) VALUES(?,?,?,?,? ,?,'MANUAL',?)",UUID.randomUUID().toString(),extractionId,fieldPath,Math.max(1,review.get("pageNumber") instanceof Number number?number.intValue():1),"{}",text(review.getOrDefault("rawText","사용자 직접 입력")),status);continue;}if("MANUALLY_REVIEWED".equals(status))jdbc.update("UPDATE extraction_evidence SET field_path=?,review_status=?,method='MANUAL' WHERE id=? AND extraction_id=?",fieldPath,status,evidenceId,extractionId);else jdbc.update("UPDATE extraction_evidence SET field_path=?,review_status=? WHERE id=? AND extraction_id=?",fieldPath,status,evidenceId,extractionId);}
     }
     void saveValidation(String id,Map<String,Object> validation,String status){ jdbc.update("UPDATE document_extractions SET validation_json=?,status=?,reviewed_at=? WHERE id=?",json(validation),status,Instant.now().toString(),id); }
     void markCommitted(String id){ String now=Instant.now().toString(); jdbc.update("UPDATE document_extractions SET status='COMMITTED',committed_at=? WHERE id=?",now,id); jdbc.update("UPDATE announcement_documents SET parse_status='COMMITTED' WHERE id=(SELECT announcement_document_id FROM document_extractions WHERE id=?)",id); }
-    boolean existsHash(String announcementId,String hash){ return jdbc.queryForObject("SELECT COUNT(*) FROM announcement_documents WHERE announcement_id=? AND content_hash=?",Integer.class,announcementId,hash)>0; }
+    String extractionIdForHash(String announcementId,String hash){List<String> ids=jdbc.queryForList("SELECT e.id FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE d.announcement_id=? AND d.content_hash=? ORDER BY e.created_at DESC LIMIT 1",String.class,announcementId,hash);return ids.isEmpty()?null:ids.getFirst();}
     boolean committedHash(String announcementId,String hash,String exceptId){ return jdbc.queryForObject("SELECT COUNT(*) FROM announcement_documents d LEFT JOIN document_extractions e ON e.announcement_document_id=d.id WHERE d.announcement_id=? AND d.content_hash=? AND d.parse_status='COMMITTED' AND (e.id IS NULL OR e.id<>?)",Integer.class,announcementId,hash,exceptId)>0; }
     String documentPath(String id){ List<String> paths=jdbc.queryForList("SELECT d.local_path FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE e.id=?",String.class,id); return paths.isEmpty()?null:paths.getFirst(); }
     void recordRevision(String announcementId,String action,String extractionId,String documentHash,String sourceRevisionId,Map<String,Object> before,Map<String,Object> after,String at){
@@ -95,6 +123,7 @@ class DocumentExtractionRepository {
     }
 
     private String json(Object value){ try{return mapper.writeValueAsString(value);}catch(Exception error){throw new IllegalStateException(error);} }
+    private boolean relatedPath(String evidencePath,String changedPath){return evidencePath.equals(changedPath)||evidencePath.startsWith(changedPath+".")||evidencePath.startsWith(changedPath+"[")||changedPath.startsWith(evidencePath+".")||changedPath.startsWith(evidencePath+"[");}
     private Map<String,Object> map(String value){ try{return mapper.readValue(value,new TypeReference<>(){});}catch(Exception error){return new LinkedHashMap<>();} }
     private List<Map<String,Object>> maps(Object value){ if(!(value instanceof List<?> list)) return List.of(); List<Map<String,Object>> result=new ArrayList<>(); for(Object item:list) if(item instanceof Map<?,?> raw){Map<String,Object> copy=new LinkedHashMap<>();raw.forEach((key,itemValue)->copy.put(String.valueOf(key),itemValue));result.add(copy);} return result; }
     private String text(Object value){return value==null?"":String.valueOf(value);} private String nullable(Object value){return value==null||String.valueOf(value).isBlank()?null:String.valueOf(value);}

@@ -1,6 +1,7 @@
-.admin-import-main { width: min(100% - 48px, 1540px); margin: 0 auto; padding: 30px 0 72px; }
+/* 스타일 변경 기준: docs/ui/style-guide.md */
+.admin-import-main { width: min(100% - 40px, 1280px); margin: 0 auto; padding: 32px 0 68px; }
 .import-start, .analysis-status, .review-overview, .pdf-review, .draft-review, .evidence-inspector, .review-footer { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
-.import-start { padding: 24px; }
+.import-start { padding: 22px; }
 .step-heading { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
 .step-heading > div { display: flex; align-items: center; gap: 10px; }
 .step-heading h2, .review-overview h2, .pdf-review h3, .draft-review h3, .evidence-inspector h3 { margin: 0; }
@@ -30,7 +31,7 @@
 .analysis-status li { color: var(--muted); font-size: .78rem; }
 .analysis-status li.done { color: var(--success); font-weight: 700; }
 .review-workspace { margin-top: 18px; }
-.review-overview { display: flex; justify-content: space-between; align-items: end; gap: 26px; padding: 20px 22px; margin-bottom: 14px; }
+.review-overview { display: flex; justify-content: space-between; align-items: end; gap: 24px; padding: 22px; margin-bottom: 18px; }
 .eyebrow { margin: 0 0 5px; color: var(--primary); font-size: .68rem; font-weight: 800; letter-spacing: .04em; }
 .review-overview h2 { font-size: 1.05rem; }
 .draft-status { margin: 6px 0 0; color: var(--muted); font-size: .74rem; }
@@ -41,7 +42,7 @@
 .completeness-card strong { font-size: .73rem; }
 .completeness-card span { margin-top: 4px; color: var(--muted); font-size: .67rem; }
 .completeness-card.missing span { color: #a84842; }
-.review-layout { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(420px, 1.12fr) minmax(245px, .6fr); gap: 14px; align-items: start; }
+.review-layout { display: grid; grid-template-columns: minmax(280px, .82fr) minmax(360px, 1.18fr) minmax(230px, .62fr); gap: 18px; align-items: start; }
 .pdf-review, .draft-review, .evidence-inspector { min-width: 0; padding: 18px; }
 /* 데스크톱에서는 원문·근거를 고정해 가운데 편집 데이터와 바로 비교한다. */
 .pdf-review, .evidence-inspector { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
@@ -61,6 +62,10 @@
 .draft-field { min-width: 0; }
 .field-caption { display: flex; align-items: center; justify-content: space-between; gap: 7px; min-width: 0; }
 .field-evidence { min-width: 0; min-height: 30px; padding: 3px 6px; overflow: hidden; font-size: .63rem; text-overflow: ellipsis; white-space: nowrap; }
+.field-evidence-actions { display: inline-flex; gap: 4px; align-items: center; }
+.field-evidence-confirm { min-height: 30px; padding: 3px 6px; border: 0; border-radius: 6px; background: #eaf4ed; color: #17603f; font-size: .63rem; font-weight: 700; }
+.evidence-actions { display: flex; gap: 7px; margin-top: 10px; }
+.evidence-actions button { min-height: 36px; padding: 5px 8px; font-size: .68rem; }
 .draft-field input[type="checkbox"] { width: 22px; height: 22px; }
 .compact { min-height: 40px; padding: 6px 10px; }
 .danger { color: var(--error); }
@@ -75,7 +80,8 @@
 .evidence-item.active { border-color: #b9d3f3; background: #f5f9ff; }
 .evidence-list button { min-width: 0; min-height: 44px; padding: 6px 8px; overflow: hidden; font-size: .7rem; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .evidence-item select { min-height: 36px; font-size: .69rem; }
-.review-footer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, .75fr); gap: 14px; padding: 14px; margin-top: 14px; }
+.evidence-status { color: var(--muted); font-size: .66rem; }
+.review-footer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, .75fr); gap: 18px; padding: 18px; margin-top: 18px; }
 .validation-box { padding: 4px 7px; font-size: .76rem; }
 .validation-box p { margin: 6px 0 0; }
 .validation-box ul { margin: 8px 0 0 18px; font-size: .74rem; }
@@ -83,6 +89,8 @@
 .validation-success { color: var(--success); }
 .validation-warning { color: #80560e; }
 .review-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-items: center; }
+.post-commit-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+.post-commit-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 12px; text-decoration: none; }
 .revision-history { display: grid; grid-template-columns: minmax(230px, .45fr) minmax(0, 1fr); gap: 24px; padding: 20px 22px; margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
 .revision-history h2 { margin: 0 0 7px; font-size: .96rem; }
 .revision-history > div > p { margin: 0; color: var(--muted); font-size: .73rem; line-height: 1.55; }

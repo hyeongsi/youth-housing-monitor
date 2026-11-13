@@ -80,7 +80,13 @@ class DocumentImportTests {
         Map<String,Object> draft=map(created.get("draft"));
         confirmAmounts(draft);
         context.service().update(id,draft);
-        Map<String,Object> validation=context.service().validate(id);assertTrue((Boolean)validation.get("valid"),validation+" events="+draft.get("events"));
+        Map<String,Object> validation=context.service().validate(id);assertFalse((Boolean)validation.get("valid"),validation+" events="+draft.get("events"));
+        assertTrue(((List<?>)validation.get("errors")).stream().anyMatch(error->String.valueOf(error).contains("원문 근거")));
+        assertThrows(ResponseStatusException.class,()->context.service().commit(id));
+        assertTrue(maps(context.announcements().detail("notice").get("sites")).isEmpty());
+        assertEquals(0,context.jdbc().queryForObject("SELECT COUNT(*) FROM announcement_detail_revisions",Integer.class));
+        confirmEvidence(context.service(),id);
+        validation=context.service().validate(id);assertTrue((Boolean)validation.get("valid"),validation+" events="+draft.get("events"));
         assertEquals("COMMITTED",context.service().commit(id).get("status"));
         Map<String,Object> detail=context.announcements().detail("notice");
         assertEquals(1,maps(detail.get("sites")).size());
@@ -105,12 +111,15 @@ class DocumentImportTests {
         context.service().restore("notice",String.valueOf(revisions.getFirst().get("id")));
         assertEquals(2,context.jdbc().queryForObject("SELECT COUNT(*) FROM announcement_detail_revisions",Integer.class));
         assertTrue(context.service().revisions("notice").stream().anyMatch(item->"RESTORED".equals(item.get("action"))));
-        assertTrue(context.jdbc().queryForObject("SELECT COUNT(*) FROM extraction_evidence WHERE review_status='NEEDS_REVIEW'",Integer.class)>0,"금액 확인만으로 다른 근거까지 자동 확정하면 안 된다");
-        assertThrows(ResponseStatusException.class,()->context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",pdf("duplicate.pdf",Files.readAllBytes(REFERENCE_PDF))));
+        assertEquals(0,context.jdbc().queryForObject("SELECT COUNT(*) FROM extraction_evidence WHERE review_status IN ('NEEDS_REVIEW','MATCHED')",Integer.class),"확정 전 모든 원문 근거를 검토해야 한다");
+        Map<String,Object> duplicate=context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",pdf("duplicate.pdf",Files.readAllBytes(REFERENCE_PDF)));
+        assertEquals(true,duplicate.get("duplicate"));
+        assertEquals(id,duplicate.get("existingExtractionId"));
     }
 
     @Test void rejectsInvalidEncryptedAndTextlessPdf() throws Exception {
         Context context=context();
+        assertThrows(ResponseStatusException.class,()->context.service().create("SH","PUBLIC_RENTAL_NOTICE","notice",pdf("unsupported.pdf",blankPdf())));
         assertThrows(ResponseStatusException.class,()->context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",pdf("fake.pdf","not a pdf".getBytes())));
         assertThrows(ResponseStatusException.class,()->context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",new MockMultipartFile("file","wrong.txt","text/plain",blankPdf())));
         assertThrows(ResponseStatusException.class,()->context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",pdf("large.pdf",new byte[20*1024*1024+1])));
@@ -180,12 +189,39 @@ class DocumentImportTests {
         Map<String,Object> draft=map(created.get("draft"));
         confirmAmounts(draft);
         context.service().update(id,draft);
+        confirmEvidence(context.service(),id);
         context.jdbc().execute("CREATE TRIGGER reject_event BEFORE INSERT ON announcement_events BEGIN SELECT RAISE(ABORT, 'test rollback'); END");
         assertThrows(ResponseStatusException.class,()->context.service().commit(id));
         assertTrue(maps(context.announcements().detail("notice").get("sites")).isEmpty());
         assertNotEquals("COMMITTED",context.service().get(id).get("status"));
         assertEquals(1,context.jdbc().queryForObject("SELECT COUNT(*) FROM document_extractions",Integer.class));
         assertEquals(0,context.jdbc().queryForObject("SELECT COUNT(*) FROM announcement_detail_revisions",Integer.class));
+    }
+
+    @Test void patchingAConfirmedFieldRequiresManualEvidenceBeforeCommit() throws Exception {
+        Assumptions.assumeTrue(Files.isRegularFile(REFERENCE_PDF),"로컬 기준 PDF가 있을 때 실행");
+        Context context=context();
+        Map<String,Object> created=context.service().create("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE","notice",pdf("notice.pdf",Files.readAllBytes(REFERENCE_PDF)));
+        String id=String.valueOf(created.get("id"));
+        Map<String,Object> draft=map(created.get("draft"));
+        confirmAmounts(draft);
+        context.service().update(id,draft);
+        confirmEvidence(context.service(),id);
+
+        Map<String,Object> confirmed=context.service().get(id);
+        Map<String,Object> changed=map(confirmed.get("draft"));
+        @SuppressWarnings("unchecked") Map<String,Object> site=(Map<String,Object>)((List<?>)changed.get("sites")).getFirst();
+        site.put("address","서울특별시 테스트구 수정로 1");
+        context.service().update(id,Map.of("draft",changed,"evidenceReviews",evidenceReviews(confirmed,null)));
+
+        Map<String,Object> afterPatch=context.service().get(id);
+        Map<String,Object> addressEvidence=maps(afterPatch.get("evidence")).stream().filter(item->"sites[0].address".equals(item.get("fieldPath"))).findFirst().orElseThrow();
+        assertEquals("NEEDS_REVIEW",addressEvidence.get("reviewStatus"));
+        assertFalse((Boolean)context.service().validate(id).get("valid"));
+        assertThrows(ResponseStatusException.class,()->context.service().commit(id));
+
+        context.service().update(id,Map.of("draft",afterPatch.get("draft"),"evidenceReviews",evidenceReviews(afterPatch,"sites[0].address")));
+        assertTrue((Boolean)context.service().validate(id).get("valid"));
     }
 
     @Test void patchAndReopenPreserveAllRepeatedRowsRuleFieldsAndEvidenceReview() throws Exception {
@@ -216,14 +252,60 @@ class DocumentImportTests {
         MockMvc mvc=MockMvcBuilders.standaloneSetup(new DocumentImportController(context.service())).build();
         mvc.perform(get("/api/admin/announcements").param("query","세이지움"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value("notice"));
+        mvc.perform(get("/api/admin/announcements/{id}","notice"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.id").value("notice"));
+        mvc.perform(get("/api/admin/announcements/{id}","missing"))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/admin/document-parser-options").param("announcementId","notice"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].siteCode").value("SEOUL_YOUTH_SAFE"))
+                .andExpect(jsonPath("$[0].documentType").value("PRIVATE_RENTAL_NOTICE"));
+        mvc.perform(get("/api/admin/document-parser-options").param("announcementId","missing"))
+                .andExpect(status().isNotFound());
+        mvc.perform(multipart("/api/admin/document-imports")
+                        .file(pdf("unsupported.pdf",blankPdf()))
+                        .param("siteCode","SH").param("documentType","PUBLIC_RENTAL_NOTICE").param("announcementId","notice"))
+                .andExpect(status().isBadRequest());
         String body=mvc.perform(multipart("/api/admin/document-imports")
                         .file(pdf("reference.pdf",Files.readAllBytes(REFERENCE_PDF)))
                         .param("siteCode","SEOUL_YOUTH_SAFE").param("documentType","PRIVATE_RENTAL_NOTICE").param("announcementId","notice"))
                 .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("DRAFT"))
                 .andReturn().getResponse().getContentAsString();
         String id=String.valueOf(map(mapper.readValue(body,Map.class)).get("id"));
+        mvc.perform(multipart("/api/admin/document-imports")
+                        .file(pdf("reference-again.pdf",Files.readAllBytes(REFERENCE_PDF)))
+                        .param("siteCode","SEOUL_YOUTH_SAFE").param("documentType","PRIVATE_RENTAL_NOTICE").param("announcementId","notice"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.duplicate").value(true))
+                .andExpect(jsonPath("$.existingExtractionId").value(id));
         mvc.perform(get("/api/admin/document-imports/{id}",id)).andExpect(status().isOk()).andExpect(jsonPath("$.draft.sites[0].name").value("세이지움 개봉"));
         mvc.perform(get("/api/admin/document-imports/{id}/document",id)).andExpect(status().isOk()).andExpect(content().contentType("application/pdf"));
+    }
+
+    @Test void workItemsShowOnlySupportedAnnouncementsAsPdfRequiredAndPromoteReadyDrafts() throws Exception {
+        Context context=context();
+        Map<String,Object> initial=context.service().workItems("","",1,20);
+        Map<String,Object> item=maps(initial.get("items")).getFirst();
+        assertEquals("PDF_REQUIRED",item.get("workStatus"));
+        assertEquals("UPLOAD",item.get("nextAction"));
+
+        context.jdbc().update("INSERT INTO announcement_documents(id,announcement_id,document_url,document_type,content_hash,local_path,retrieved_at,parser_version,parse_status) VALUES('document','notice','file','PRIVATE_RENTAL_NOTICE','hash','file',CURRENT_TIMESTAMP,'test','DRAFT')");
+        context.jdbc().update("INSERT INTO document_extractions(id,announcement_document_id,parser_id,parser_version,site_code,document_type,status,extracted_json,validation_json,created_at) VALUES('extraction','document','test','1','SEOUL_YOUTH_SAFE','PRIVATE_RENTAL_NOTICE','READY','{}','{}',CURRENT_TIMESTAMP)");
+        Map<String,Object> ready=maps(context.service().workItems("","",1,20).get("items")).getFirst();
+        assertEquals("READY_TO_PUBLISH",ready.get("workStatus"));
+        assertEquals("PUBLISH",ready.get("nextAction"));
+    }
+
+    @Test void workItemsDoNotTreatNeedsReviewDetailAsAvailableDetail() throws Exception {
+        Context context=context();
+        context.announcements().saveDetailHierarchy("notice","NEEDS_REVIEW",List.of(Map.of(
+                "sourceSiteKey","review-site","name","검토 대상 단지",
+                "location",Map.of("region1","서울특별시","region2","구로구","address","서울특별시 구로구 테스트로 1","accuracy","EXACT"),
+                "units",List.of(Map.of("sourceUnitKey","review-unit","unitType","A형","exclusiveAreaM2",42.5,
+                        "rentalOptions",List.of(Map.of("optionKey","review-option","depositWon",50_000_000,"monthlyRentWon",500_000))))
+        )),"2026-11-12T10:00:00");
+        assertEquals(1,context.jdbc().queryForObject("SELECT COUNT(*) FROM announcement_sites WHERE announcement_id='notice'",Integer.class));
+        Map<String,Object> item=maps(context.service().workItems("","",1,20).get("items")).getFirst();
+        assertEquals("PDF_REQUIRED",item.get("workStatus"));
+        assertEquals("UPLOAD",item.get("nextAction"));
     }
 
     private Context context() throws Exception {
@@ -238,10 +320,16 @@ class DocumentImportTests {
         return new Context(jdbc,announcements,service);
     }
 
-    private Map<String,Object> announcement(){return Map.ofEntries(Map.entry("id","notice"),Map.entry("sourceId","fixture"),Map.entry("sourceName","Fixture"),Map.entry("provider","서울특별시"),Map.entry("title","세이지움 개봉 청년안심주택 추가모집"),Map.entry("housingType","청년안심주택"),Map.entry("announcedAt","2026-11-05"),Map.entry("applicationEnd","2026-11-10"),Map.entry("status","접수중"),Map.entry("officialUrl","https://example.test/notice"),Map.entry("retrievedAt","2026-11-08T10:00:00"));}
+    private Map<String,Object> announcement(){return Map.ofEntries(Map.entry("id","notice"),Map.entry("sourceId","seoul-youth-safe"),Map.entry("sourceName","청년안심주택 모집공고"),Map.entry("provider","서울특별시"),Map.entry("title","세이지움 개봉 청년안심주택 민간임대 추가모집"),Map.entry("housingType","청년안심주택"),Map.entry("announcedAt","2026-11-05"),Map.entry("applicationEnd","2026-11-10"),Map.entry("status","접수중"),Map.entry("officialUrl","https://example.test/notice"),Map.entry("retrievedAt","2026-11-08T10:00:00"));}
     private MockMultipartFile pdf(String name,byte[] bytes){return new MockMultipartFile("file",name,"application/pdf",bytes);}
     @SuppressWarnings("unchecked")
     private void confirmAmounts(Map<String,Object> draft){Map<String,Object> site=(Map<String,Object>)((List<?>)draft.get("sites")).getFirst();Map<String,Object> unit=(Map<String,Object>)((List<?>)site.get("units")).getFirst();Map<String,Object> option=(Map<String,Object>)((List<?>)unit.get("rentalOptions")).getFirst();option.put("depositUnitConfirmed",true);option.put("monthlyRentUnitConfirmed",true);}
+    private void confirmEvidence(DocumentImportService service,String id){
+        Map<String,Object> current=service.get(id);
+        List<Map<String,Object>> reviews=evidenceReviews(current,null);
+        service.update(id,Map.of("draft",current.get("draft"),"evidenceReviews",reviews));
+    }
+    private List<Map<String,Object>> evidenceReviews(Map<String,Object> current,String manualPath){return maps(current.get("evidence")).stream().map(item->Map.of("id",item.get("id"),"fieldPath",item.get("fieldPath"),"reviewStatus",manualPath!=null&&manualPath.equals(item.get("fieldPath"))?"MANUALLY_REVIEWED":"CONFIRMED")).toList();}
     private byte[] blankPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){pdf.addPage(new PDPage());pdf.save(out);return out.toByteArray();}}
     private byte[] encryptedPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){pdf.addPage(new PDPage());AccessPermission access=new AccessPermission();pdf.protect(new StandardProtectionPolicy("owner","user",access));pdf.save(out);return out.toByteArray();}}
     private byte[] otherTextPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){PDPage page=new PDPage();pdf.addPage(page);try(PDPageContentStream content=new PDPageContentStream(pdf,page)){content.beginText();content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA),12);content.newLineAtOffset(50,700);content.showText("Another supported-site document with enough searchable text.");content.endText();}pdf.save(out);return out.toByteArray();}}
