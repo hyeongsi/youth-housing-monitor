@@ -98,12 +98,14 @@ class AnnouncementRepositoryTests {
         repository.saveDetailHierarchy("closed","PARSED",List.of(site("closed", "중랑구", 59, List.of(option(80_000_000,450_000)))),"2026-11-06T10:00:00");
         context.jdbc().update("UPDATE announcements SET title=?,announcement_date=?,application_end=?,status=? WHERE id=?","첫 번째 공고","2099-01-03","2099-02-01","접수중","first");
         context.jdbc().update("UPDATE announcements SET title=?,announcement_date=?,application_end=?,status=? WHERE id=?","두 번째 공고","2099-01-02","2099-01-20","접수중","second");
-        context.jdbc().update("UPDATE announcements SET title=?,announcement_date=?,application_end=?,status=? WHERE id=?","마감 공고","2099-01-01","2099-01-10","마감","closed");
+        context.jdbc().update("UPDATE announcements SET title=?,announcement_date=?,application_end=?,status=? WHERE id=?","추가모집 마감 공고","2099-01-01","2099-01-10","마감","closed");
         context.jdbc().update("UPDATE announcements SET title=?,announcement_date=?,application_end=?,status=? WHERE id=?","상세 미확인 공고","2099-01-04","2099-02-10","접수중","unknown");
+        context.jdbc().update("UPDATE announcements SET title=?,status=? WHERE id=?","추가모집 상태 공고","추가모집","first");
+        context.jdbc().update("UPDATE announcements SET title=?,status=? WHERE id=?","제목으로 표시된 추가모집 공고","접수중","second");
 
         AnnouncementRepository.CatalogQuery mismatched=new AnnouncementRepository.CatalogQuery(1,10,"관악구","","","","공고",60_000_000L,500_000L,40d,50d,"LATEST",true);
         assertEquals(0,((List<?>)repository.page(mismatched).get("items")).size(),"보증금과 월세가 서로 다른 임대 조건 행에서 조합되면 안 된다");
-        AnnouncementRepository.CatalogQuery matching=new AnnouncementRepository.CatalogQuery(1,1,"관악구","","","","두 번째",110_000_000L,500_000L,50d,60d,"LATEST",true);
+        AnnouncementRepository.CatalogQuery matching=new AnnouncementRepository.CatalogQuery(1,1,"관악구","","","","제목으로",110_000_000L,500_000L,50d,60d,"LATEST",true);
         Map<String,Object> page=repository.page(matching);
         assertEquals(1,page.get("totalCount"));
         assertFalse((Boolean)page.get("hasNext"));
@@ -122,6 +124,13 @@ class AnnouncementRepositoryTests {
         assertEquals(1,repository.page(new AnnouncementRepository.CatalogQuery(1,10,"","","","","",null,null,null,null,"LATEST",false,true,List.of("second"),null)).get("totalCount"),"저장 공고 ID는 전체 결과의 서버 조건으로 적용한다");
         AnnouncementRepository.InterestQuery interest=new AnnouncementRepository.InterestQuery(true,List.of("관악구"),110_000_000L,500_000L,50d,60d,false);
         assertEquals(List.of("second"),((List<?>)repository.page(new AnnouncementRepository.CatalogQuery(1,10,"","","","","",null,null,null,null,"LATEST",false,true,List.of(),interest)).get("items")).stream().map(item->String.valueOf(((Map<?,?>)item).get("id"))).toList());
+        Map<String,Object> supplementalPage=repository.page(new AnnouncementRepository.CatalogQuery(1,1,"","","OPEN","","",null,null,null,null,"LATEST",false,true,false,List.of(),null,true));
+        assertEquals(2,supplementalPage.get("totalCount"),"원문 상태 또는 제목의 추가모집 표시는 서버에서 함께 필터링한다");
+        assertTrue((Boolean)supplementalPage.get("hasNext"));
+        assertEquals("first",((Map<?,?>)((List<?>)supplementalPage.get("items")).getFirst()).get("id"));
+        assertEquals(true,((Map<?,?>)supplementalPage.get("appliedFilters")).get("supplementalOnly"));
+        Map<String,Object> supplementalCostPage=repository.page(new AnnouncementRepository.CatalogQuery(1,10,"관악구","","OPEN","","",60_000_000L,1_000_000L,null,null,"LATEST",false,true,false,List.of(),null,true));
+        assertEquals(List.of("first"),((List<?>)supplementalCostPage.get("items")).stream().map(item->String.valueOf(((Map<?,?>)item).get("id"))).toList(),"추가모집 조건은 지역·금액·진행 상태 조건과 AND로 결합한다");
         assertTrue(((List<?>)repository.facets().get("regions")).contains("서울"),"상세 위치가 없는 원본 지역도 facet에 포함한다");
     }
 

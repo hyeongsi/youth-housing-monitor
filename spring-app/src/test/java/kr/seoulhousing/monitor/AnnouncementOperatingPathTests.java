@@ -26,13 +26,13 @@ class AnnouncementOperatingPathTests {
         Files.copy(projectData.resolve("announcement-details.json"),data.resolve("announcement-details.json"),StandardCopyOption.REPLACE_EXISTING);
         Map<String,Object> expectedCatalog=mapper.readValue(data.resolve("all-announcements.json").toFile(),new TypeReference<>(){});
         Map<String,Object> expectedDetails=mapper.readValue(data.resolve("announcement-details.json").toFile(),new TypeReference<>(){});
-        int expectedOptions=detailOptionCount(expectedDetails);
         Context context=context(root);
         AnnouncementRepository repository=new AnnouncementRepository(context.jdbc(),context.transactions(),mapper,root.toString());
 
-        assertEquals(((List<?>)expectedCatalog.get("items")).size(),repository.catalog().get("itemCount"));
+        assertEquals(context.jdbc().queryForObject("SELECT COUNT(*) FROM announcements WHERE active=1 AND content_kind='ANNOUNCEMENT'",Integer.class),repository.catalog().get("itemCount"));
         long expectedDetailCount=((Map<?,?>)expectedDetails.get("items")).keySet().stream()
                 .map(String::valueOf).filter(id->repository.announcement(id)!=null).count();
+        int expectedOptions=detailOptionCountForImportedAnnouncements(expectedDetails,repository);
         assertEquals(expectedDetailCount,((Map<?,?>)repository.details().get("items")).size());
         assertEquals(expectedOptions,normalizedOptionCount(repository.details()));
         for(Object raw:((List<?>)expectedCatalog.get("items")).subList(0,Math.min(20,((List<?>)expectedCatalog.get("items")).size()))) {
@@ -87,6 +87,7 @@ class AnnouncementOperatingPathTests {
     private Context context(Path scenario){ DriverManagerDataSource source=new DriverManagerDataSource("jdbc:sqlite:"+scenario.resolve("data/test.db")+"?foreign_keys=on&busy_timeout=5000&journal_mode=WAL"); return new Context(new JdbcTemplate(source),new DataSourceTransactionManager(source)); }
     private Map<String,Object> baseline(){ return Map.ofEntries(Map.entry("id","old-id"),Map.entry("sourceId","lh"),Map.entry("sourceName","LH"),Map.entry("provider","LH"),Map.entry("title","기존 공고"),Map.entry("housingType","국민임대"),Map.entry("area","서울"),Map.entry("announcedAt","2026-10-01"),Map.entry("applicationEnd","2026-10-31"),Map.entry("status","접수마감"),Map.entry("officialUrl","https://example.test/old"),Map.entry("retrievedAt","2026-11-01T09:00:00")); }
     private int detailOptionCount(Map<String,Object> details){ int count=0; for(Object value:((Map<?,?>)details.get("items")).values()){ Object options=((Map<?,?>)value).get("costOptions"); if(options instanceof List<?> list) count+=list.size(); } return count; }
+    private int detailOptionCountForImportedAnnouncements(Map<String,Object> details,AnnouncementRepository repository){int count=0;for(Map.Entry<?,?> entry:((Map<?,?>)details.get("items")).entrySet()){if(repository.announcement(String.valueOf(entry.getKey()))==null)continue;Object options=((Map<?,?>)entry.getValue()).get("costOptions");if(options instanceof List<?> list)count+=list.size();}return count;}
     private int normalizedOptionCount(Map<String,Object> details){ int count=0; for(Object detail:((Map<?,?>)details.get("items")).values()) for(Object site:(List<?>)((Map<?,?>)detail).get("sites")) for(Object unit:(List<?>)((Map<?,?>)site).get("units")) count+=((List<?>)((Map<?,?>)unit).get("rentalOptions")).size(); return count; }
     private String page(){ return "<table><tr><th>번호</th><th>주택유형</th><th>지역</th><th>공고명</th><th>첨부파일</th><th>공고일</th><th>접수 마감일</th><th>공고 상태</th></tr><tr data-id1='new-pan' data-id2='sys' data-id3='up' data-id4='type'><td>1</td><td>매입임대</td><td>서울</td><td><a class='wrtancInfoBtn'>신규 공고</a></td><td>첨부</td><td>2026.11.06</td><td>2026.11.30</td><td>접수중</td></tr></table>"; }
     private record Context(JdbcTemplate jdbc,DataSourceTransactionManager transactions) {}

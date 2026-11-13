@@ -1,5 +1,6 @@
 import { areaSquareMeters, classifyInterest, explicitLocation, verifiedOptions } from './announcement-explorer.js';
 import { announcementMapSearchQuery, describeAnnouncementLocations, kakaoMapSearchUrl, locationAccuracyMessage, renderAnnouncementMap } from './announcement-map.js';
+import { announcementIdFromSearch, publicAnnouncementLookupUrl } from './admin-navigation-model.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const ANNOUNCEMENT_PAGE_SIZE = 10;
@@ -1174,6 +1175,16 @@ async function load() {
   populateForm(state.profile || {});
 }
 
+async function openAnnouncementFromUrl() {
+  const announcementId = announcementIdFromSearch(location.search);
+  if (!announcementId) return;
+  const response = await fetch(publicAnnouncementLookupUrl(announcementId));
+  if (!response.ok) throw new Error('선택한 공고를 찾지 못했습니다.');
+  const result = await response.json();
+  window.location.hash = '#announcements';
+  openAnnouncementDrawer(result.announcement, result.details || null, null);
+}
+
 async function reloadPage() {
   try {
     await load();
@@ -1323,6 +1334,7 @@ $('#profile-form').addEventListener('submit', async (event) => {
 
 $('#announcement-drawer-close').addEventListener('click', closeAnnouncementDrawer);
 $('#announcement-drawer-backdrop').addEventListener('click', closeAnnouncementDrawer);
+$('.brand').addEventListener('click', () => closeAnnouncementDrawer());
 for (const tab of document.querySelectorAll('[data-drawer-tab]')) {
   tab.addEventListener('click', () => activateDrawerTab(tab.dataset.drawerTab, true));
   tab.addEventListener('keydown', (event) => {
@@ -1369,7 +1381,7 @@ window.addEventListener('hashchange', () => setActiveView(getViewFromHash()));
 
 loadInterestPreferences();
 setActiveView(getViewFromHash());
-load().catch((error) => {
+load().then(openAnnouncementFromUrl).catch((error) => {
   initialLoadError(error);
   showToast({ type: 'error', message: '데이터를 다시 불러오지 못했습니다.', detail: overviewLoadMessage(error), retry: true });
 });

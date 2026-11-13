@@ -15,7 +15,7 @@
     <div class="app-shell">
       <header class="app-header">
         <div class="header-main">
-          <a class="brand" href="#home" aria-label="청약 알림 홈">청약<span>알림</span></a>
+          <a class="brand" href="#home" data-view-link="home" aria-label="청약 알림 홈">청약<span>알림</span></a>
           <form id="global-search" class="global-search" role="search">
             <span aria-hidden="true">전국</span>
             <input id="global-query" type="search" aria-label="통합 공고 검색" placeholder="지역이나 공고명을 검색해 보세요" />
@@ -23,10 +23,6 @@
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" /></svg>
             </button>
           </form>
-          <div class="header-actions" aria-label="개발 점검 도구">
-            <a href="/admin.html">수집 관리</a>
-            <a href="/admin-import.html">PDF 검토</a>
-          </div>
         </div>
       </header>
       <div class="app-layout">
@@ -35,6 +31,10 @@
           <a href="#announcements" data-view-link="announcements">공고 찾기</a>
           <a href="#preferences" data-view-link="preferences">관심 조건</a>
           <a href="#programs" data-view-link="programs">제도 안내</a>
+          <span class="navigation-divider" aria-hidden="true"></span>
+          <a href="/admin.html">수집 관리</a>
+          <a href="/admin-import.html">PDF 검토</a>
+          <a href="/admin-imports.html">PDF 관리</a>
         </nav>
         <main class="app-content">
           <div id="overview-load-error" class="initial-load-error" role="alert" hidden></div>
@@ -163,7 +163,7 @@
       } else {
         const appScript = document.createElement('script');
         appScript.type = 'module';
-        appScript.src = './app.js?v=20261106-sites';
+        appScript.src = './app.js?v=20261113-entry';
         document.body.append(appScript);
       }
     </script>
