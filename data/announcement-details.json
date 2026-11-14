@@ -1,5 +1,4 @@
 {
-  "schemaVersion" : 2,
   "items" : {
     "faa13abfce509b8529a078ffb1e36b0989db4149593ba8aac317e27746769f15" : {
       "verificationStatus" : "PARTIAL",
@@ -7,6 +6,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021017&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "7af9b83970e7a2c17a755ec7d96061fa3a2aab21ed615b8b4764c36b1f535dab",
+        "sourceSiteKey" : "0",
         "name" : "익산한스빌",
         "moveInText" : "2016.05",
         "eligibilityText" : null,
@@ -20,17 +20,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전북특별자치도 익산시 목천로 30-14(목천동,한스빌아파트) 30-14 (한스빌아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "e58a8e317955923d02f8b790fcb67bf3bc599b0060ab6c9e83d9aa86aacf6b3f",
+          "sourceUnitKey" : "주택형 데이터가 없습니다.",
           "unitType" : "주택형 데이터가 없습니다.",
           "exclusiveAreaM2" : null,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "익산시",
         "address" : "전북특별자치도 익산시 목천로 30-14(목천동,한스빌아파트) 30-14 (한스빌아파트)"
@@ -44,6 +49,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021005&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=40&mi=1026",
       "sites" : [ {
         "id" : "ccc0bc17680f6557c68f7bcbc4fd2653dc96836c6d233e4994ec5cc3644d4f99",
+        "sourceSiteKey" : "0",
         "name" : "인천계양 A3블록 가정어린이집",
         "moveInText" : "2026.12",
         "eligibilityText" : null,
@@ -57,17 +63,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "인천광역시 계양구 동양동 409-2"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "f8563dfa00e1ea4e4555b535e569680b6f853dc8f75e1d6e3b121ee935532fda",
+          "sourceUnitKey" : "55",
           "unitType" : "55",
           "exclusiveAreaM2" : 55.48,
           "supplyCount" : 1,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "계양구",
         "address" : "인천광역시 계양구 동양동 409-2"
@@ -82,6 +93,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020995&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "890b31b23f4c725522c1924c619ad6c22e23855fdef0043f6fe9d5d36b058a45",
+        "sourceSiteKey" : "0",
         "name" : "정선사북 행복주택(행복주택)",
         "moveInText" : "2027.08",
         "eligibilityText" : null,
@@ -95,26 +107,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 정선군 사북읍 사북6길 8"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "501dbae61c5f1064216fb3ac653112d6ce2f97cba4ec79847cf7d543d43fdcb7",
+          "sourceUnitKey" : "31A(청년)",
           "unitType" : "31A(청년)",
           "exclusiveAreaM2" : 31.79,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "fc0743e573cc0a111db5a1e0615ff56ff2992df3ad67b7605b0489c4606fe2b0",
+          "sourceUnitKey" : "44A(신혼부부등)",
           "unitType" : "44A(신혼부부등)",
           "exclusiveAreaM2" : 44.77,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "정선군",
         "address" : "강원특별자치도 정선군 사북읍 사북6길 8"
@@ -129,6 +148,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020974&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "c137c44e848e52636a88fd42e499e4ca561c16e8d6e6ac6b856080373756ee10",
+        "sourceSiteKey" : "0",
         "name" : "충주연수2",
         "moveInText" : "1992.09",
         "eligibilityText" : null,
@@ -142,17 +162,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청북도 충주시 주공길 6(연수동,연수주공영구임대아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "f943c87551c546d08ecb3cc2307120007573df3ba594032f215d1a3f0ffc6e3f",
+          "sourceUnitKey" : "45.2600",
           "unitType" : "45.2600",
           "exclusiveAreaM2" : 31.32,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "충주시",
         "address" : "충청북도 충주시 주공길 6(연수동,연수주공영구임대아파트)"
@@ -167,6 +192,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020962&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "f58184d62a3d67c0d8e023f16d23a9bbe08bd3f3d0aa5e2f5746abaf3bd1b618",
+        "sourceSiteKey" : "0",
         "name" : "공주덕성그린시티빌(부도)",
         "moveInText" : "1999.08",
         "eligibilityText" : null,
@@ -180,27 +206,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청남도 공주시 관골2길 24-5(신관동,덕성그린시티빌)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "05db32d5d6f339481f8c20087a9f14a974aae27cd66bfba042889a7c6b2b20f0",
+          "sourceUnitKey" : "35",
           "unitType" : "35",
           "exclusiveAreaM2" : 35.856,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "f6c5a752066d1ddb2614c07e7ebc94c9372cff57b96ea5064f46fb3f4075c6d9",
+          "sourceUnitKey" : "41",
           "unitType" : "41",
           "exclusiveAreaM2" : 40.896,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "155738bb2f7290a9d7edc151a58802f4b2c28fd380ff56218b6c0c81854441b0",
+        "sourceSiteKey" : "1",
         "name" : "공주신한1차",
         "moveInText" : "2010.05",
         "eligibilityText" : null,
@@ -214,17 +246,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청남도 공주시 의당면 연수원길 115-21(청룡신한1차아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "1350bff60ea253c83aa3ced1b6b3d714f2c565f49b3a3de2a253c11961725156",
+          "sourceUnitKey" : "42",
           "unitType" : "42",
           "exclusiveAreaM2" : 42.54,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "공주시",
         "address" : "충청남도 공주시 관골2길 24-5(신관동,덕성그린시티빌)"
@@ -239,6 +276,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020896&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "f7063e079f2cf793aec3e29c20266aa7c5630fe2d12b820e52e470634a0dbec4",
+        "sourceSiteKey" : "0",
         "name" : "오산세교2 A-6블록 영구임대주택",
         "moveInText" : "2023.08",
         "eligibilityText" : null,
@@ -252,26 +290,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 오산시 송로 11(청학동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "960c869376a56321ef70fbcb478da9875b6f200648da6455fe6549d9d1eb7b2f",
+          "sourceUnitKey" : "26D",
           "unitType" : "26D",
           "exclusiveAreaM2" : 26.35,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "a16a6b5015c95fbdec638364f1f890c0d7f76f3a3a4af33a2e2ab8a8014fa8e5",
+          "sourceUnitKey" : "26D(주거약자용)",
           "unitType" : "26D(주거약자용)",
           "exclusiveAreaM2" : 26.35,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "오산시",
         "address" : "경기도 오산시 송로 11(청학동)"
@@ -286,6 +331,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020992&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=48&mi=1026",
       "sites" : [ {
         "id" : "5f351cc8c57c16567a78bf244fc0145d0dcf4650e138e2ede8ca0069aba82aa5",
+        "sourceSiteKey" : "0",
         "name" : "평창장평 통합공공임대주택(고령자)",
         "moveInText" : "2028.07",
         "eligibilityText" : null,
@@ -299,35 +345,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 평창군 용평면 장평리 317-2"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "97cfb973de6856741a5da03f3d1c7c74fdbea4b722e9cb5e226c09ca6be270ef",
+          "sourceUnitKey" : "31A",
           "unitType" : "31A",
           "exclusiveAreaM2" : 31.96,
           "supplyCount" : 7,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "070fc28d8424052762d91c2943ae7607ae285a90eec9538bf23ca0e69b97350a",
+          "sourceUnitKey" : "36A",
           "unitType" : "36A",
           "exclusiveAreaM2" : 36.95,
           "supplyCount" : 18,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "df0ff7cbc667bbca99ace2b823f566ced63cc5d7d4bfeb92c18307d5a1a71210",
+          "sourceUnitKey" : "46A",
           "unitType" : "46A",
           "exclusiveAreaM2" : 46.99,
           "supplyCount" : 7,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "평창군",
         "address" : "강원특별자치도 평창군 용평면 장평리 317-2"
@@ -342,6 +397,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020993&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=48&mi=1026",
       "sites" : [ {
         "id" : "87084e9e38184eb05c6887924c5a0555cf7e8b38b27198c5d362793cfcccecfa",
+        "sourceSiteKey" : "0",
         "name" : "평창장평 통합공공임대주택(고령자)",
         "moveInText" : "2028.07",
         "eligibilityText" : null,
@@ -355,26 +411,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 평창군 용평면 장평리 317-2"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "2be9a41f9d3ca02cc49fea0d4b6e576d49a1c42ce9ae4df52d745ca1c8d6c49a",
+          "sourceUnitKey" : "31B",
           "unitType" : "31B",
           "exclusiveAreaM2" : 31.96,
           "supplyCount" : 32,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b5821991e03f15af1c3ad1ce1fc7cc244b6eda2c0228a704d5147b74fd8714df",
+          "sourceUnitKey" : "31S",
           "unitType" : "31S",
           "exclusiveAreaM2" : 31.96,
           "supplyCount" : 4,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "평창군",
         "address" : "강원특별자치도 평창군 용평면 장평리 317-2"
@@ -387,14 +450,17 @@
       "verificationStatus" : "NEEDS_REVIEW",
       "verifiedAt" : "2026-11-10T09:00:00",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020972&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
-      "sites" : [ ]
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
     },
     "b93cd92de6fb2bc286dfdb8d7b5e31676195a4bcb7cd75310af332e436ad1c5c" : {
       "verificationStatus" : "PARTIAL",
-      "verifiedAt" : "2026-11-05T09:00:00",
+      "verifiedAt" : "2026-11-13T10:32:08",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020905&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=48&mi=1026",
       "sites" : [ {
         "id" : "2352b0823724e7f08da7ad2eace783b79b1e603e459f70e3920e7f19de2938d7",
+        "sourceSiteKey" : "0",
         "name" : "담양삼만 통합공공임대(일자리연계형 지원주택)",
         "moveInText" : "2027.02",
         "eligibilityText" : null,
@@ -408,44 +474,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 담양군 담양읍 삼만리 1241"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "cc74f994ec0109bd9adbd461e254b4e442f94b9cc0f030d0cfe5a87efc328d60",
+          "sourceUnitKey" : "31A",
           "unitType" : "31A",
           "exclusiveAreaM2" : 31.88,
           "supplyCount" : 82,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "9e9c96c0cdc6e8d4b0b2dda100a9b019f2f4f16fc156b863ec98bb79039f5e1d",
+          "sourceUnitKey" : "31A1",
           "unitType" : "31A1",
           "exclusiveAreaM2" : 31.46,
           "supplyCount" : 12,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "d5362e7e68db7f10c73abd7125f5d38b5dcba686c7243993d2a5612a0381e114",
+          "sourceUnitKey" : "41A",
           "unitType" : "41A",
           "exclusiveAreaM2" : 41.95,
           "supplyCount" : 60,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "1ff94ac7b53c35dcdd2c7ce4aadb8459aaa4ebce1a1b1997a3daf81840307b49",
+          "sourceUnitKey" : "41B",
           "unitType" : "41B",
           "exclusiveAreaM2" : 41.28,
           "supplyCount" : 20,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "담양군",
         "address" : "전남광주통합특별시 담양군 담양읍 삼만리 1241"
@@ -458,7 +535,9 @@
       "verificationStatus" : "NEEDS_REVIEW",
       "verifiedAt" : "2026-11-09T12:00:00",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020965&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
-      "sites" : [ ]
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
     },
     "8dbbd92fb0cd9dd9d7928535b62feb68401c0a977dff733c5dc5122a17c21dfd" : {
       "verificationStatus" : "VERIFIED",
@@ -466,6 +545,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=0000061193&ccrCnntSysDsCd=02&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "ae382176ccb155facc872637baecb6ced778c0bee8ef3527980c991221de851c",
+        "sourceSiteKey" : "0",
         "name" : "울산송정B-3(공임리츠) B-3",
         "moveInText" : "2020년 02월",
         "eligibilityText" : null,
@@ -479,14 +559,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "울산광역시 북구 화산로 140 (송정동,송정하우스디)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "ea1de8f30fd47508dc6eaea9e3ff6dc962dcc2facb4c5cd9039b3dfb7691c614",
+          "sourceUnitKey" : "84.9700A",
           "unitType" : "84.9700A",
           "exclusiveAreaM2" : 84.97,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "cf004859d50b0e0ce47e303b5bde77e0410dd3a32901e864f410965b6182a1c3",
             "conditionText" : "기본 임대조건",
@@ -496,12 +579,14 @@
           } ]
         }, {
           "id" : "ef651fd58c31a7c91b7d3fff45791555d60d79c333a555d742e02805f609d225",
+          "sourceUnitKey" : "84.9800B",
           "unitType" : "84.9800B",
           "exclusiveAreaM2" : 84.98,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "59c03cf0335be8b17b8325aa5ba132394485f20d9beec98b15e02c36a586572d",
             "conditionText" : "기본 임대조건",
@@ -511,6 +596,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "북구",
         "address" : "울산광역시 북구 화산로 140 (송정동,송정하우스디)"
@@ -532,6 +619,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020960&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "9f0f7ca9153fec327aba482c2625915249e641b4da68cbfa6461c68fe4d9dc0f",
+        "sourceSiteKey" : "0",
         "name" : "과천지식정보타운 S12블록 행복주택",
         "moveInText" : "2027.07",
         "eligibilityText" : null,
@@ -545,116 +633,143 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 과천시 갈현동 581-1"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "5d11f7e94db70fc4d61962469e38f919cfbdb4f7b089a566985860ee04cb2fd7",
+          "sourceUnitKey" : "16A형(대학생,청년)",
           "unitType" : "16A형(대학생,청년)",
           "exclusiveAreaM2" : 16.98,
           "supplyCount" : 342,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "6c1e34b97bf42be0a101c46dc2f042e0eaf2862bcffd4455d2be1c8124edb721",
+          "sourceUnitKey" : "16A형(주거급여수급자)",
           "unitType" : "16A형(주거급여수급자)",
           "exclusiveAreaM2" : 16.98,
           "supplyCount" : 40,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "4cc1d9b1c9d0628a928e1e92fd0ab79734870e1565b3a534ffc25f82abead69c",
+          "sourceUnitKey" : "16B형(고령자-주거약자용)",
           "unitType" : "16B형(고령자-주거약자용)",
           "exclusiveAreaM2" : 16.98,
           "supplyCount" : 38,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "e72e987611ff8465ccb6f7ca201cf586f5b7bb56c532fff2927891976364ea28",
+          "sourceUnitKey" : "26A형(대학생,청년)",
           "unitType" : "26A형(대학생,청년)",
           "exclusiveAreaM2" : 26.89,
           "supplyCount" : 216,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "9523c51f657b3cbd471933ff779e822579c67cef99021bbaf34b1959b539c3fe",
+          "sourceUnitKey" : "26A형(주거급여수급자)",
           "unitType" : "26A형(주거급여수급자)",
           "exclusiveAreaM2" : 26.89,
           "supplyCount" : 60,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b1d90e2a5bea5f7c77b7a335d4f4e2d6f019bb58a723fe6b3e21fb7b52a87c97",
+          "sourceUnitKey" : "26B형(고령자-주거약자용)",
           "unitType" : "26B형(고령자-주거약자용)",
           "exclusiveAreaM2" : 26.89,
           "supplyCount" : 12,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c5f11e894ac018203bdbce91ec8cbd01ff53b3999fa77a54d67801000ef5fb22",
+          "sourceUnitKey" : "36A형(고령자)",
           "unitType" : "36A형(고령자)",
           "exclusiveAreaM2" : 36.85,
           "supplyCount" : 62,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b13d097ac1120e67d4fc04cbcf1c7a9eb976f616da7d617f84e3b9a10e6bfbb7",
+          "sourceUnitKey" : "36A형(신혼부부·한부모가족)",
           "unitType" : "36A형(신혼부부·한부모가족)",
           "exclusiveAreaM2" : 36.85,
           "supplyCount" : 388,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5685997eec67702ec86a41a0c485e5d3f2b59088c61feb7fba102425f0854609",
+          "sourceUnitKey" : "36A형(청년)",
           "unitType" : "36A형(청년)",
           "exclusiveAreaM2" : 36.85,
           "supplyCount" : 116,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "98af4c08e63cf1a3d1d70a33f36e471f42e4fd12149abc2758c700a912fc27f6",
+          "sourceUnitKey" : "36B형(고령자-주거약자용)",
           "unitType" : "36B형(고령자-주거약자용)",
           "exclusiveAreaM2" : 36.81,
           "supplyCount" : 67,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "57dc6fae04dc532826ecbd54ca04f1e85c1f91200d3e7c8e055ddb1d3ac37840",
+          "sourceUnitKey" : "36C형(신혼부부·한부모가족)",
           "unitType" : "36C형(신혼부부·한부모가족)",
           "exclusiveAreaM2" : 36.88,
           "supplyCount" : 41,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "f09c38b5edc3622f6b5fb49b9e58113ae8f6f891c5b9c60bd1efb57237b2b214",
+          "sourceUnitKey" : "36C형(청년)",
           "unitType" : "36C형(청년)",
           "exclusiveAreaM2" : 36.88,
           "supplyCount" : 42,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "과천시",
         "address" : "경기도 과천시 갈현동 581-1"
@@ -669,6 +784,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020963&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "2501017db930922f54f0dd7cbf5183fd07bc6f3f633add9882b2c29775d2c720",
+        "sourceSiteKey" : "0",
         "name" : "포항블루밸리 행복주택",
         "moveInText" : "2022.02",
         "eligibilityText" : null,
@@ -682,35 +798,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 포항시 남구 동해면 블루동로2길 25 포항블루밸리 행복주택"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "2d8f2634fcbd23b146976231f0233599d1446ad85d832b1aa010d6dc9f85f5ba",
+          "sourceUnitKey" : "21A(청년,산단근로자,고령자,통합일반)",
           "unitType" : "21A(청년,산단근로자,고령자,통합일반)",
           "exclusiveAreaM2" : 21.83,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "09a73b278438097273495b9ea06d6d0b7aad3a52ce48b21524b007d15cfb6eab",
+          "sourceUnitKey" : "26A(청년,산단근로자, 고령자,통합일반)",
           "unitType" : "26A(청년,산단근로자, 고령자,통합일반)",
           "exclusiveAreaM2" : 26.58,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "7eead87cf7330f4c0ae0c8c5a024505a3ab1ae20e28d5b5a14b1436fad0d7a8b",
+          "sourceUnitKey" : "26B(고령자-주거취약)",
           "unitType" : "26B(고령자-주거취약)",
           "exclusiveAreaM2" : 26.58,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "포항시",
         "address" : "경상북도 포항시 남구 동해면 블루동로2길 25 포항블루밸리 행복주택"
@@ -723,7 +848,9 @@
       "verificationStatus" : "NEEDS_REVIEW",
       "verifiedAt" : "2026-11-09T09:27:54",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020944&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
-      "sites" : [ ]
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
     },
     "0329f20c411aea25dea7980e2c1a9c073a37abcf81f69d9671465777a06c8896" : {
       "verificationStatus" : "PARTIAL",
@@ -731,6 +858,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020976&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "ba23b9529e622ed013cbfac4a88603e9d9ff135308c8ea2bc236394668040941",
+        "sourceSiteKey" : "0",
         "name" : "광주우산3",
         "moveInText" : "1992.05",
         "eligibilityText" : null,
@@ -744,17 +872,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 북구 중문로 55(우산동,우산주공3차아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "f9564f730fa9ef0bf7ba18af9c9d020d9e864c9adc0cd2e9cb2b5e671907a42b",
+          "sourceUnitKey" : "45.2600",
           "unitType" : "45.2600",
           "exclusiveAreaM2" : 31.32,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "북구",
         "address" : "전남광주통합특별시 북구 중문로 55(우산동,우산주공3차아파트)"
@@ -769,6 +902,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020981&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "ac74983214558aea40a5ded277f7daf2ee0d56258d086122f5e2224ca5095ff5",
+        "sourceSiteKey" : "0",
         "name" : "광주두암4",
         "moveInText" : "2018.07",
         "eligibilityText" : null,
@@ -782,17 +916,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 북구 삼정로 10(두암동,두암주공4단지 아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "eca0cfe3333d20d36a0fab37d660a1d97da5f1de5b3b9c271b8867f605b1931a",
+          "sourceUnitKey" : "39.7500",
           "unitType" : "39.7500",
           "exclusiveAreaM2" : 26.37,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "북구",
         "address" : "전남광주통합특별시 북구 삼정로 10(두암동,두암주공4단지 아파트)"
@@ -807,6 +946,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020978&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "565b5739009021d467c5a3374f940d0da3a1d47fb0829ddc3972a29ded0e6c93",
+        "sourceSiteKey" : "0",
         "name" : "광주 오치1",
         "moveInText" : "2018.07",
         "eligibilityText" : null,
@@ -820,26 +960,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 북구 서하로194번길 6(오치동,오치 영구임대아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "3bef9c922bd2e210d80203c112d153f8c896bff493af86ca0caf2e6aa0850caf",
+          "sourceUnitKey" : "39.8700",
           "unitType" : "39.8700",
           "exclusiveAreaM2" : 26.37,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c754cf00cce10e589bf692149dc4f9282da3d6fde0932ddecadd180285b96f1a",
+          "sourceUnitKey" : "43.9200",
           "unitType" : "43.9200",
           "exclusiveAreaM2" : 31.32,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "북구",
         "address" : "전남광주통합특별시 북구 서하로194번길 6(오치동,오치 영구임대아파트)"
@@ -854,6 +1001,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020980&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "4a49a33bcf1ae4d21fb958b2a09df55f3043131ee16defa75a8eb2e862ce8b7c",
+        "sourceSiteKey" : "0",
         "name" : "광주하남",
         "moveInText" : "2018.07",
         "eligibilityText" : null,
@@ -867,17 +1015,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "7bbec7e03ab7798643b27af5c3b0e4ccbc80744c4c60e8dbc7d54164900e30bc",
+          "sourceUnitKey" : "46.9600",
           "unitType" : "46.9600",
           "exclusiveAreaM2" : 31.32,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "광산구",
         "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
@@ -892,6 +1045,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020979&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "ec6ef9a3e77dab8f0430a9244c9ce496e7077bfaa32757243f4d02d925ecb54d",
+        "sourceSiteKey" : "0",
         "name" : "광주하남",
         "moveInText" : "2018.07",
         "eligibilityText" : null,
@@ -905,20 +1059,80 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "1f7e1a08745993a99f447c0494fd868c0f19a18ee8501c0ea02aa1ef2acb5776",
+          "sourceUnitKey" : "A형",
           "unitType" : "A형",
           "exclusiveAreaM2" : 26.37,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "광산구",
         "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
+    "a768cdfa1825f495073c8fd67db3b868266bacaa08b63d79a72140d1e51e5257" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020977&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "98d99c57fa6969eb78e4cfb06e1afa389e1c79e6daa1b77ef1b73e7abbe4754c",
+        "sourceSiteKey" : "0",
+        "name" : "광주두암2 영구임대",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "북구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)",
+          "latitude" : 35.1647017,
+          "longitude" : 126.9360117,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "e995a570157b675a21e8b61c9fe40113de65f050eeb7d2ac34a3c4d46409bf70",
+          "sourceUnitKey" : "26.37",
+          "unitType" : "26.37",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "55ad993f82c4bcb5b1d3bbe83592429022486433e33f36a7f13c7527405a95b9",
+          "sourceUnitKey" : "31.32",
+          "unitType" : "31.32",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "북구",
+        "address" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)"
       },
       "exclusiveAreaText" : "26.37㎡",
       "moveInText" : "2018.07",
@@ -930,6 +1144,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020958&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "44f310682097a2fbdefca840103e5d52837af60701cdaeebafb4b600faa09d80",
+        "sourceSiteKey" : "0",
         "name" : "화성동탄2 A-53블록 행복주택",
         "moveInText" : "2023.04",
         "eligibilityText" : null,
@@ -943,54 +1158,66 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄신리천로5길 90(신동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "d9435255eba6d53ba64d23fc7bd09adae3979f15a483206c37995dbea6800520",
+          "sourceUnitKey" : "21A/21A-1 (고령자-주거약자용)",
           "unitType" : "21A/21A-1 (고령자-주거약자용)",
           "exclusiveAreaM2" : 21.92,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "8014ab86337e34a391a0047e08ef6bd17fe144ab8639265c8706028a0efabe10",
+          "sourceUnitKey" : "21A/21A-2 (청년,대학생,주거급여수급자)",
           "unitType" : "21A/21A-2 (청년,대학생,주거급여수급자)",
           "exclusiveAreaM2" : 21.92,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "efb35bacd8323f172cc8b62c02623c81d2f2a4f579c4a66bd2618b0bedbe543e",
+          "sourceUnitKey" : "36A/36A-1 (청년, 신혼부부·한부모가족, 장기근속자, 주거급여수급자, 고령자-주거약자外)",
           "unitType" : "36A/36A-1 (청년, 신혼부부·한부모가족, 장기근속자, 주거급여수급자, 고령자-주거약자外)",
           "exclusiveAreaM2" : 36.86,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "a229dae694d9b5f9dbb3e5c8c431fa2f06199728037447d01336a9a3495142b6",
+          "sourceUnitKey" : "36B/B-1/B-2/B-3 (청년, 신혼부부·한부모가족, 장기근속자,주거급여수급자,고령자-주거약자外)",
           "unitType" : "36B/B-1/B-2/B-3 (청년, 신혼부부·한부모가족, 장기근속자,주거급여수급자,고령자-주거약자外)",
           "exclusiveAreaM2" : 36.8,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "df19d2517cdce99fbb4559418eb6e9862b75c1d3676af90d4f1ea809a5ae2c29",
+          "sourceUnitKey" : "44A/A-1/A-2/A-3 (청년, 신혼부부·한부모가족, 고령자, 주거급여수급자外)",
           "unitType" : "44A/A-1/A-2/A-3 (청년, 신혼부부·한부모가족, 고령자, 주거급여수급자外)",
           "exclusiveAreaM2" : 44.75,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "c142605406a68cefd27a099c0709043ba2e244ff518724029c9a5e41610f5208",
+        "sourceSiteKey" : "1",
         "name" : "화성동탄2 A-54블록 행복주택",
         "moveInText" : "2023.11",
         "eligibilityText" : null,
@@ -1004,72 +1231,88 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄신리천로5가길 35(신동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "9016fd248be76502981bd1cf3b03ee86688e92ac404da6a383e9a6c741063bd4",
+          "sourceUnitKey" : "21Aa/21Ab(대학생,청년,주거급여수급자)",
           "unitType" : "21Aa/21Ab(대학생,청년,주거급여수급자)",
           "exclusiveAreaM2" : 21.33,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "cdf193cf98ac1d015bfaa032d3bad502a70025c9aa6a432d4bf805a1334455fd",
+          "sourceUnitKey" : "21B(대학생,청년,주거급여수급자)",
           "unitType" : "21B(대학생,청년,주거급여수급자)",
           "exclusiveAreaM2" : 21.14,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "1be0ad89d28081360166713cec3ae0400fb4eb438c0f0319dfca6969a8e91f97",
+          "sourceUnitKey" : "26A(대학생,청년,주거급여수급자)",
           "unitType" : "26A(대학생,청년,주거급여수급자)",
           "exclusiveAreaM2" : 26.18,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "fa559075f5498dcbbe3a3f7c4f022b074e0f48168252b1de1eafecfcd4b8c9dc",
+          "sourceUnitKey" : "37Aa(고령자-주거약자용)",
           "unitType" : "37Aa(고령자-주거약자용)",
           "exclusiveAreaM2" : 37.95,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "6cf709e13cb2982859aa58d7649214735578cb8d914f90932d807aaf5f8b69ca",
+          "sourceUnitKey" : "37Ab(청년,신혼부부·한부모,주거급여수급자)",
           "unitType" : "37Ab(청년,신혼부부·한부모,주거급여수급자)",
           "exclusiveAreaM2" : 37.6,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "45cedd22dc849d4ce6df15d4711db7a716d0964c80a745409a055b5c87a5772d",
+          "sourceUnitKey" : "45Aa/45B(청년, 신혼부부·한부모, 주거급여수급자)",
           "unitType" : "45Aa/45B(청년, 신혼부부·한부모, 주거급여수급자)",
           "exclusiveAreaM2" : 45.61,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "ad2382f044714df1a3fb0c351b4cce7aa9927696067635ebcc7453e8a0cd8978",
+          "sourceUnitKey" : "45Ab(청년, 신혼부부·한부모, 주거급여수급자)",
           "unitType" : "45Ab(청년, 신혼부부·한부모, 주거급여수급자)",
           "exclusiveAreaM2" : 45.04,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "86bc3de979dc7c01fbb09d0d87294de023ad9a14cc30309de911729f7ed66287",
+        "sourceSiteKey" : "2",
         "name" : "화성동탄2 A-82블록 행복주택",
         "moveInText" : "2019.05",
         "eligibilityText" : null,
@@ -1083,72 +1326,88 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄순환대로2길 13(장지동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "1d7f3f625335f578f7c2a3bd3359f289b7077055fe254aa84de857c1ce73f155",
+          "sourceUnitKey" : "16AS형",
           "unitType" : "16AS형",
           "exclusiveAreaM2" : 16.65,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "40e1e73f688e55daed468cb76662d48e79b179eb07a5e1ad6925f25eb56e32e9",
+          "sourceUnitKey" : "16A형",
           "unitType" : "16A형",
           "exclusiveAreaM2" : 16.65,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "519c593c80f73fa21bb207f87aa6631bdbb6c060c3426c294d53c1fb824526ed",
+          "sourceUnitKey" : "26AS형(주거약자)",
           "unitType" : "26AS형(주거약자)",
           "exclusiveAreaM2" : 26.26,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "2115e36e9dbb1613d81edfac4297372f53eef4b4f98587aafd352d48afa34b51",
+          "sourceUnitKey" : "26A형(청년,주거급여수급자)",
           "unitType" : "26A형(청년,주거급여수급자)",
           "exclusiveAreaM2" : 26.26,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "70e65f2eb4f7dca7eab2ceed4f5848481f7798678e04ad7c248e41c2af8fe96d",
+          "sourceUnitKey" : "34A형(청년)",
           "unitType" : "34A형(청년)",
           "exclusiveAreaM2" : 34.91,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "2e5c53500cfae49bdd1dc3cabf8d49a88cb01cc90f59c5e4215a8e9e9ae7369e",
+          "sourceUnitKey" : "36A형(청년,신혼부부·한부모가족,고령자)",
           "unitType" : "36A형(청년,신혼부부·한부모가족,고령자)",
           "exclusiveAreaM2" : 36.43,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "44cc48a951587c4ff1de59220d4d195611e92ae86d87bca824fe06afc7b74b04",
+          "sourceUnitKey" : "42A형(신혼부부·한부모가족)",
           "unitType" : "42A형(신혼부부·한부모가족)",
           "exclusiveAreaM2" : 42.42,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "c4b8349b817e53aa4d5b4a655443b02758f2daabea8fbdb8d341f7a11a73a183",
+        "sourceSiteKey" : "3",
         "name" : "화성동탄2 A4-1블록 행복주택",
         "moveInText" : "2020.08",
         "eligibilityText" : null,
@@ -1162,144 +1421,176 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄영천로 108-21(영천동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "604ceb98bbe3cf68496cffccd8a06af40d4f19b97756fbd8bc3520ef1c2f29e4",
+          "sourceUnitKey" : "16A형(대학생, 청년)",
           "unitType" : "16A형(대학생, 청년)",
           "exclusiveAreaM2" : 16.3,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "836b7e105001a9cff58fac8605a2b0d8f618f913b449fd06884580256c566633",
+          "sourceUnitKey" : "23A-S~23C-S형(청년)",
           "unitType" : "23A-S~23C-S형(청년)",
           "exclusiveAreaM2" : 23.19,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "ea4938b71d3e0c799e406b9c60d73c7fc61bae0b1ba924131f947cc68ef09985",
+          "sourceUnitKey" : "26A-1형[고령자(주거약자용)]",
           "unitType" : "26A-1형[고령자(주거약자용)]",
           "exclusiveAreaM2" : 26.64,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c5a64ed08c83a6f72b6225ef51f3eea65aae40c1f19cee447ee38a5b893cbf47",
+          "sourceUnitKey" : "26A형(청년,주거급여수급자)",
           "unitType" : "26A형(청년,주거급여수급자)",
           "exclusiveAreaM2" : 26.64,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5c09ae877c6a1e01250e4f8f5eadfb29598e23600c019ef061ddc84623ee7988",
+          "sourceUnitKey" : "36A-1형(고령자(주거약자용))",
           "unitType" : "36A-1형(고령자(주거약자용))",
           "exclusiveAreaM2" : 36.39,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "f7e5e6a923af5b58e0162242d2fc6bab4b8d7edb0f9a83ffd2dd507f7f1b9589",
+          "sourceUnitKey" : "36A-S~36F-S형(청년,신혼부부.한부모가족)",
           "unitType" : "36A-S~36F-S형(청년,신혼부부.한부모가족)",
           "exclusiveAreaM2" : 36.44,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b5377748ab74f331ab21a810c34dcc6b1302d6c40e1b88f209806651dd41db1c",
+          "sourceUnitKey" : "36A형(청년,신혼부부,한부모가족)",
           "unitType" : "36A형(청년,신혼부부,한부모가족)",
           "exclusiveAreaM2" : 36.39,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "fdbad5391d56f43621e44cfd0e876e14c9d050f5f3e837c940f43ef4f62a9d0a",
+          "sourceUnitKey" : "36B/36C(청년,신혼부부.한부모가족)",
           "unitType" : "36B/36C(청년,신혼부부.한부모가족)",
           "exclusiveAreaM2" : 36.34,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b5e4c316bf366ea1aa8524840bb72dd16f3ba030f11860f73f6d5bd40f228ab1",
+          "sourceUnitKey" : "37A-S~37E-S형(청년,신혼부부.한부모가족)",
           "unitType" : "37A-S~37E-S형(청년,신혼부부.한부모가족)",
           "exclusiveAreaM2" : 37.21,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "3da6a3e8052f317b5916fb383368675fdb9352939179f94fa697e9d1f0b17efd",
+          "sourceUnitKey" : "38A-S~38F-S형(청년,신혼부부.한부모가족)",
           "unitType" : "38A-S~38F-S형(청년,신혼부부.한부모가족)",
           "exclusiveAreaM2" : 38.13,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "68c790f6c15254104c1768bcf3fa6968a3ed55c7921e66f7e20fe7a3fbc14734",
+          "sourceUnitKey" : "41A/41B형(청년, 신혼부부.한부모가족)",
           "unitType" : "41A/41B형(청년, 신혼부부.한부모가족)",
           "exclusiveAreaM2" : 41.34,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5c4d4926b8670c7eef4f780fecbab565fcaaa395e1421799b913179a870cc01c",
+          "sourceUnitKey" : "41C형(청년, 신혼부부.한부모가족)",
           "unitType" : "41C형(청년, 신혼부부.한부모가족)",
           "exclusiveAreaM2" : 41.98,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "7522d6a17fa840ba596239e6ddcae5a27590c4cbe99cb2b511550a38215a687f",
+          "sourceUnitKey" : "44A-S~44R-S형(청년, 신혼부부.한부모가족)",
           "unitType" : "44A-S~44R-S형(청년, 신혼부부.한부모가족)",
           "exclusiveAreaM2" : 44.02,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "f8096b6955bd32c632ce079ecead46cd5248e375b6daa9da907eec2c83c7f995",
+          "sourceUnitKey" : "44A형(청년, 신혼부부.한부모가족)",
           "unitType" : "44A형(청년, 신혼부부.한부모가족)",
           "exclusiveAreaM2" : 44.41,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "fd822a4bc2aba6b3288a607f9b11205240e7a32a1f5864c771e590f3848f7ac9",
+          "sourceUnitKey" : "44B/44C형[청년, 신혼부부.한부모가족,고령자(주거약자용外)]",
           "unitType" : "44B/44C형[청년, 신혼부부.한부모가족,고령자(주거약자용外)]",
           "exclusiveAreaM2" : 44.43,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "3478742228f0b7200c286c3076fd9800e3a4ea6b6f38568ac44a2089ea0b92d8",
+        "sourceSiteKey" : "4",
         "name" : "화성동탄2 A57-1블록 행복주택",
         "moveInText" : "2022.06",
         "eligibilityText" : null,
@@ -1313,63 +1604,77 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄신리천로8길 15(신동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "30091adc7486e90274853a7ba8a3a5e2d0eef62075562491e3407ebfb47981d5",
+          "sourceUnitKey" : "16A(대학생,청년)",
           "unitType" : "16A(대학생,청년)",
           "exclusiveAreaM2" : 16.7,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5e25fcbb2f088d499c22fe9c4c4a7d0edfa98b46c7ede51df2607c3564b33d07",
+          "sourceUnitKey" : "21AH/21AL(대학생,청년)",
           "unitType" : "21AH/21AL(대학생,청년)",
           "exclusiveAreaM2" : 21.14,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "10d0f405b0573de041f483bbe80a59282cf86192d6acc987b3da10a9a18cbfcd",
+          "sourceUnitKey" : "26AH/26AL(대학생, 청년, 주거급여수급자)",
           "unitType" : "26AH/26AL(대학생, 청년, 주거급여수급자)",
           "exclusiveAreaM2" : 26.06,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "609888d60afe9ae6815e4811c5c99e7b2feaee79274bebf247e249b7e6fc6927",
+          "sourceUnitKey" : "26B(고령자-주거약자용)",
           "unitType" : "26B(고령자-주거약자용)",
           "exclusiveAreaM2" : 26.25,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "2e116c077587e86704360b37c3f5e66a0fd09dd7034cabe7e77748f4d959bd5f",
+          "sourceUnitKey" : "36AH/36AL(청년, 신혼, 한부모)",
           "unitType" : "36AH/36AL(청년, 신혼, 한부모)",
           "exclusiveAreaM2" : 36.5,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5f1c9297b5b6dcc857718a5ef864f53abe7bf371635dc097349bf89a8751b5f0",
+          "sourceUnitKey" : "44A(신혼부부·한부모가족)",
           "unitType" : "44A(신혼부부·한부모가족)",
           "exclusiveAreaM2" : 44.7,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "e3b44f1093f2592e9cf7c88b2ec5a8784ee2d8d92a5797e476304f413b9172a0",
+        "sourceSiteKey" : "5",
         "name" : "화성동탄2 A77-1블록 행복주택",
         "moveInText" : "2020.07",
         "eligibilityText" : null,
@@ -1383,45 +1688,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄순환대로10길 42(산척동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "9c2d80916bc4bcb0e9e7516e70f230c2ec3b224aeada22b7829d69a943fbb95c",
+          "sourceUnitKey" : "21A형",
           "unitType" : "21A형",
           "exclusiveAreaM2" : 21.7,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "8e6dd145c52226a711b366eca7d3c943773d009e91c738e2add689f01165b0da",
+          "sourceUnitKey" : "26A/26B형(청년, 주거급여수급자)",
           "unitType" : "26A/26B형(청년, 주거급여수급자)",
           "exclusiveAreaM2" : 26.03,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "a3fde69387a588a875da649fd8e3694429b7b16d999d45557db1f8b58148e9a9",
+          "sourceUnitKey" : "26C형(주거약자용)",
           "unitType" : "26C형(주거약자용)",
           "exclusiveAreaM2" : 26.03,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "3c55f56789907582a629acde2a921ccf872aabcb6fdd20c1726361e21a807af5",
+          "sourceUnitKey" : "36A형(청년,신혼부부·한부모가족,고령자)",
           "unitType" : "36A형(청년,신혼부부·한부모가족,고령자)",
           "exclusiveAreaM2" : 36.04,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "42bc3fcd405dba5c655cb94e9ec21665bb30e608fab2ec6b7297e50a7e37e072",
+        "sourceSiteKey" : "6",
         "name" : "화성동탄(2) C26블록",
         "moveInText" : "2020.10",
         "eligibilityText" : null,
@@ -1435,45 +1750,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄기흥로277번길 12(여울동,동탄2 LH C26단지) (LH C26단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "981cb9dc0559c29a09ef8994757385117c895433e135c4747cc58c37766c54fc",
+          "sourceUnitKey" : "16A형",
           "unitType" : "16A형",
           "exclusiveAreaM2" : 16.86,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "1c8060715b9cf93410c21baab3f7083ef89ddce937baf17f15c0b9f5c0cdd748",
+          "sourceUnitKey" : "21A형(대학생,청년,산업단지근로자)",
           "unitType" : "21A형(대학생,청년,산업단지근로자)",
           "exclusiveAreaM2" : 21.81,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "8358e4e04120fc73d57e42717deb9c12280047057f7c6c171d16592f52948fcd",
+          "sourceUnitKey" : "31A-1형(주거약자)",
           "unitType" : "31A-1형(주거약자)",
           "exclusiveAreaM2" : 31.96,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "15de0a870610bc3abc117c50fe2978b14d6078bef8abf996cf2b0d3ddd676bd6",
+          "sourceUnitKey" : "31A형(대학생,청년,산업단지근로자,고령자)",
           "unitType" : "31A형(대학생,청년,산업단지근로자,고령자)",
           "exclusiveAreaM2" : 31.97,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "dc9359b1065bedfacdf264b8e865831e520ec545c81cc4be3fc6ed58a6298887",
+        "sourceSiteKey" : "7",
         "name" : "화성동탄2 지원6-2블록 지역전략산업지원주택",
         "moveInText" : "2023.02",
         "eligibilityText" : null,
@@ -1487,35 +1812,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 화성시 동탄구 동탄첨단산업1로 57(영천동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "201feef844651104f6d7045611d5f486f0f8e55ced79a61628f0b577bd9428f5",
+          "sourceUnitKey" : "20A",
           "unitType" : "20A",
           "exclusiveAreaM2" : 20.94,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "0bea0fdc6c37eb3ba6a4940c32bcfa9e832efa55e8344e313565905f9bda560c",
+          "sourceUnitKey" : "20B(주거약자)",
           "unitType" : "20B(주거약자)",
           "exclusiveAreaM2" : 20.94,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "35a8e735f3405544920ee6d208090a98cc25d1fa30ff9edc401107152a64ae55",
+          "sourceUnitKey" : "28A",
           "unitType" : "28A",
           "exclusiveAreaM2" : 28.92,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "화성시",
         "address" : "경기도 화성시 동탄구 동탄신리천로5길 90(신동)"
@@ -1530,6 +1864,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020936&ccrCnntSysDsCd=03&uppAisTpCd=39&aisTpCd=42&mi=1026",
       "sites" : [ {
         "id" : "54da11d979c269187996f2dc287a62723a7a6b18c40384fd6015ff8ba8504379",
+        "sourceSiteKey" : "0",
         "name" : "구리갈매역세권 A-1BL 신혼희망타운 행복주택",
         "moveInText" : "2028.09",
         "eligibilityText" : null,
@@ -1543,116 +1878,143 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 구리시 갈매동 10"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "64c74ea998c28ef4b7395896d3cf1ecbadd0677a0b8781f5c57f9b57fff89d20",
+          "sourceUnitKey" : "46A-1",
           "unitType" : "46A-1",
           "exclusiveAreaM2" : 46.94,
           "supplyCount" : 33,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c94008af620011a45c88b74d5c2cc64dbc56875daf2a984d6a69d0a6cdbf8985",
+          "sourceUnitKey" : "46A-2",
           "unitType" : "46A-2",
           "exclusiveAreaM2" : 46.85,
           "supplyCount" : 68,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "3d0784f5be3dea6f8be48c775183975e340cf44a2180fdd53fcd8379c88165f4",
+          "sourceUnitKey" : "46A-H1(주거약자형)",
           "unitType" : "46A-H1(주거약자형)",
           "exclusiveAreaM2" : 46.94,
           "supplyCount" : 10,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "15c993bcf6d620c1466b27ea02bbb6346747df724962134e7b0b2950388f13ac",
+          "sourceUnitKey" : "46A-H2(주거약자형)",
           "unitType" : "46A-H2(주거약자형)",
           "exclusiveAreaM2" : 46.85,
           "supplyCount" : 39,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "642472f835c5f498b10fc78915646b0e0fc001676aaed5cb21eb8d2b48017a99",
+          "sourceUnitKey" : "55A-1",
           "unitType" : "55A-1",
           "exclusiveAreaM2" : 55.94,
           "supplyCount" : 39,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "79edc9f898b4be075656c0ab2e805871eafab470b7ee8c32d492ff994f5f85e3",
+          "sourceUnitKey" : "55A-2",
           "unitType" : "55A-2",
           "exclusiveAreaM2" : 55.71,
           "supplyCount" : 36,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "9c1c246fe3421ff8876a793d35c1b6359b865e92a6ab36ead6e0c741c0eee6f2",
+          "sourceUnitKey" : "55B-1",
           "unitType" : "55B-1",
           "exclusiveAreaM2" : 55.95,
           "supplyCount" : 44,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "25bb6e34bd03d2788764e72bf999fc241bfff2a13b6815fd4c6b328507f8f980",
+          "sourceUnitKey" : "55B-2",
           "unitType" : "55B-2",
           "exclusiveAreaM2" : 55.76,
           "supplyCount" : 66,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "6c11a17fcdcab525cfe2be61c57794847e35adc15b05b74fd38e4ec34f2e4fdf",
+          "sourceUnitKey" : "55C-1",
           "unitType" : "55C-1",
           "exclusiveAreaM2" : 55.98,
           "supplyCount" : 49,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b0e83cfe26f53bd2c37aa50093232c89a33cee69a7d8cc68255296c2c3a15c9c",
+          "sourceUnitKey" : "55C-2",
           "unitType" : "55C-2",
           "exclusiveAreaM2" : 55.89,
           "supplyCount" : 28,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "77c2420a82c2674403516868b87b580499bc70c14e78fa61659eecaf40d333ef",
+          "sourceUnitKey" : "55D-1",
           "unitType" : "55D-1",
           "exclusiveAreaM2" : 55.98,
           "supplyCount" : 83,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "6dacb419bade376ef4ebdb96b1c8d79654c0c215bbcf5152cb410ef8725b0949",
+          "sourceUnitKey" : "55D-2",
           "unitType" : "55D-2",
           "exclusiveAreaM2" : 55.76,
           "supplyCount" : 109,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "구리시",
         "address" : "경기도 구리시 갈매동 10"
@@ -1667,6 +2029,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020932&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "5c44899e9bf82a5c8da907eb40670db2821461413fc653e838496c6aa899b121",
+        "sourceSiteKey" : "0",
         "name" : "도청이전신도시 RH10-2BL 국민임대",
         "moveInText" : "2022.11",
         "eligibilityText" : null,
@@ -1680,44 +2043,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청남도 홍성군 홍북읍 홍예로 163"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "0fb73cdc40de60324bdbac1701abae686f72d73eaebdc2857604d1495bb46fd4",
+          "sourceUnitKey" : "29A",
           "unitType" : "29A",
           "exclusiveAreaM2" : 29.79,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "eed42f96ae0d3c40328ae60a789e98360ed0de96590fecde313dce282065ea7e",
+          "sourceUnitKey" : "37A",
           "unitType" : "37A",
           "exclusiveAreaM2" : 37.46,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "2fd8cd91a33278b87b80e1aababae0fee321a98e5fd4a1cb01a4e9331a3febee",
+          "sourceUnitKey" : "37B(주거약자용)",
           "unitType" : "37B(주거약자용)",
           "exclusiveAreaM2" : 37.46,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "4cbf0094721a43d778d7dcb6668b4845aaad093369641e9b7ad5118bb4459384",
+          "sourceUnitKey" : "46A",
           "unitType" : "46A",
           "exclusiveAreaM2" : 46.53,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "홍성군",
         "address" : "충청남도 홍성군 홍북읍 홍예로 163"
@@ -1732,6 +2106,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=0000061188&ccrCnntSysDsCd=02&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "59817f5ba5192b753beba8df6d096ed9fcc7e59677711bbba2c27857e4e16cb2",
+        "sourceSiteKey" : "0",
         "name" : "광주선운3(공임리츠) 3",
         "moveInText" : "2017년 08월",
         "eligibilityText" : null,
@@ -1745,14 +2120,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전남광주통합특별시 광산구 선운로 65 (선암동,선운리버프라임)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "eca1c52c9a8d407bc7e534f266bec90b2ef9d2b21e7cc597a9416850773e6d01",
+          "sourceUnitKey" : "66.9600A",
           "unitType" : "66.9600A",
           "exclusiveAreaM2" : 66.96,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "dab5803e630a4917114833bc6ecc653d1505528883465a0e9d5fe45c98809b79",
             "conditionText" : "기본 임대조건",
@@ -1762,12 +2140,14 @@
           } ]
         }, {
           "id" : "bb8016a2fc9945c1ecfed743b1f7549614eca3654dbee22e18acb0b5451b43fa",
+          "sourceUnitKey" : "66.9400B",
           "unitType" : "66.9400B",
           "exclusiveAreaM2" : 66.94,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "91a45721df49726d87d1b0ee746b36470a6cb79fb4339b2214f60f900511fa08",
             "conditionText" : "기본 임대조건",
@@ -1777,12 +2157,14 @@
           } ]
         }, {
           "id" : "020fe8aeae09741c035f77821700c86f38eff6403eefe1eb7fb9bc58fec01fbc",
+          "sourceUnitKey" : "66.8500C",
           "unitType" : "66.8500C",
           "exclusiveAreaM2" : 66.85,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "a89a3c20d57c45cb4214529f62dc972910d89ea72cf214e4940a4edd087bf6ca",
             "conditionText" : "기본 임대조건",
@@ -1792,12 +2174,14 @@
           } ]
         }, {
           "id" : "dcf13e342465c118443d8ab604a3f6a09762c8e0367a0f7d32fe3c1795e2a00a",
+          "sourceUnitKey" : "66.9400D",
           "unitType" : "66.9400D",
           "exclusiveAreaM2" : 66.94,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "ad1f578664b845814a60528733722f796b86846d2327d7773ef0c654cf6e1ea2",
             "conditionText" : "기본 임대조건",
@@ -1807,12 +2191,14 @@
           } ]
         }, {
           "id" : "231a23d580b133f2413c72923dc76d6e6222c562dbd41849e0338a43dd25a770",
+          "sourceUnitKey" : "74.9800A",
           "unitType" : "74.9800A",
           "exclusiveAreaM2" : 74.98,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "84dc4197ebdfa8bbfa925c86133a7b1c32dcac87c3650924a8a2ee053319a34b",
             "conditionText" : "기본 임대조건",
@@ -1822,6 +2208,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "광산구",
         "address" : "전남광주통합특별시 광산구 선운로 65 (선암동,선운리버프라임)"
@@ -1837,12 +2225,315 @@
         "typeText" : "66.9600A"
       } ]
     },
+    "94f6974ef615a9aa07cfb3b6219717ada00149060f35840e334a376c0af53171" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020970&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "79f5bca182615304678dd1fb9b6b331af47fd6e8c361f50da7b84efc1dc374e8",
+        "sourceSiteKey" : "0",
+        "name" : "광주하남",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "광산구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)",
+          "latitude" : 35.1657166,
+          "longitude" : 126.8026708,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "542b582f7001ffaa9300210490b253291b93693005ee02031e1b710da241c278",
+          "sourceUnitKey" : "46.9600",
+          "unitType" : "46.9600",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "광산구",
+        "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
+      },
+      "exclusiveAreaText" : "31.32㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
+    "a2a3a14a200c7e4506a9e3400514975e1269f9a99374e69617aea6c0bcc4bb5c" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020971&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "34ee8888ed721ee761189cd7cfd95f52507ae41d3b8a6a4d7f030293648a8462",
+        "sourceSiteKey" : "0",
+        "name" : "광주하남",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "광산구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)",
+          "latitude" : 35.1657166,
+          "longitude" : 126.8026708,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "f385fe07a6ba919ee8e259ab546cd1eb55fdd36ccd010ad554d54788b5b67780",
+          "sourceUnitKey" : "A형",
+          "unitType" : "A형",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "광산구",
+        "address" : "전남광주통합특별시 광산구 월곡산정로 12(우산동,하남주공아파트 1차/2차 아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
+    "6d9af85c454551c13e5155e1f01330826c4c439a9b6093d2f60e0c64c07e6eba" : {
+      "verificationStatus" : "NEEDS_REVIEW",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020933&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
+    },
+    "d7c7a72f8f0a385540332ff93754c19319cdb867ea6d9889333f50538084132b" : {
+      "verificationStatus" : "NEEDS_REVIEW",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020928&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
+    },
+    "f5dff8ee3fc442f3dff013cbad348274d05b9049c61d60cc97a460c2db5ddde8" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020969&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "36e8d9e4d2c416b366a77e36f450850f3a32c25eb55b51965f0e18006b6d92fc",
+        "sourceSiteKey" : "0",
+        "name" : "광주두암2 영구임대",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "북구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)",
+          "latitude" : 35.1647017,
+          "longitude" : 126.9360117,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "d2c6c78d015600fda103f7561db745a2b4c66e3debaa04a1d63f8752f9abce4d",
+          "sourceUnitKey" : "26.37",
+          "unitType" : "26.37",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "3e0b54e43955af4a942c4860795efa516de77f6862f8a5d1a9b905cad24cf912",
+          "sourceUnitKey" : "31.32",
+          "unitType" : "31.32",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "북구",
+        "address" : "전남광주통합특별시 북구 삼정로 7(두암동,율곡타운아파트,두암주공2단지아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
+    "cde875993ad7d42070eeaaa0decd01aa0a98ff11b83f9380d190424d7b334860" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020966&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "d62f1217e766f1bb35d1fbb760a6425d6ad50d58eaa8354d89d9edb9bef65312",
+        "sourceSiteKey" : "0",
+        "name" : "광주우산3",
+        "moveInText" : "1992.05",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "북구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 북구 중문로 55(우산동,우산주공3차아파트)",
+          "latitude" : 35.1771213,
+          "longitude" : 126.9187093,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 북구 중문로 55(우산동,우산주공3차아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "65376f2a7bad41aa81c86c278054e0be7c0ae23f5fc3ce8c94fedd55afff8de2",
+          "sourceUnitKey" : "45.2600",
+          "unitType" : "45.2600",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "북구",
+        "address" : "전남광주통합특별시 북구 중문로 55(우산동,우산주공3차아파트)"
+      },
+      "exclusiveAreaText" : "31.32㎡",
+      "moveInText" : "1992.05",
+      "costOptions" : [ ]
+    },
+    "f0fcce8a24b043e7b972a6327ea9bdcee8ff2e422aaeac5a8fe54399d0208447" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020967&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "9917d5cd8cec20fd5f8e975a261a6f3517295d5f6167ba0720d46ba5fd73b168",
+        "sourceSiteKey" : "0",
+        "name" : "광주두암4",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "북구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 북구 삼정로 10(두암동,두암주공4단지 아파트)",
+          "latitude" : 35.1630614,
+          "longitude" : 126.9380126,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 북구 삼정로 10(두암동,두암주공4단지 아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "3d018625b46f9599df82747ba361cac6757a007623140e129efb6089a9ed86ff",
+          "sourceUnitKey" : "39.7500",
+          "unitType" : "39.7500",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "북구",
+        "address" : "전남광주통합특별시 북구 삼정로 10(두암동,두암주공4단지 아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
+    "142172f9d39b019302b396a9cec9f67debe991702573caa1bed803fe2ed2132c" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020968&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "fd7d607b9e9bb41adaf0efebdaecbbe15ebe894320d7958176095102e05c3d98",
+        "sourceSiteKey" : "0",
+        "name" : "광주 오치1",
+        "moveInText" : "2018.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전남광주통합특별시",
+          "region2" : "북구",
+          "region3" : null,
+          "address" : "전남광주통합특별시 북구 서하로194번길 6(오치동,오치 영구임대아파트)",
+          "latitude" : 35.1858036,
+          "longitude" : 126.9008438,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전남광주통합특별시 북구 서하로194번길 6(오치동,오치 영구임대아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "fff5e527d7c79cf7c9635c0fb50bda34fe3e29bda683e5993abf44cc877a9b78",
+          "sourceUnitKey" : "39.8700",
+          "unitType" : "39.8700",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "1ae628229e8e650efd5d8e88ee7b30abc086756b6d9f3209ed495f8ff0953f8f",
+          "sourceUnitKey" : "43.9200",
+          "unitType" : "43.9200",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "북구",
+        "address" : "전남광주통합특별시 북구 서하로194번길 6(오치동,오치 영구임대아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2018.07",
+      "costOptions" : [ ]
+    },
     "3e5dcdc17055a8ca40594f5fae17b0821099f154c5fd4351dfe702acb58c64ee" : {
       "verificationStatus" : "VERIFIED",
-      "verifiedAt" : "2026-10-24",
-      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6707&menuNo=400008&pageIndex=2",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6707&menuNo=400008&pageIndex=3",
       "sites" : [ {
         "id" : "c39ac764570d3e09660717e4d3b6429091e95956b3b3661df0674fd7e2610c97",
+        "sourceSiteKey" : "legacy-site",
         "name" : "청량리역",
         "moveInText" : "예비자 선정 후 개별 연락",
         "eligibilityText" : null,
@@ -1856,14 +2547,17 @@
           "accuracy" : "LANDMARK",
           "displayLabel" : "청량리역"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "578bc536a96bde26eb2e98cb491119063dcc9972d1691dacdeacc64807efcd06",
+          "sourceUnitKey" : "legacy-unit",
           "unitType" : "20㎡ 청년 일반",
           "exclusiveAreaM2" : 20.0,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "6ec16bfd77cce7e1831fda32b578f34be8582e4cd3df93e2590ab7276c50f4ad",
             "conditionText" : "보증금·월세 전환 조합",
@@ -1885,6 +2579,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "동대문구",
         "address" : "청량리역"
@@ -1916,10 +2612,11 @@
     },
     "75b479d0098df882e8be94d69197075733dcb7e3b5f80bca3a096fe77f8fa3dd" : {
       "verificationStatus" : "VERIFIED",
-      "verifiedAt" : "2026-10-24",
-      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6706&menuNo=400008&pageIndex=2",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6706&menuNo=400008&pageIndex=3",
       "sites" : [ {
         "id" : "3e18e853f5e4b9e044258d4545ea8f66b767044fa0044839c1e56bc2085b3c82",
+        "sourceSiteKey" : "legacy-site",
         "name" : "구로디지털단지역",
         "moveInText" : "공실 발생 시 예비자 순차 개별 연락",
         "eligibilityText" : null,
@@ -1933,14 +2630,17 @@
           "accuracy" : "LANDMARK",
           "displayLabel" : "구로디지털단지역"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "bf3939fb29a671a99e2cde3e18a70d450373dfa4b44283ba27146e44ee886a2b",
+          "sourceUnitKey" : "legacy-unit",
           "unitType" : "16.56㎡ 예비자",
           "exclusiveAreaM2" : 16.56,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "d8b0fe926e4e1c5c2bb0a866dffc5c93d3a12b66e55cc8213c1572d298e0d6a0",
             "conditionText" : "보증금·월세 전환 조합",
@@ -1962,6 +2662,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "관악구",
         "address" : "구로디지털단지역"
@@ -1993,10 +2695,11 @@
     },
     "61cb273a0c9133c4afc5c0debf94462630aa853a6040be1ae6d75d43c7743f3b" : {
       "verificationStatus" : "VERIFIED",
-      "verifiedAt" : "2026-10-24",
-      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6705&menuNo=400008&pageIndex=2",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6705&menuNo=400008&pageIndex=3",
       "sites" : [ {
         "id" : "a7645805c1035b0d0ac098695fd61e7c33585e239fe3d0127b3275bbd4e5988d",
+        "sourceSiteKey" : "legacy-site",
         "name" : "신림역",
         "moveInText" : "2026년 12월 18일 예정 (기존 입주자 퇴거일에 따라 변경 가능)",
         "eligibilityText" : null,
@@ -2010,14 +2713,17 @@
           "accuracy" : "LANDMARK",
           "displayLabel" : "신림역"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "397e577dddcdbc37abf14e077cc48cf28faa3b6f8d40f42cc92c7d666048264d",
+          "sourceUnitKey" : "legacy-unit",
           "unitType" : "42㎡ 1세대",
           "exclusiveAreaM2" : 42.0,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "ca5986a59ca5bb242a7db0e3e9bf7f02b4ae619127b185ae5833ff461888f771",
             "conditionText" : "공고 표 기준",
@@ -2027,6 +2733,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "관악구",
         "address" : "신림역"
@@ -2044,10 +2752,11 @@
     },
     "639f6a41f4a028e857ce960a92d02a33ec10365e04ca7e9d97c1c37a7cde9e02" : {
       "verificationStatus" : "VERIFIED",
-      "verifiedAt" : "2026-10-24",
-      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6704&menuNo=400008&pageIndex=2",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6704&menuNo=400008&pageIndex=3",
       "sites" : [ {
         "id" : "2c9882a0d790bbc4691444b7636e2807aebe55424519d612713213bf7bbcd35c",
+        "sourceSiteKey" : "legacy-site",
         "name" : "상봉역",
         "moveInText" : "2026년 11월 23일 ~ 12월 4일",
         "eligibilityText" : null,
@@ -2061,14 +2770,17 @@
           "accuracy" : "LANDMARK",
           "displayLabel" : "상봉역"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "5fb3230b466d9d2776f6a92dbbc9af842142f369ebe095f57216333030d8302e",
+          "sourceUnitKey" : "legacy-unit",
           "unitType" : "38.64㎡ 특별공급 1세대",
           "exclusiveAreaM2" : 38.64,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "9e6b18f5895abe67bc8754a369b8de7612e95e9f7ecdfe046592c2c459701373",
             "conditionText" : "보증금·월세 전환 조합",
@@ -2090,6 +2802,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "중랑구",
         "address" : "상봉역"
@@ -2121,10 +2835,11 @@
     },
     "f95c610ce5ecd45fbe1a5a0aecfd4b67c9ddf49f8bb6def85a408ca684127168" : {
       "verificationStatus" : "VERIFIED",
-      "verifiedAt" : "2026-10-24",
-      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6703&menuNo=400008&pageIndex=2",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://soco.seoul.go.kr/youth/bbs/BMSR00015/view.do?optn1=2026-10-22&boardId=6703&menuNo=400008&pageIndex=3",
       "sites" : [ {
         "id" : "537c4b2f05aeba85a5d3d341fa83ec3dd67b0e23dd30ca7510ae447953f71c32",
+        "sourceSiteKey" : "legacy-site",
         "name" : "화랑대역",
         "moveInText" : "예비당첨자 순차 개별 연락",
         "eligibilityText" : null,
@@ -2138,14 +2853,17 @@
           "accuracy" : "LANDMARK",
           "displayLabel" : "화랑대역"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "70bcc8e9c273f435fb39b348f893ae36310ec399e97d30707fa7d24023e2a520",
+          "sourceUnitKey" : "legacy-unit",
           "unitType" : "39.51㎡ 예비자",
           "exclusiveAreaM2" : 39.51,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "abce3be47124ef86738f5c042c375cb1f451275a556d7e352978bbc2a89a885c",
             "conditionText" : "보증금·월세 전환 조합",
@@ -2167,6 +2885,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "중랑구",
         "address" : "화랑대역"
@@ -2202,6 +2922,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020916&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "a773ffb771eef5cb5ba8e3aa9fbb653adbee2c4ce77499e12289f7cf5411384a",
+        "sourceSiteKey" : "0",
         "name" : "전주1산단(전주팔복)",
         "moveInText" : "2022.10",
         "eligibilityText" : null,
@@ -2215,53 +2936,66 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전북특별자치도 전주시 덕진구 팔과정로 168(팔복동1가)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "e81a8ea310c53d17a605d1b16da48bcb7d4ea86e06b52456189b53ad75c0387d",
+          "sourceUnitKey" : "14A(대학생,청년,고령자,산단근로자)",
           "unitType" : "14A(대학생,청년,고령자,산단근로자)",
           "exclusiveAreaM2" : 14.28,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b8e7841c2ac674b48966b569e125707245c08075f686558493fa8755fcf25dd5",
+          "sourceUnitKey" : "26A(대학생,청년,고령자,산단근로자)",
           "unitType" : "26A(대학생,청년,고령자,산단근로자)",
           "exclusiveAreaM2" : 26.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "7fc2a9dc08cc4e09abd241ebdf5992bc43fa7e1cc633d5b35255238895cb588b",
+          "sourceUnitKey" : "26B(고령자(주거약자),대학생,청년,산단근로자)",
           "unitType" : "26B(고령자(주거약자),대학생,청년,산단근로자)",
           "exclusiveAreaM2" : 26.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "49b12aa9ab2d7b590569a707dd1419d2bb060f3527851c2527ce3223f4447001",
+          "sourceUnitKey" : "36A(쳥년,고령자,신혼부부 · 한부모가족,산단근로자)",
           "unitType" : "36A(쳥년,고령자,신혼부부 · 한부모가족,산단근로자)",
           "exclusiveAreaM2" : 36.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "d8d6e4133aeb36fb098c03a15161607af2673f35a0267773fbcaa972aa263686",
+          "sourceUnitKey" : "36B(고령자(주거약자),청년,신혼부부 ·한부모가족,산단근로자)",
           "unitType" : "36B(고령자(주거약자),청년,신혼부부 ·한부모가족,산단근로자)",
           "exclusiveAreaM2" : 36.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "전주시",
         "address" : "전북특별자치도 전주시 덕진구 팔과정로 168(팔복동1가)"
@@ -2270,12 +3004,112 @@
       "moveInText" : "2022.10",
       "costOptions" : [ ]
     },
+    "087e055b961dcc988169b9b8fbae35c66da17d8d49efcf6fa6ae6cc415c63f68" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-09T12:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020917&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
+      "sites" : [ {
+        "id" : "3dc1845373c684bcbea8b8c1f76e35e2b089f72f7d447f90fb19eb285ea148f3",
+        "sourceSiteKey" : "0",
+        "name" : "완주삼례 A-1 행복주택",
+        "moveInText" : "2023.12",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전북특별자치도",
+          "region2" : "완주군",
+          "region3" : "삼례읍",
+          "address" : "전북특별자치도 완주군 삼례읍 동학로 36-21 완주삼례 행복 아리따운 아파트",
+          "latitude" : 35.9101578,
+          "longitude" : 127.0766795,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전북특별자치도 완주군 삼례읍 동학로 36-21 완주삼례 행복 아리따운 아파트"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "38ee264a0b966dab88504e251ba8207e9ef6c2021ccb629bfa479daaa8736585",
+          "sourceUnitKey" : "21A(대학생,청년)",
+          "unitType" : "21A(대학생,청년)",
+          "exclusiveAreaM2" : 21.52,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "9a6cd0b45fff6f574aec930b545b4a0f95d3d2d2dd2188f71b3f0d4561dc60ee",
+          "sourceUnitKey" : "26A(고령자,주거급여수급자)",
+          "unitType" : "26A(고령자,주거급여수급자)",
+          "exclusiveAreaM2" : 26.06,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "완주군",
+        "address" : "전북특별자치도 완주군 삼례읍 동학로 36-21 완주삼례 행복 아리따운 아파트"
+      },
+      "exclusiveAreaText" : "21.52㎡",
+      "moveInText" : "2023.12",
+      "costOptions" : [ ]
+    },
+    "dc235c314ea9b124ebb9fc4684e85e1bacbadaa19b3e0f7d6b58d07a4616a768" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-05T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020730&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
+      "sites" : [ {
+        "id" : "c2ae3c86ad6ea9d3f1386641924eadb7b0238f3e55ca098a54b439836ce564a3",
+        "sourceSiteKey" : "0",
+        "name" : "태백장성 국민임대주택",
+        "moveInText" : "2023.12",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "태백시",
+          "region3" : null,
+          "address" : "강원특별자치도 태백시 장성1길 13(장성동) 태백장성 탄탄마을",
+          "latitude" : 37.1017171,
+          "longitude" : 129.0084753,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 태백시 장성1길 13(장성동) 태백장성 탄탄마을"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "d40093ad32055fed77ce6b127a0b0d707c0821e611143ba0452e68c22d7cf3b5",
+          "sourceUnitKey" : "29(주거약자용)",
+          "unitType" : "29(주거약자용)",
+          "exclusiveAreaM2" : 29.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "태백시",
+        "address" : "강원특별자치도 태백시 장성1길 13(장성동) 태백장성 탄탄마을"
+      },
+      "exclusiveAreaText" : "29.37㎡",
+      "moveInText" : "2023.12",
+      "costOptions" : [ ]
+    },
     "fe00134c29d8e8f8727c49ea5542ec64ecf19150a0e5f4b6e7acfffa5229c08d" : {
       "verificationStatus" : "VERIFIED",
       "verifiedAt" : "2026-11-07T00:00:00",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=0000061206&ccrCnntSysDsCd=02&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "747c450f6f35017e8f480c9811c55ec33646c425e47b9c0d0761ae1e7fceaa7b",
+        "sourceSiteKey" : "0",
         "name" : "안성아양B-4(공임리츠) B-4",
         "moveInText" : "2017년 12월",
         "eligibilityText" : null,
@@ -2289,14 +3123,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 안성시 아양로 73 (아양동,서희스타힐스 NHF)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "210497028e0793128ff770e6ddbf79e90d284f6ea0be670b7580370eb6f9f2f2",
+          "sourceUnitKey" : "74.9300A",
           "unitType" : "74.9300A",
           "exclusiveAreaM2" : 74.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "33a372353d01634644c632c6ebefba4ae62cd8f7cdf3f3d31912ab1676b5eb56",
             "conditionText" : "기본 임대조건",
@@ -2306,12 +3143,14 @@
           } ]
         }, {
           "id" : "408400804b15a30de737bb6aacb078a2f2f9c7f90b043e22e6cd615722a0808d",
+          "sourceUnitKey" : "84.9100A",
           "unitType" : "84.9100A",
           "exclusiveAreaM2" : 84.91,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "79ed6e17d768d48b2849daf5d84f9b4efc3f8a49770b9734334b7e1a956124ee",
             "conditionText" : "기본 임대조건",
@@ -2321,12 +3160,14 @@
           } ]
         }, {
           "id" : "de8a2cf4065be3a1232d346b8aa9ba046c24d47285d6c2dbe8605475f180a6f6",
+          "sourceUnitKey" : "84.7600B",
           "unitType" : "84.7600B",
           "exclusiveAreaM2" : 84.76,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "1460d6bec0ddde5209423c0972e30da538ddc16e37442dc36fe56783fe72ffea",
             "conditionText" : "기본 임대조건",
@@ -2337,6 +3178,7 @@
         } ]
       }, {
         "id" : "cb9b53ff483356ab3f6acbb64c5c669ab286965a9315671e8ea5eec18f37a8bf",
+        "sourceSiteKey" : "1",
         "name" : "평택소사벌B-2(공임리츠) B2",
         "moveInText" : "2017년 07월",
         "eligibilityText" : null,
@@ -2350,14 +3192,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 비전4로 175 (비전동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "ead4d892ff3c82e45e90b9ac5a3f9c0504f7d8c970b0972adb3d0bf5a109e546",
+          "sourceUnitKey" : "74.8500A",
           "unitType" : "74.8500A",
           "exclusiveAreaM2" : 74.85,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "86444f0941dd452fea39f83db225e175dd3a8e1e82537308ce22e5c4ad65ae45",
             "conditionText" : "기본 임대조건",
@@ -2367,12 +3212,14 @@
           } ]
         }, {
           "id" : "b95259b2a32dc240eeffdd4673caf18f6b95e9aa2b94e9788b82a29b6be65189",
+          "sourceUnitKey" : "84.9700A",
           "unitType" : "84.9700A",
           "exclusiveAreaM2" : 84.97,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "a67f3aff90172b70fc21cf73206a4a408a397ea840aab6f1639eeeb811dde398",
             "conditionText" : "기본 임대조건",
@@ -2382,12 +3229,14 @@
           } ]
         }, {
           "id" : "bf2f93f08872a700e96f986c286140f0f05d05382ae9b1340b14c943535ff79a",
+          "sourceUnitKey" : "84.9800A",
           "unitType" : "84.9800A",
           "exclusiveAreaM2" : 84.98,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "e17b1b22ca5e92ab34b0d0413a910eae9cc4a792abb78496965584621f9609fa",
             "conditionText" : "기본 임대조건",
@@ -2397,12 +3246,14 @@
           } ]
         }, {
           "id" : "a958611f9f5789dcf88040b97450c48c073c9ee3899bd9d4ac23a8ac1b1450ba",
+          "sourceUnitKey" : "84.9700B",
           "unitType" : "84.9700B",
           "exclusiveAreaM2" : 84.97,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "93a322c1929236c1b244014f4b8f14c8271f9b2f91dbbf596135b954516edd51",
             "conditionText" : "기본 임대조건",
@@ -2413,6 +3264,7 @@
         } ]
       }, {
         "id" : "ddb86bd42cfc0d803d9e6de8ab52ee0b22e4a640c7b6279eab9c167a833566d1",
+        "sourceSiteKey" : "2",
         "name" : "평택고덕AB-10(공임리츠) Ab-10",
         "moveInText" : "2019년 09월",
         "eligibilityText" : null,
@@ -2426,14 +3278,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 고덕국제2로 73 (고덕동,고덕신동아파밀리에엔에이치에프7단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "da7b46e7483ef441f1028c0f688ef0505305190cd93bcf54882a0c91940bf793",
+          "sourceUnitKey" : "84.9500A",
           "unitType" : "84.9500A",
           "exclusiveAreaM2" : 84.95,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "890ee38e5c81f15e9587a9bad7d1af1cea15b312f1e6ee316639b94da1de6eb6",
             "conditionText" : "기본 임대조건",
@@ -2444,6 +3299,7 @@
         } ]
       }, {
         "id" : "29e844fb38af4266471e63b352bf1377a286fda57336c07d415ec03c59728c9d",
+        "sourceSiteKey" : "3",
         "name" : "안성아양B-6(공임리츠) B-6",
         "moveInText" : "2019년 05월",
         "eligibilityText" : null,
@@ -2457,14 +3313,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 안성시 아양로 61-19 (아양동,안성하우스디엔에이치에프)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "7bd113c5e188bc07d6aaf069d5fdb47904926b29d07f773e808f31e929585afb",
+          "sourceUnitKey" : "74.9400A",
           "unitType" : "74.9400A",
           "exclusiveAreaM2" : 74.94,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "d2078bc683ff997c6cd7942220e5848b28d25b31084c56e5a424835c75edc535",
             "conditionText" : "기본 임대조건",
@@ -2474,12 +3333,14 @@
           } ]
         }, {
           "id" : "468373ccb86c4c09905ac841294ec121648c0332a99dedae2672778839fd10dd",
+          "sourceUnitKey" : "84.9100A",
           "unitType" : "84.9100A",
           "exclusiveAreaM2" : 84.91,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "a6f857e1f8051c1d2d7eaeddf655bea32f3f634025dcdbc3a1fcbd4fddbefbfa",
             "conditionText" : "기본 임대조건",
@@ -2489,12 +3350,14 @@
           } ]
         }, {
           "id" : "c959b6111f4412757e4b2e2b9ed3e2bdf6b1981d592283a33c0ccc4293c265ec",
+          "sourceUnitKey" : "84.9300C",
           "unitType" : "84.9300C",
           "exclusiveAreaM2" : 84.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "9f47fb88c9f051797aa72f7b9b097a81ccd3eeaf461e5a77e0e2784172f3f362",
             "conditionText" : "기본 임대조건",
@@ -2505,6 +3368,7 @@
         } ]
       }, {
         "id" : "00d0a692989ec3b6803bde827f500954db180f86583398d98618a7fc52e973ea",
+        "sourceSiteKey" : "4",
         "name" : "평택고덕국제화계획 Aab1(공임리츠) A-1",
         "moveInText" : "2021년 08월",
         "eligibilityText" : null,
@@ -2518,14 +3382,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 고덕갈평3로 50 (고덕동,평택고덕 센트레빌 엔에이치에프 3단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "07052e3d8cfa0d7eff52697d466e34668bad03f27bf5e7b2762690b579def3a5",
+          "sourceUnitKey" : "59.0000A",
           "unitType" : "59.0000A",
           "exclusiveAreaM2" : 59.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "ac0a39debdfb611b1ea4090194461b354fca252b1424d0a5c7ef823da00b5926",
             "conditionText" : "기본 임대조건",
@@ -2535,12 +3402,14 @@
           } ]
         }, {
           "id" : "e1e929cc6c4e648d3f7bea0a48038f7951011859b2f295e12d957eaf168ce7dc",
+          "sourceUnitKey" : "84.0000B",
           "unitType" : "84.0000B",
           "exclusiveAreaM2" : 84.73,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "8170d4efd770a003cc986dedad62bdb1b15d23a826e519c36113a3be41956756",
             "conditionText" : "기본 임대조건",
@@ -2550,6 +3419,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "안성시",
         "address" : "경기도 안성시 아양로 73 (아양동,서희스타힐스 NHF)"
@@ -2571,6 +3442,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021022&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "9f061f9e90431d93625ef49a6c23907ed78a7cd8d0664013e12af3584d799e58",
+        "sourceSiteKey" : "0",
         "name" : "남원노암",
         "moveInText" : "2022.06",
         "eligibilityText" : null,
@@ -2584,26 +3456,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전북특별자치도 남원시 노송로 1255-9(노암동,주공아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "117cc4846d1c8e9bdde690c1e6b1d1ddb2e8e25c2df9e3464691c1b20c48ab92",
+          "sourceUnitKey" : "14평",
           "unitType" : "14평",
           "exclusiveAreaM2" : 35.28,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "1e2741a348a2a70e4940ffd6ec15ec9d8d3b0f122f11281b5bc1c15d2eacb956",
+          "sourceUnitKey" : "15평",
           "unitType" : "15평",
           "exclusiveAreaM2" : 36.0,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "남원시",
         "address" : "전북특별자치도 남원시 노송로 1255-9(노암동,주공아파트)"
@@ -2614,10 +3493,11 @@
     },
     "1b755ba1723fc90879e513875c53e5b21a5004c14c47a7646609f75315e0ad85" : {
       "verificationStatus" : "PARTIAL",
-      "verifiedAt" : "2026-11-07T00:00:00",
+      "verifiedAt" : "2026-11-12T09:00:00",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021026&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "4e2a34caad4af20cd5acaae877976f1427203d2e2713a8811259fc19608f3dd5",
+        "sourceSiteKey" : "0",
         "name" : "인천논현 2단지 국민임대",
         "moveInText" : "2008.07",
         "eligibilityText" : null,
@@ -2631,17 +3511,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "인천광역시 남동구 은봉로166번길 27(논현동,논현휴먼시아 범마을)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "067f29fb9edcdeccd52f5c3049bed1050292f1fa3a431595dbf3d5ab71e64cb5",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "남동구",
         "address" : "인천광역시 남동구 은봉로166번길 27(논현동,논현휴먼시아 범마을)"
@@ -2656,6 +3541,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=0000061201&ccrCnntSysDsCd=02&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "dda16f1dc2c2066c1e9b7ae7485875954c6bc0363f169965474b7b40f69003a3",
+        "sourceSiteKey" : "0",
         "name" : "안성아양B-4(공임리츠) B-4",
         "moveInText" : "2017년 12월",
         "eligibilityText" : null,
@@ -2669,14 +3555,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 안성시 아양로 73 (아양동,서희스타힐스 NHF)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "880e9d1374ad405e64cabbc3e1f8675aa84d0aa52b1643c86b5819c868f8a23f",
+          "sourceUnitKey" : "74.9300A",
           "unitType" : "74.9300A",
           "exclusiveAreaM2" : 74.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "82b179856a2d012ca627783c52b49efefff9faa5ada43bc170b1523070bf1c2a",
             "conditionText" : "기본 임대조건",
@@ -2686,12 +3575,14 @@
           } ]
         }, {
           "id" : "f63f8717034bf000be40f016b0790def74574227773e1baba9bd3e2d0bb69234",
+          "sourceUnitKey" : "84.9100A",
           "unitType" : "84.9100A",
           "exclusiveAreaM2" : 84.91,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "f55f9f987cf30ea5cf7483253608a86672718af119a8717cc3b7e5ffaf411ee0",
             "conditionText" : "기본 임대조건",
@@ -2701,12 +3592,14 @@
           } ]
         }, {
           "id" : "329573bcef8e7952f3a4dac2b9bc0344de4e48b1eb12c76f2143e1ce01953592",
+          "sourceUnitKey" : "84.7600B",
           "unitType" : "84.7600B",
           "exclusiveAreaM2" : 84.76,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "d5ed58ff26a7bc9c0e996d40b82af72b3cf61608820a66d52d5b22cc772b82cd",
             "conditionText" : "기본 임대조건",
@@ -2717,6 +3610,7 @@
         } ]
       }, {
         "id" : "d80153c0c7ee8594924cd7b20d452685ee92c660ee84855b0a2855f4bd14830a",
+        "sourceSiteKey" : "1",
         "name" : "평택소사벌B-2(공임리츠) B2",
         "moveInText" : "2017년 07월",
         "eligibilityText" : null,
@@ -2730,14 +3624,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 비전4로 175 (비전동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "c494d2fbed896d813131bfe11c38a847cbf86b09a0a371a266afc3bfc14f9be6",
+          "sourceUnitKey" : "74.8500A",
           "unitType" : "74.8500A",
           "exclusiveAreaM2" : 74.85,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "52b3142d0d643ad2105939ab7ba13a46a1b9de59380794227c427116e299c165",
             "conditionText" : "기본 임대조건",
@@ -2747,12 +3644,14 @@
           } ]
         }, {
           "id" : "f703ea7f4861f58df67ba4e92b347c8045df8309c97aa224f9681545a789b32d",
+          "sourceUnitKey" : "84.9700A",
           "unitType" : "84.9700A",
           "exclusiveAreaM2" : 84.97,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "b142ce69baee9c870793d4f711f31b372e9bd2ef078b1e32bdab9ae43c0ff469",
             "conditionText" : "기본 임대조건",
@@ -2762,12 +3661,14 @@
           } ]
         }, {
           "id" : "682babf979a9f0da343ffd2972b11650c4192a2a62ee4ee05919d6b378fa687e",
+          "sourceUnitKey" : "84.9800A",
           "unitType" : "84.9800A",
           "exclusiveAreaM2" : 84.98,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "92f8b50229cb14c8092c0994121d7063c271bf20f633f6748a19007e257bec05",
             "conditionText" : "기본 임대조건",
@@ -2777,12 +3678,14 @@
           } ]
         }, {
           "id" : "56e3bd49b51e0d6aa5297b9ffc82ec451cc75b964cdcc08dfc0be376d3e12a5a",
+          "sourceUnitKey" : "84.9700B",
           "unitType" : "84.9700B",
           "exclusiveAreaM2" : 84.97,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "86eb797ba65993a0555b5d45aac9dcb517044f637a1ba501365a3c680310dbdd",
             "conditionText" : "기본 임대조건",
@@ -2793,6 +3696,7 @@
         } ]
       }, {
         "id" : "ce07104460d0757a86ec5e768e0e62f3da1fb3e4e1e7f1abd574a4285ceb68d5",
+        "sourceSiteKey" : "2",
         "name" : "평택고덕AB-10(공임리츠) Ab-10",
         "moveInText" : "2019년 09월",
         "eligibilityText" : null,
@@ -2806,14 +3710,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 고덕국제2로 73 (고덕동,고덕신동아파밀리에엔에이치에프7단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "8fcf528d3125199978f97971f5321ce38948fa1a50294124c0451916556c3a56",
+          "sourceUnitKey" : "84.9500A",
           "unitType" : "84.9500A",
           "exclusiveAreaM2" : 84.95,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "51574a572b94fe4e7e0a041cfd6c1059a9fc1170d6310aef18c94d9a1ca6e01c",
             "conditionText" : "기본 임대조건",
@@ -2824,6 +3731,7 @@
         } ]
       }, {
         "id" : "40809c76dbac839a5e310db2d3fb269863095a2ff886a5285b9c13f59c34ae2b",
+        "sourceSiteKey" : "3",
         "name" : "안성아양B-6(공임리츠) B-6",
         "moveInText" : "2019년 05월",
         "eligibilityText" : null,
@@ -2837,14 +3745,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 안성시 아양로 61-19 (아양동,안성하우스디엔에이치에프)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "93ae40cd42ce366e601876f259fee875269f57fe5a86add01f2aaed69a41d837",
+          "sourceUnitKey" : "74.9400A",
           "unitType" : "74.9400A",
           "exclusiveAreaM2" : 74.94,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "c3c45652456a81b00857547085251c878f86f6824366b806ec13fc08c425d519",
             "conditionText" : "기본 임대조건",
@@ -2854,12 +3765,14 @@
           } ]
         }, {
           "id" : "f58676c891025ec1dfc410b47216f5f9830394af86012bab2a0822eafa1b10ba",
+          "sourceUnitKey" : "84.9100A",
           "unitType" : "84.9100A",
           "exclusiveAreaM2" : 84.91,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "327b5c3f95e09f9ecdd52e1f5a256025261d3a4a86bc11c2e40966baabb5b21c",
             "conditionText" : "기본 임대조건",
@@ -2869,12 +3782,14 @@
           } ]
         }, {
           "id" : "515d97bc66496e58a12273bdc9c42b97712a2cca7412e29aa21443e27ed2ef56",
+          "sourceUnitKey" : "84.9300C",
           "unitType" : "84.9300C",
           "exclusiveAreaM2" : 84.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "1923c103e6887595410443b64e005e4af837b2b5a715014257abd11840270514",
             "conditionText" : "기본 임대조건",
@@ -2885,6 +3800,7 @@
         } ]
       }, {
         "id" : "c01baad02ea4e77bcdd79a07f1477f6069b1881ac2e6f56b185cc5ecf5685921",
+        "sourceSiteKey" : "4",
         "name" : "평택고덕국제화계획 Aab1(공임리츠) A-1",
         "moveInText" : "2021년 08월",
         "eligibilityText" : null,
@@ -2898,14 +3814,17 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 고덕갈평3로 50 (고덕동,평택고덕 센트레빌 엔에이치에프 3단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "6a5238fe267c467fa43bf3182e926a186112282d08a64760354a13d0662f8b8d",
+          "sourceUnitKey" : "59.0000A",
           "unitType" : "59.0000A",
           "exclusiveAreaM2" : 59.93,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "bf42f612170571001fda6db5d3fbabb5e877df436f4f70dd91c6bb3c4afd300b",
             "conditionText" : "기본 임대조건",
@@ -2915,12 +3834,14 @@
           } ]
         }, {
           "id" : "3bc72e6cd2fc8828a5ece61d61029bd6f23b993b4a558eae3a23186757d266d2",
+          "sourceUnitKey" : "84.0000B",
           "unitType" : "84.0000B",
           "exclusiveAreaM2" : 84.73,
           "supplyCount" : 0,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ {
             "id" : "290177dcf09ad50115f291452f6073fb10fe70b468fbeb2caf3cfadef2b73be8",
             "conditionText" : "기본 임대조건",
@@ -2930,6 +3851,8 @@
           } ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "안성시",
         "address" : "경기도 안성시 아양로 73 (아양동,서희스타힐스 NHF)"
@@ -2951,6 +3874,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021025&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "f61ed2e07e4f1571d4b1a674289e76fc8280a2677526f6663003a528131b8992",
+        "sourceSiteKey" : "0",
         "name" : "경주건천",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -2964,45 +3888,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 건천읍 대곡용명길 27(건천휴먼시아)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "0693e55ba139802d2492f78a5c485111ac9378a23ab9f834f710be8a7b7a3892",
+          "sourceUnitKey" : "33형",
           "unitType" : "33형",
           "exclusiveAreaM2" : 33.48,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "e459e911511c240bc2bdf8b4036497110265e2e097da12e87864966129c3c103",
+          "sourceUnitKey" : "41형",
           "unitType" : "41형",
           "exclusiveAreaM2" : 41.99,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c0c81000e31152455646d1bd63b4d034f641f418c6f89dcb0b41d52fb5b994f9",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "0bab51bd861cff794fb3b475999ea21f6ea350dcba53e80c6ee423be98a3abd4",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.97,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "e9d235c6013f2520fbb2d0d37bee6b81a579d12b20a6c627dbe9b4d48a3ab1ed",
+        "sourceSiteKey" : "1",
         "name" : "경주외동",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3016,36 +3950,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 외동읍 본동길 14(경주외동엘에이치아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "9d6bc48fd3d6d742af52ebd9cd485e937cdeae7ae7fb68364b77641644677672",
+          "sourceUnitKey" : "36형",
           "unitType" : "36형",
           "exclusiveAreaM2" : 36.64,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "ecaa2c8dc769e9b2d53713b858f3ea66b2d5abc43a4956dbf0be4b43a1438170",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.49,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "720b2e7a469c08c264b24a06d59d9a7401c154c0553bf555ea9a858e07ffe088",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.59,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "0f7f0cae32c8955380a210bbb462ceaa1d41c9da9eeeb65593a332315544270b",
+        "sourceSiteKey" : "2",
         "name" : "경주안강",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3059,36 +4001,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 안강읍 안강중앙로 141(경주안강엘에이치아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "9b82037609db63e901f73e6fb7db2017f9a2ef011266f44ff0b0df28513c979a",
+          "sourceUnitKey" : "36형",
           "unitType" : "36형",
           "exclusiveAreaM2" : 36.51,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "36faee121eb4f4741da20e9392297eb6e6cb675638d9a481543601cc8da7e1e1",
+          "sourceUnitKey" : "39형",
           "unitType" : "39형",
           "exclusiveAreaM2" : 39.09,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "4409e8e6c5aedfc1c5eef828e6588b2f2d948c99bd7c0d056c959d29ca25e96b",
+          "sourceUnitKey" : "47형",
           "unitType" : "47형",
           "exclusiveAreaM2" : 47.0,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "6b94cd4e887bf751e074e58402cffa36831dd820e70d9569c98ca47005d0e4a1",
+        "sourceSiteKey" : "3",
         "name" : "영천망정 5단지",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3102,35 +4052,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 영천시 망정로 80(망정동,영천망정휴먼시아5단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "3eda064fb7ab760569a54c6a1f0220ac4b6d5cdbb3e765e75f19f90869fcfe07",
+          "sourceUnitKey" : "39형",
           "unitType" : "39형",
           "exclusiveAreaM2" : 39.57,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "bc4a55d019aaf98ef7f68ddfac712e8aa8e9a0e09df17567c49896bff869d924",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "e77397bd6de220e8f2d0f9037e5225ac0566adda34a7e73cf5a76140c45155df",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "경주시",
         "address" : "경상북도 경주시 건천읍 대곡용명길 27(건천휴먼시아)"
@@ -3145,6 +4104,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020973&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "3f8e62f2b61939b1a311dedb77b2c50cd1174c7c7a8c6cc53dad4eadb80c0cd7",
+        "sourceSiteKey" : "0",
         "name" : "평택송화 국민임대",
         "moveInText" : "2004.06",
         "eligibilityText" : null,
@@ -3158,26 +4118,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 평택시 팽성읍 팽성송화로 163(주공아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "facdc8c9dda7ef508774a62231aede5ced162f741c22996cf7315955aa18ac24",
+          "sourceUnitKey" : "36형",
           "unitType" : "36형",
           "exclusiveAreaM2" : 36.63,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5df4090903831a469cf0ad3c7660705e06fb53f48881ad81c44be4bc05f6dc00",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 45.79,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "평택시",
         "address" : "경기도 평택시 팽성읍 팽성송화로 163(주공아파트)"
@@ -3188,10 +4155,11 @@
     },
     "8f8b4dcd8b36f689b5edb9f65514f3dd00064fb6ede478eeb1025083fef4d301" : {
       "verificationStatus" : "PARTIAL",
-      "verifiedAt" : "2026-11-07T00:00:00",
+      "verifiedAt" : "2026-11-12T09:00:00",
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021024&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "57c31f75daf8aaa315b464cfa8e8abd3160ff9d3209a5fb5e0ca664b8a2ef04d",
+        "sourceSiteKey" : "0",
         "name" : "인천논현 2단지 국민임대",
         "moveInText" : "2008.07",
         "eligibilityText" : null,
@@ -3205,17 +4173,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "인천광역시 남동구 은봉로166번길 27(논현동,논현휴먼시아 범마을)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "738dd9bf0e3a998d1476bc1acd0567d5f49ac7d5b652940dd6b944f4eba293d5",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "남동구",
         "address" : "인천광역시 남동구 은봉로166번길 27(논현동,논현휴먼시아 범마을)"
@@ -3230,6 +4203,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020987&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "8ac593c0695bdcd7e9e5f6dddc2907c903cc2e24725159a2ace0f95684ca73d8",
+        "sourceSiteKey" : "0",
         "name" : "인천논현3단지",
         "moveInText" : null,
         "eligibilityText" : null,
@@ -3243,17 +4217,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "인천광역시 남동구 논현로 45(논현동,논현휴먼시아 하늘마을)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "d668ac01a6e2999d34f99719c377782aaac7831166d6b5fab418b5eb1d704dd9",
+          "sourceUnitKey" : "39",
           "unitType" : "39",
           "exclusiveAreaM2" : 39.72,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "남동구",
         "address" : "인천광역시 남동구 논현로 45(논현동,논현휴먼시아 하늘마을)"
@@ -3268,6 +4247,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020996&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "7f91df98703a0cfb55ff92fdea6e1f82c991ef92bde36bae6a6b4a3792000599",
+        "sourceSiteKey" : "0",
         "name" : "연천전곡1",
         "moveInText" : "2009.10",
         "eligibilityText" : null,
@@ -3281,17 +4261,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 연천군 전곡읍 밤골로 8(휴먼시아)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "bbd4cc717020de0069f710c9c2565f0be706e309dc374b344c5d1e250fc0195f",
+          "sourceUnitKey" : "46",
           "unitType" : "46",
           "exclusiveAreaM2" : 46.6,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "연천군",
         "address" : "경기도 연천군 전곡읍 밤골로 8(휴먼시아)"
@@ -3306,6 +4291,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021004&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "68a0a849560bfc4566ee4bd54e9ad16653ac9ff23e94a5f19c33456c271ccb41",
+        "sourceSiteKey" : "0",
         "name" : "파주법원",
         "moveInText" : "2019.11",
         "eligibilityText" : null,
@@ -3319,27 +4305,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 파주시 법원읍 법원로 12(파주법원엘에이치행복주택1단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "458ecc4b1dc8b542605acccd0796e167bf222bea487aa66578ced587c1f85dd1",
+          "sourceUnitKey" : "16A",
           "unitType" : "16A",
           "exclusiveAreaM2" : 16.65,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "1c60b945e7c66d14e025e3745a28e87b80ea2346de8e7197cee578b26a1c78ed",
+          "sourceUnitKey" : "26A",
           "unitType" : "26A",
           "exclusiveAreaM2" : 26.67,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "06e15be1ed1a8d3339c323f4d1ca669fdd1365d454aedf58e04cb45bf7d207a2",
+        "sourceSiteKey" : "1",
         "name" : "파주출판C76BL",
         "moveInText" : "2017.11",
         "eligibilityText" : null,
@@ -3353,18 +4345,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 파주시 문발로 430(신촌동) 행복주택"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "1f87d56de3febd771c2d36a5bf4e6a1f972adcea4b9ac4394466f6d8b9bd20ca",
+          "sourceUnitKey" : "16형",
           "unitType" : "16형",
           "exclusiveAreaM2" : 16.47,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "b27cd31072140b3c68086c94c5dea10a298a98403013b54a2c444e2bbaccadea",
+        "sourceSiteKey" : "2",
         "name" : "파주운정3 A25블록 초롱꽃10 행복주택",
         "moveInText" : "2021.03",
         "eligibilityText" : null,
@@ -3378,17 +4374,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경기도 파주시 숲속노을로 60(동패동,초롱꽃마을10단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "e89a93d5c8f6582f29d8a26ef44a0b05aec068b0963f32aebb6970b1d0d62079",
+          "sourceUnitKey" : "14A,B 대학생/청년",
           "unitType" : "14A,B 대학생/청년",
           "exclusiveAreaM2" : 14.8,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "파주시",
         "address" : "경기도 파주시 법원읍 법원로 12(파주법원엘에이치행복주택1단지)"
@@ -3403,6 +4404,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021031&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "8f2d2d828b7166c84de4acf93b6442f6cf51e6bf2b454e897e31448000ccffed",
+        "sourceSiteKey" : "0",
         "name" : "인천논현3단지",
         "moveInText" : null,
         "eligibilityText" : null,
@@ -3416,17 +4418,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "인천광역시 남동구 논현로 45(논현동,논현휴먼시아 하늘마을)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "5659478640080205338afb9ef21c732e84223e5e8d1f66db46d8e1a69a87a567",
+          "sourceUnitKey" : "39",
           "unitType" : "39",
           "exclusiveAreaM2" : 39.72,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "남동구",
         "address" : "인천광역시 남동구 논현로 45(논현동,논현휴먼시아 하늘마을)"
@@ -3441,6 +4448,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020975&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=08&mi=1026",
       "sites" : [ {
         "id" : "945cccef6417f699babe89f2aa4763e95ddb597dd1fd1ef6cacb54621600414f",
+        "sourceSiteKey" : "0",
         "name" : "제천장락1",
         "moveInText" : "2018.04",
         "eligibilityText" : null,
@@ -3454,18 +4462,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청북도 제천시 죽하로 30(장락동,장락주공아파트1단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "d08005928b19c58242af33c69a855e738266e8d519d4eb29635ba36250e44801",
+          "sourceUnitKey" : "49",
           "unitType" : "49",
           "exclusiveAreaM2" : 49.96,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "2d2d43bef079003d3264c97f99982c6993088a2c0d415280e96b43e128b4de55",
+        "sourceSiteKey" : "1",
         "name" : "제천장락1",
         "moveInText" : "2018.04",
         "eligibilityText" : null,
@@ -3479,17 +4491,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "충청북도 제천시 죽하로 30(장락동,장락주공아파트1단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "49d1831f7872aeb717013bb757f7c3ee1cb0fc55783572dc6dacf2cdef813951",
+          "sourceUnitKey" : "49",
           "unitType" : "49",
           "exclusiveAreaM2" : 49.96,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "제천시",
         "address" : "충청북도 제천시 죽하로 30(장락동,장락주공아파트1단지)"
@@ -3504,6 +4521,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021011&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
       "sites" : [ {
         "id" : "42695a5ca8c9a53d42d43ea2b7ca51f4c4a8840671987f97957d8a4064ef2e49",
+        "sourceSiteKey" : "0",
         "name" : "원주태장 LH천년나무 5단지",
         "moveInText" : "2017.10",
         "eligibilityText" : null,
@@ -3517,18 +4535,22 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 원주시 치악로 2050(태장동,원주태장LH 천년나무 5단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "55555619f9dcba2e9f7b333a0a0c3086cd15ca2f0f15283d622dde01b0087b94",
+          "sourceUnitKey" : "23",
           "unitType" : "23",
           "exclusiveAreaM2" : 23.48,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "dcf6bc63008bb014113e9cc8797a7c1e9e015c09a4480a51c493fadd3d035662",
+        "sourceSiteKey" : "1",
         "name" : "원주태장8 영구임대",
         "moveInText" : "2023.07",
         "eligibilityText" : null,
@@ -3542,27 +4564,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 원주시 소일마을2길 60(태장동)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "1f601ee3f9b3c940439186640cbd17f3ffed1cff66db011b09bbf00bf4564588",
+          "sourceUnitKey" : "26",
           "unitType" : "26",
           "exclusiveAreaM2" : 26.38,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "17fb426c76af31794e6e07a73c5de99ed605b6db9ff736dfdc7b17916d3b6f7b",
+          "sourceUnitKey" : "26(주거약자)",
           "unitType" : "26(주거약자)",
           "exclusiveAreaM2" : 26.37,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "2b0e809e182fd82499aaf763107e9b83ec2269f50e51af55e0d8d9ac6c88a401",
+        "sourceSiteKey" : "2",
         "name" : "원주흥업 LH천년나무 2단지",
         "moveInText" : "2016.10",
         "eligibilityText" : null,
@@ -3576,26 +4604,33 @@
           "accuracy" : "EXACT",
           "displayLabel" : "강원특별자치도 원주시 흥업면 남원로 52(원주 흥업 LH천년나무2)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "cc3ae6d71fcd205eadb374761dbeabc83fd7c0170006087e2e564e8e9c9ad121",
+          "sourceUnitKey" : "21",
           "unitType" : "21",
           "exclusiveAreaM2" : 21.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "d4c3fc502e4d36ca4c7e0d50ea0fb69c2961d5d2b3f6ab9ba21c4894b64c61f4",
+          "sourceUnitKey" : "26",
           "unitType" : "26",
           "exclusiveAreaM2" : 26.73,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "원주시",
         "address" : "강원특별자치도 원주시 치악로 2050(태장동,원주태장LH 천년나무 5단지)"
@@ -3610,6 +4645,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021045&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
       "sites" : [ {
         "id" : "0083a4cc666ec608d219b8dbee5603cea811239d1d3bfe9cd8a3c7706c253788",
+        "sourceSiteKey" : "0",
         "name" : "익산 제3일반산단",
         "moveInText" : "2025.05",
         "eligibilityText" : null,
@@ -3623,44 +4659,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "전북특별자치도 익산시 낭산면 용기리 1953-1"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "425384b94ebd4cfef227cf73308b2517b8eb6b3d6003265bcaee8e2c196c09d8",
+          "sourceUnitKey" : "25A(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "unitType" : "25A(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "exclusiveAreaM2" : 25.96,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "3022cb5dc8c54269075d44ffa09c830a08c31824db266555c545d30f98cab25b",
+          "sourceUnitKey" : "25B(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "unitType" : "25B(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "exclusiveAreaM2" : 25.96,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "78874e6536c9347b0e273aef1ef0c68b78a5cabc985aced918f73e19a33b20ad",
+          "sourceUnitKey" : "36A(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "unitType" : "36A(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "exclusiveAreaM2" : 36.91,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "5f01f6df2a64623381656e77383f38ff585dd86a0e3a6ade640b2abfa3989b23",
+          "sourceUnitKey" : "36B(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "unitType" : "36B(대학생,청년,신혼부부,한부모,주거급여수급자,고령자)",
           "exclusiveAreaM2" : 36.86,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "익산시",
         "address" : "전북특별자치도 익산시 낭산면 용기리 1953-1"
@@ -3675,6 +4722,7 @@
       "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021030&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
       "sites" : [ {
         "id" : "2593952431e06ea235ca7404b69848471103b3df4ecd607aa31cdafd4a4a0370",
+        "sourceSiteKey" : "0",
         "name" : "경주건천",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3688,45 +4736,55 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 건천읍 대곡용명길 27(건천휴먼시아)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "370110409866110b5194bfdb65f68958113f4a8221decad39785db0d545f533b",
+          "sourceUnitKey" : "33형",
           "unitType" : "33형",
           "exclusiveAreaM2" : 33.48,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "0e4623a7a672d1cc5ba2e0aefb862a1d2fe299c4aa4de71fc4ab3f0993acc020",
+          "sourceUnitKey" : "41형",
           "unitType" : "41형",
           "exclusiveAreaM2" : 41.99,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "750a1286f67baddfdfef7b3d56801751001390fd546bfccf583c15c9c41fbcda",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "7021b4f1a109f3a7ac5f2a38d71ceef31cce8e61ea737f02710e1692c1815a78",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.97,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "cf5fdb950416010a10b2eda5593780bdb7ba7cc5626069c3a4b6ec56a0f6d49c",
+        "sourceSiteKey" : "1",
         "name" : "경주외동",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3740,36 +4798,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 외동읍 본동길 14(경주외동엘에이치아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "48c27d2ba6bccb09ceb73185a7d5dc8798609f53eeb214762f45098e0d2c95cf",
+          "sourceUnitKey" : "36형",
           "unitType" : "36형",
           "exclusiveAreaM2" : 36.64,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "0aa3722fed739e2f9bf15f355ce25e58eab199f07047eb316e0f907324dc6dcf",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.49,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "623c93ffb9db73dfc49597d836c654bc664a5495573ce90fea8df3c76bf588cd",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.59,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "4266c215dc726857608a59476e6358b6d86aa062c35965619a21ab0326964902",
+        "sourceSiteKey" : "2",
         "name" : "경주안강",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3783,36 +4849,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 경주시 안강읍 안강중앙로 141(경주안강엘에이치아파트)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "ffea9d92f5e67405ec5e445452a3f149ab724d9d0f95262b0b983a1eea783d39",
+          "sourceUnitKey" : "36형",
           "unitType" : "36형",
           "exclusiveAreaM2" : 36.51,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "76bec3523dc57f01db2a129332e407bbdcd252941dba2f6219aa84dd6413fb69",
+          "sourceUnitKey" : "39형",
           "unitType" : "39형",
           "exclusiveAreaM2" : 39.09,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "ad0fb2cb1c90a3f3c9401dcc8168dc5e738b26d7a47cecf0de44f760e7cae73e",
+          "sourceUnitKey" : "47형",
           "unitType" : "47형",
           "exclusiveAreaM2" : 47.0,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       }, {
         "id" : "73e7a128aaf45ca4e2ccbc32c3c733d0cd5499d603fc2135d5dc74ec02db3cdb",
+        "sourceSiteKey" : "3",
         "name" : "영천망정 5단지",
         "moveInText" : "2027.01",
         "eligibilityText" : null,
@@ -3826,35 +4900,44 @@
           "accuracy" : "EXACT",
           "displayLabel" : "경상북도 영천시 망정로 80(망정동,영천망정휴먼시아5단지)"
         },
+        "organizations" : [ ],
         "units" : [ {
           "id" : "c2a81b45969ca3e0a397a8bb7ecc72e557c9237d306f8121527029a9acbe506f",
+          "sourceUnitKey" : "39형",
           "unitType" : "39형",
           "exclusiveAreaM2" : 39.57,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "b469210575c9750b7c99e6f0c87d1b9b024a44c13acba18a3bf0bfb5eb83a3aa",
+          "sourceUnitKey" : "46형",
           "unitType" : "46형",
           "exclusiveAreaM2" : 46.9,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         }, {
           "id" : "c5565bd70d090c772a5838b474108406fe4d02f338c639c244ee688453163b40",
+          "sourceUnitKey" : "51형",
           "unitType" : "51형",
           "exclusiveAreaM2" : 51.93,
           "supplyCount" : null,
           "categoryText" : null,
           "floorText" : null,
           "roomText" : null,
+          "rooms" : [ ],
           "rentalOptions" : [ ]
         } ]
       } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
       "location" : {
         "district" : "경주시",
         "address" : "경상북도 경주시 건천읍 대곡용명길 27(건천휴먼시아)"
@@ -3862,6 +4945,956 @@
       "exclusiveAreaText" : "33.48㎡",
       "moveInText" : "2027.01",
       "costOptions" : [ ]
+    },
+    "e33e8cadca8c850e77b1d09a898134ecd4a59ec5ccef4e9c02959ca5e713d4f6" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021018&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
+      "sites" : [ {
+        "id" : "15e502ec2766b46408b4c69cd76210b9477c7e0c7275d92fe56020596f3dc09f",
+        "sourceSiteKey" : "0",
+        "name" : "대구신서 A-5BL 국민임대",
+        "moveInText" : "2016.11",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "대구광역시",
+          "region2" : "동구",
+          "region3" : null,
+          "address" : "대구광역시 동구 초례로 66(숙천동,대구신서혁신엘에이치천년나무13단지)",
+          "latitude" : 35.8812822,
+          "longitude" : 128.7525587,
+          "accuracy" : "EXACT",
+          "displayLabel" : "대구광역시 동구 초례로 66(숙천동,대구신서혁신엘에이치천년나무13단지)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "9abe5db4407c6e5ab2042917bf46ee992eb5310893e2378cfaaf2b748da9cbe8",
+          "sourceUnitKey" : "26A",
+          "unitType" : "26A",
+          "exclusiveAreaM2" : 26.92,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "baf1ad93f73511be08a656a38f6eee17d3be3f3777073f594994012501742dca",
+          "sourceUnitKey" : "26A(주거약자)",
+          "unitType" : "26A(주거약자)",
+          "exclusiveAreaM2" : 26.92,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "903c03044611aebece341cf264e32c169608cd7a35a46c5e21fa2d5e45695a2e",
+          "sourceUnitKey" : "33A",
+          "unitType" : "33A",
+          "exclusiveAreaM2" : 33.97,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "22a268b061c6d8759eef1a9c0a32ffa1cdcef1959e2b101c7dbeb4ba544e0f9e",
+        "sourceSiteKey" : "1",
+        "name" : "대구신서 A-6BL 국민임대",
+        "moveInText" : "2016.11",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "대구광역시",
+          "region2" : "동구",
+          "region3" : null,
+          "address" : "대구광역시 동구 초례로16길 3(숙천동,대구신서혁신엘에이치천년나무14단지)",
+          "latitude" : 35.8825486,
+          "longitude" : 128.7524295,
+          "accuracy" : "EXACT",
+          "displayLabel" : "대구광역시 동구 초례로16길 3(숙천동,대구신서혁신엘에이치천년나무14단지)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "16720acb033c5f7954e19a817bd93498c1b192f0d996307aaf00ee82ab1f9d28",
+          "sourceUnitKey" : "26A",
+          "unitType" : "26A",
+          "exclusiveAreaM2" : 26.96,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "59aaa2d8dda61867c524ed29f6ef3a1234e47151a2d50071cdee6e42a036710c",
+          "sourceUnitKey" : "26A(주거약자)",
+          "unitType" : "26A(주거약자)",
+          "exclusiveAreaM2" : 26.96,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "a66327a5b438dcf27d24511847e7b8f2f92afb153296978cc72b81c3e418190a",
+          "sourceUnitKey" : "46A",
+          "unitType" : "46A",
+          "exclusiveAreaM2" : 46.93,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "eaba37291ce4ca76e8c03f732bcfb72bbf3c9cedb02e4d1b577477e61985a700",
+        "sourceSiteKey" : "2",
+        "name" : "경산삼주봉황1차",
+        "moveInText" : null,
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "경상북도",
+          "region2" : "경산시",
+          "region3" : null,
+          "address" : "경상북도 경산시 봉황길 29",
+          "latitude" : 35.8855024,
+          "longitude" : 128.8222461,
+          "accuracy" : "EXACT",
+          "displayLabel" : "경상북도 경산시 봉황길 29"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "90a67ec70706c15f5c4463b99b24cbe73e5326f4514ca810bc4b9fa2fe85af74",
+          "sourceUnitKey" : "33형",
+          "unitType" : "33형",
+          "exclusiveAreaM2" : 33.54,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "8323ee042d80d61f220a1dea8a99ad8ae155e427aebe8f0f29f1c7dc624fd388",
+          "sourceUnitKey" : "59형",
+          "unitType" : "59형",
+          "exclusiveAreaM2" : 59.26,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "74e67cb74a58f0a63d51606387e52dc6b86ddc067f50582057ac6ed8a318e2ef",
+        "sourceSiteKey" : "3",
+        "name" : "경산삼주봉황2차",
+        "moveInText" : "2010.07",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "경상북도",
+          "region2" : "경산시",
+          "region3" : null,
+          "address" : "경상북도 경산시 봉황길 36",
+          "latitude" : 35.883907,
+          "longitude" : 128.822725,
+          "accuracy" : "EXACT",
+          "displayLabel" : "경상북도 경산시 봉황길 36"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "3836ba9191c41b0940efdff42263cce6cc45d31e4181f3817673879366cf448c",
+          "sourceUnitKey" : "59형",
+          "unitType" : "59형",
+          "exclusiveAreaM2" : 59.26,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "동구",
+        "address" : "대구광역시 동구 초례로 66(숙천동,대구신서혁신엘에이치천년나무13단지)"
+      },
+      "exclusiveAreaText" : "26.92㎡",
+      "moveInText" : "2016.11",
+      "costOptions" : [ ]
+    },
+    "1cc1a8c4bfd136b6c480af4e6755816e3195cb830d7813fa5b5092ccad29130d" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021052&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
+      "sites" : [ {
+        "id" : "efa9a3f19026fa5b2a0aa2786e86283d748b3ad880d54859c9e370d85772f60f",
+        "sourceSiteKey" : "0",
+        "name" : "인천산곡 A1블록 행복주택",
+        "moveInText" : "2026.08",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "인천광역시",
+          "region2" : "부평구",
+          "region3" : null,
+          "address" : "인천광역시 부평구 산청로17번길 67(산곡동) 산곡솔마루아파트",
+          "latitude" : 37.5105977,
+          "longitude" : 126.6976318,
+          "accuracy" : "EXACT",
+          "displayLabel" : "인천광역시 부평구 산청로17번길 67(산곡동) 산곡솔마루아파트"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "91c034eb8affd5f5e8b55730a8a2f2661bcf84816cdaa83b7cd3010223896d30",
+          "sourceUnitKey" : "44(신혼부부·한부모)",
+          "unitType" : "44(신혼부부·한부모)",
+          "exclusiveAreaM2" : 44.75,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "부평구",
+        "address" : "인천광역시 부평구 산청로17번길 67(산곡동) 산곡솔마루아파트"
+      },
+      "exclusiveAreaText" : "44.75㎡",
+      "moveInText" : "2026.08",
+      "costOptions" : [ ]
+    },
+    "b87e3e674b45d39d33f56a162c5769f72b558737b62ef7972a4a95deee5ac752" : {
+      "verificationStatus" : "NEEDS_REVIEW",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300020997&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
+    },
+    "c5a4dae7f46d6824bca1799199b034ff51539e0eab2aeef3548e4af2df583d88" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021050&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "eac0acabb8176c86df3c5b728fd1dd7683da57f6bbbe66500d867c8973e965aa",
+        "sourceSiteKey" : "0",
+        "name" : "(수원우만3)영구임대주택 예비입주자 모집 공고",
+        "moveInText" : "2019.09",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "경기도",
+          "region2" : "수원시",
+          "region3" : "팔달구",
+          "address" : "경기도 수원시 팔달구 창룡대로210번길 13(우만동,주공3단지아파트)",
+          "latitude" : 37.2920515,
+          "longitude" : 127.0349395,
+          "accuracy" : "EXACT",
+          "displayLabel" : "경기도 수원시 팔달구 창룡대로210번길 13(우만동,주공3단지아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "1867fbbc59aa98f5008bac25d267c0c4cf8b5cb7a0430017a964fee3cfe138c2",
+          "sourceUnitKey" : "39.87",
+          "unitType" : "39.87",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "05f5c6aa73ea4c1f79c73ec7cd9500414fade161f5bbcb1f8449f6442dcd9fb3",
+          "sourceUnitKey" : "42.93",
+          "unitType" : "42.93",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "수원시",
+        "address" : "경기도 수원시 팔달구 창룡대로210번길 13(우만동,주공3단지아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "2019.09",
+      "costOptions" : [ ]
+    },
+    "d5849dd65d1a498a79561bb89ac7072fe628019fac2a9fb5cea3b34d6d6fd44a" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021033&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=07&mi=1026",
+      "sites" : [ {
+        "id" : "9a3d1e504cd63652978684ad0043231099ddcabb436555828b8ea330592092b2",
+        "sourceSiteKey" : "0",
+        "name" : "인제서화 고령자복지주택(영구임대)",
+        "moveInText" : "2027.02",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "인제군",
+          "region3" : "서화면",
+          "address" : "강원특별자치도 인제군 서화면 천도로81번길 43",
+          "latitude" : 38.223125,
+          "longitude" : 128.2081849,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 인제군 서화면 천도로81번길 43"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "23657a70ccd885435593e8cb223f8b127cccace445ea6dab29ebf45a1006c4e2",
+          "sourceUnitKey" : "36A",
+          "unitType" : "36A",
+          "exclusiveAreaM2" : 36.56,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "fcc7c68ef757ae13544863eaa9e5569f9ff1991d0c506286cfea7c6db2ac23e9",
+          "sourceUnitKey" : "44A",
+          "unitType" : "44A",
+          "exclusiveAreaM2" : 44.28,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "인제군",
+        "address" : "강원특별자치도 인제군 서화면 천도로81번길 43"
+      },
+      "exclusiveAreaText" : "36.56㎡",
+      "moveInText" : "2027.02",
+      "costOptions" : [ ]
+    },
+    "72b302080a2fb7c1b1af4d3bf25aa71ebf24d0f350e041533875bd42571768ec" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-12T09:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021032&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "f81fb7ef2b78da8d408312012efd10e6a72799554600bb3bd6242388eb6c9a78",
+        "sourceSiteKey" : "0",
+        "name" : "인제서화 고령자복지주택(영구임대)",
+        "moveInText" : "2027.02",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "인제군",
+          "region3" : "서화면",
+          "address" : "강원특별자치도 인제군 서화면 천도로81번길 43",
+          "latitude" : 38.223125,
+          "longitude" : 128.2081849,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 인제군 서화면 천도로81번길 43"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "b9d2882c7fc0b57c71cc4b69fb7c8036e2093c9e651f1daeac6a94441804e442",
+          "sourceUnitKey" : "32A",
+          "unitType" : "32A",
+          "exclusiveAreaM2" : 32.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "인제군",
+        "address" : "강원특별자치도 인제군 서화면 천도로81번길 43"
+      },
+      "exclusiveAreaText" : "32.32㎡",
+      "moveInText" : "2027.02",
+      "costOptions" : [ ]
+    },
+    "434912f778f1b4a7d7782f49e7fa376dbd69c629b4bf52acc8ffe16b9fc5c3d5" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021012&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=08&mi=1026",
+      "sites" : [ {
+        "id" : "8549ed8b7c9fad0051f989b47e4f5cba564838d99fb79cb242fbc24c62151e35",
+        "sourceSiteKey" : "0",
+        "name" : "대전문화1 50년 공공임대",
+        "moveInText" : "1994.09",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "대전광역시",
+          "region2" : "중구",
+          "region3" : null,
+          "address" : "대전광역시 중구 보문산로161번길 55(문화동,주공1차아파트)",
+          "latitude" : 36.3077358,
+          "longitude" : 127.3963253,
+          "accuracy" : "EXACT",
+          "displayLabel" : "대전광역시 중구 보문산로161번길 55(문화동,주공1차아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "9179a4d3d449a6b65023f158edee3d5fdbe9b1330c4995367418a6987f71ccae",
+          "sourceUnitKey" : "17",
+          "unitType" : "17",
+          "exclusiveAreaM2" : 39.69,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "중구",
+        "address" : "대전광역시 중구 보문산로161번길 55(문화동,주공1차아파트)"
+      },
+      "exclusiveAreaText" : "39.69㎡",
+      "moveInText" : "1994.09",
+      "costOptions" : [ ]
+    },
+    "bccf493a15281c22f8167c6d2913cf47ed87e614ef10f422a135b4da77444d92" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021060&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
+      "sites" : [ {
+        "id" : "dbbb1ab6b3095f2b3226f83d1fd8286f9e563c3c813630d7fe043c32499bc12a",
+        "sourceSiteKey" : "0",
+        "name" : "울산다운2 A-6블록 행복주택",
+        "moveInText" : "2025.10",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "울산광역시",
+          "region2" : "중구",
+          "region3" : null,
+          "address" : "울산광역시 중구 다전로 277(다운동,울산다운2 6단지)",
+          "latitude" : 35.5685187,
+          "longitude" : 129.2714194,
+          "accuracy" : "EXACT",
+          "displayLabel" : "울산광역시 중구 다전로 277(다운동,울산다운2 6단지)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "04dc3c862df28bc41cd4f3e5ae0fd4780407a75512b9991ac18ff198061f5a4f",
+          "sourceUnitKey" : "16(대학생,청년)",
+          "unitType" : "16(대학생,청년)",
+          "exclusiveAreaM2" : 16.99,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "d5c1932015ee2c5ce748c80f9951e483c030eaafd769322386020db91d1b743a",
+          "sourceUnitKey" : "26(고령자)",
+          "unitType" : "26(고령자)",
+          "exclusiveAreaM2" : 26.52,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "7748718a0f6bbb70fc011e34fbc640edf576684542ad25f74026dd98e3d8ccdc",
+          "sourceUnitKey" : "26(주거급여수급자)",
+          "unitType" : "26(주거급여수급자)",
+          "exclusiveAreaM2" : 26.52,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "8de8bf1ee6d8c401235b150a94e4a41066befdad6bda43577a18a44a59915355",
+          "sourceUnitKey" : "26(청년)",
+          "unitType" : "26(청년)",
+          "exclusiveAreaM2" : 26.52,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "048d71244a28c2c7831845c9efa0ddecfeac18a2551a1970ba6eaf86b08241a3",
+          "sourceUnitKey" : "36A(신혼부부)",
+          "unitType" : "36A(신혼부부)",
+          "exclusiveAreaM2" : 36.74,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "70e5d1dbc52c83ed23deaa3337eb1ac317c0d134eda3c75b91588742bed4f828",
+          "sourceUnitKey" : "36A(청년)",
+          "unitType" : "36A(청년)",
+          "exclusiveAreaM2" : 36.74,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "중구",
+        "address" : "울산광역시 중구 다전로 277(다운동,울산다운2 6단지)"
+      },
+      "exclusiveAreaText" : "16.99㎡",
+      "moveInText" : "2025.10",
+      "costOptions" : [ ]
+    },
+    "5ca792c87fcb21551edd177f6379f837a624653c1567675df4ad9319afbbc1ef" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021062&ccrCnntSysDsCd=03&uppAisTpCd=39&aisTpCd=42&mi=1026",
+      "sites" : [ {
+        "id" : "13ee1fc5104e3e52c23c5ed5441373a78896261d56acf5a8c6417da23d0406cd",
+        "sourceSiteKey" : "0",
+        "name" : "울산다운2 A-9블록 신혼희망타운 행복주택",
+        "moveInText" : "2025.06",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "울산광역시",
+          "region2" : "울주군",
+          "region3" : "범서읍",
+          "address" : "울산광역시 울주군 범서읍 다운서사로 240(서사시티프라디움)",
+          "latitude" : 35.5933973,
+          "longitude" : 129.2761037,
+          "accuracy" : "EXACT",
+          "displayLabel" : "울산광역시 울주군 범서읍 다운서사로 240(서사시티프라디움)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "a4396ce7efa8f6cd62efc50d81892934cdcbd39644e97deaa01a1dc07982c7f7",
+          "sourceUnitKey" : "55",
+          "unitType" : "55",
+          "exclusiveAreaM2" : 55.93,
+          "supplyCount" : 203,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "db57d3db97691b4b3d4ba0f4e96e4788a3248c7ddfd619ad83b08211944ed58b",
+          "sourceUnitKey" : "55(주거약자)",
+          "unitType" : "55(주거약자)",
+          "exclusiveAreaM2" : 55.93,
+          "supplyCount" : 29,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "울주군",
+        "address" : "울산광역시 울주군 범서읍 다운서사로 240(서사시티프라디움)"
+      },
+      "exclusiveAreaText" : "55.93㎡",
+      "moveInText" : "2025.06",
+      "costOptions" : [ ]
+    },
+    "5e5ac427325a8f96a601f560dcec3c7ea8478c41cd576a2e7c602c748e6098f7" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021041&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "6e923901e10ef22dc3c3ffa0fd13dcbe8ae660bbfcce9fa547400049775e3b74",
+        "sourceSiteKey" : "0",
+        "name" : "밀양가곡 영구임대주택 예비입주자 모집",
+        "moveInText" : "1995.05",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "경상남도",
+          "region2" : "밀양시",
+          "region3" : null,
+          "address" : "경상남도 밀양시 중앙로 47(가곡동,가곡주공아파트)",
+          "latitude" : 35.4723068,
+          "longitude" : 128.7718645,
+          "accuracy" : "EXACT",
+          "displayLabel" : "경상남도 밀양시 중앙로 47(가곡동,가곡주공아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "62012df3e353c49061a701bb614b4cc6514fef65b6ef3f6491ccef876b923436",
+          "sourceUnitKey" : "26.37",
+          "unitType" : "26.37",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "eb6be506238e41cf142299d27aef1d56f157df55b9161b6a3cb4d438f7fcc791",
+          "sourceUnitKey" : "31.32",
+          "unitType" : "31.32",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "밀양시",
+        "address" : "경상남도 밀양시 중앙로 47(가곡동,가곡주공아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "1995.05",
+      "costOptions" : [ ]
+    },
+    "e0715b9ab2d25ce8921ddb4542a349d32f385f8ad0cfe820cd14a840f608665b" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021049&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=10&mi=1026",
+      "sites" : [ {
+        "id" : "68243e2da2b9915c661d84803a268b6bd5d2c3e834c7cdd8bce04d2a57f6e93b",
+        "sourceSiteKey" : "0",
+        "name" : "춘천거두2 행복주택",
+        "moveInText" : "2018.02",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "춘천시",
+          "region3" : "동내면",
+          "address" : "강원특별자치도 춘천시 동내면 거두택지길 70(춘천거두2지구행복주택) 춘천거두2 행복주택",
+          "latitude" : 37.8547397,
+          "longitude" : 127.7586092,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 춘천시 동내면 거두택지길 70(춘천거두2지구행복주택) 춘천거두2 행복주택"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "b74d004c59001e853f2dcfc577f0febaffa5fe3f87c44955996acd4f90b31127",
+          "sourceUnitKey" : "16A(대학+사초생)",
+          "unitType" : "16A(대학+사초생)",
+          "exclusiveAreaM2" : 16.91,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "edd352fac783fd23d18b82ce8b0e0ca7c2772fa38431b43fb326075d5aaefbfb",
+          "sourceUnitKey" : "36A(신혼부부)",
+          "unitType" : "36A(신혼부부)",
+          "exclusiveAreaM2" : 36.91,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "e344bdb809987e49ac35588eb2ad7ccf33d2b014b3d7df4343ad9e672372da4c",
+        "sourceSiteKey" : "1",
+        "name" : "철원갈말 마을정비형 임대주택",
+        "moveInText" : "2021.10",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "철원군",
+          "region3" : "갈말읍",
+          "address" : "강원특별자치도 철원군 갈말읍 명성로111번길 18",
+          "latitude" : 38.1428735,
+          "longitude" : 127.304859,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 철원군 갈말읍 명성로111번길 18"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "c792ff61fc22858ba2dced670a9d9138660656c801c6f0c60c2525d56ef7368f",
+          "sourceUnitKey" : "16(수급자,고령자)",
+          "unitType" : "16(수급자,고령자)",
+          "exclusiveAreaM2" : 16.78,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "091454ef64926a6f1d2aec60341739c4e5f332a439d04a6355e40c4adc99a216",
+          "sourceUnitKey" : "16청년",
+          "unitType" : "16청년",
+          "exclusiveAreaM2" : 16.78,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "25ab126976ddb9676188389041e88fceebe00bda7d3765d6e271350d0c6f4712",
+          "sourceUnitKey" : "36(수급자,고령자)",
+          "unitType" : "36(수급자,고령자)",
+          "exclusiveAreaM2" : 36.38,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "a2c77a1f5e861e4b593728e7f1db87ecde0293d9463e36468f7bde445b92e901",
+        "sourceSiteKey" : "2",
+        "name" : "철원철원 도시재생(행복주택)",
+        "moveInText" : "2025.04",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "철원군",
+          "region3" : "철원읍",
+          "address" : "강원특별자치도 철원군 철원읍 금학로279번길 15",
+          "latitude" : 38.2120936,
+          "longitude" : 127.2128736,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 철원군 철원읍 금학로279번길 15"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "da0f25a7fad21f1f086230b52d6da46160aad0474c02976acee4b58f55c8bc05",
+          "sourceUnitKey" : "26A(고령자)",
+          "unitType" : "26A(고령자)",
+          "exclusiveAreaM2" : 26.82,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "68aaa5860869a58e3af153372c52fc897b2f7f56b941e9fad9c4f879527cf39d",
+          "sourceUnitKey" : "26B(주거약자)",
+          "unitType" : "26B(주거약자)",
+          "exclusiveAreaM2" : 26.82,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "8dc1def75d91eeda670610f29ec62935650abc35711c754e1dba16caf893ce8e",
+          "sourceUnitKey" : "36A(신혼부부등)",
+          "unitType" : "36A(신혼부부등)",
+          "exclusiveAreaM2" : 36.93,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "춘천시",
+        "address" : "강원특별자치도 춘천시 동내면 거두택지길 70(춘천거두2지구행복주택) 춘천거두2 행복주택"
+      },
+      "exclusiveAreaText" : "16.91㎡",
+      "moveInText" : "2018.02",
+      "costOptions" : [ ]
+    },
+    "16afeb14347e68383c943072d22b160c5ff7e864e9af3de91fec63405ade7fa1" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021029&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "3c70549de896f4014fee2ed6f7d569ebb35081fa7a88eab610a0577523a64d91",
+        "sourceSiteKey" : "0",
+        "name" : "익산부송1단지",
+        "moveInText" : "1993.04",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전북특별자치도",
+          "region2" : "익산시",
+          "region3" : null,
+          "address" : "전북특별자치도 익산시 무왕로22길 12(부송동,익산부송1주공아파트)",
+          "latitude" : 35.9582179,
+          "longitude" : 126.9858875,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전북특별자치도 익산시 무왕로22길 12(부송동,익산부송1주공아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "4953dbf2246a2544c62b659c6c20537cedbae4482182b8190f9b2a1ee1d6201b",
+          "sourceUnitKey" : "39.93",
+          "unitType" : "39.93",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "6fd77b5fed1e53408797cfb9e9d8b73d70a2c121ee7f8b1ae06e901e6ba55f46",
+          "sourceUnitKey" : "45.34",
+          "unitType" : "45.34",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      }, {
+        "id" : "af1ae6476d23e34123997cc584375fa6d455043e9f3742b75ac84456a49992c6",
+        "sourceSiteKey" : "1",
+        "name" : "익산동산",
+        "moveInText" : "1992.04",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "전북특별자치도",
+          "region2" : "익산시",
+          "region3" : null,
+          "address" : "전북특별자치도 익산시 동천로7길 26-5(동산동,동산 주공아파트)",
+          "latitude" : 35.9324846,
+          "longitude" : 126.9705375,
+          "accuracy" : "EXACT",
+          "displayLabel" : "전북특별자치도 익산시 동천로7길 26-5(동산동,동산 주공아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "e0cd1a2f878be6496d1ecbee0370dc798e3f8c04b3b27ab2d835e075ffd6ce3e",
+          "sourceUnitKey" : "26.37",
+          "unitType" : "26.37",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        }, {
+          "id" : "6f3373d5e15a8c532eb3a593b47b560c48b0bfa3b0c373014f0f68e5ae42c020",
+          "sourceUnitKey" : "31.32",
+          "unitType" : "31.32",
+          "exclusiveAreaM2" : 31.32,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "익산시",
+        "address" : "전북특별자치도 익산시 무왕로22길 12(부송동,익산부송1주공아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "1993.04",
+      "costOptions" : [ ]
+    },
+    "82572f2a7e33ae3f2fd9411e58902a2bee3119165c2aa94a191e9b611579f4c5" : {
+      "verificationStatus" : "PARTIAL",
+      "verifiedAt" : "2026-11-13T10:32:08",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021051&ccrCnntSysDsCd=03&uppAisTpCd=06&aisTpCd=09&mi=1026",
+      "sites" : [ {
+        "id" : "e6b99b3ab33971325c00e756d1ca5eda70dc823a8e921036c606a8bf4c3040d6",
+        "sourceSiteKey" : "0",
+        "name" : "원주명륜2",
+        "moveInText" : "1992.08",
+        "eligibilityText" : null,
+        "location" : {
+          "region1" : "강원특별자치도",
+          "region2" : "원주시",
+          "region3" : null,
+          "address" : "강원특별자치도 원주시 예술관길 31(명륜동,명륜2단지아파트)",
+          "latitude" : 37.3322942,
+          "longitude" : 127.9420415,
+          "accuracy" : "EXACT",
+          "displayLabel" : "강원특별자치도 원주시 예술관길 31(명륜동,명륜2단지아파트)"
+        },
+        "organizations" : [ ],
+        "units" : [ {
+          "id" : "578aceed34e39e1783c8a8a7524b9de95b30673b03dd6662b183ab10ee95496c",
+          "sourceUnitKey" : "39.9300",
+          "unitType" : "39.9300",
+          "exclusiveAreaM2" : 26.37,
+          "supplyCount" : null,
+          "categoryText" : null,
+          "floorText" : null,
+          "roomText" : null,
+          "rooms" : [ ],
+          "rentalOptions" : [ ]
+        } ]
+      } ],
+      "events" : [ ],
+      "eligibilityRules" : [ ],
+      "location" : {
+        "district" : "원주시",
+        "address" : "강원특별자치도 원주시 예술관길 31(명륜동,명륜2단지아파트)"
+      },
+      "exclusiveAreaText" : "26.37㎡",
+      "moveInText" : "1992.08",
+      "costOptions" : [ ]
+    },
+    "39575aeb2084e6d0dec05c9d5dd40e47ccbb38fec33be11006b06fd766e8b7f8" : {
+      "verificationStatus" : "NEEDS_REVIEW",
+      "verifiedAt" : "2026-11-13T18:00:00",
+      "sourceUrl" : "https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancInfo.do?panId=2015122300021077&ccrCnntSysDsCd=03&uppAisTpCd=13&aisTpCd=26&mi=1026",
+      "sites" : [ ],
+      "events" : [ ],
+      "eligibilityRules" : [ ]
     }
-  }
+  },
+  "schemaVersion" : 2
 }
