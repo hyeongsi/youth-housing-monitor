@@ -147,6 +147,11 @@ class DocumentImportTests {
         Map<String,Object> unit=maps(site.get("units")).getFirst();
         assertEquals("42C",unit.get("unitType"));
         assertEquals(42.75,((Number)unit.get("exclusiveAreaM2")).doubleValue());
+        Map<String,Object> rentalOption=maps(unit.get("rentalOptions")).getFirst();
+        assertEquals(35_000L,((Number)rentalOption.get("managementFeeWon")).longValue());
+        assertEquals("관리비: 35,000원, 임대보증금 전환 가능",rentalOption.get("managementFeeRawText"));
+        assertEquals("관리비: 35,000원, 임대보증금 전환 가능",rentalOption.get("conversionConditionText"));
+        assertTrue(result.evidence().stream().anyMatch(item->item.fieldPath().endsWith("managementFeeRawText")&&"NEEDS_REVIEW".equals(item.reviewStatus())));
         assertEquals("18층",maps(unit.get("rooms")).getFirst().get("floorText"));
         assertEquals("1802호",maps(unit.get("rooms")).getFirst().get("roomText"));
         Map<String,Object> option=maps(unit.get("rentalOptions")).getFirst();
@@ -155,6 +160,16 @@ class DocumentImportTests {
         Map<String,Object> application=maps(result.draft().get("events")).stream().filter(item->"APPLICATION".equals(item.get("eventType"))).findFirst().orElseThrow();
         assertEquals("2027-02-05T09:00",application.get("startsAt"));
         assertEquals("2027-02-06T18:00",application.get("endsAt"));
+    }
+
+    @Test void keepsUnpricedManagementFeeAsReviewableRawText() {
+        DocumentParser.ParseResult result=new SeoulYouthSafePrivatePdfParser().parse(changedTemplateLayout("관리비 별도, 임대보증금 전환 불가"));
+        Map<String,Object> site=maps(result.draft().get("sites")).getFirst();
+        Map<String,Object> unit=maps(site.get("units")).getFirst();
+        Map<String,Object> rentalOption=maps(unit.get("rentalOptions")).getFirst();
+        assertEquals("관리비 별도, 임대보증금 전환 불가",rentalOption.get("managementFeeRawText"));
+        assertNull(rentalOption.get("managementFeeWon"));
+        assertEquals("관리비 별도, 임대보증금 전환 불가",rentalOption.get("conversionConditionText"));
     }
 
     @Test void htmlConflictWarningsUseExtractedSiteAndProviderInsteadOfReferenceConstants() {
@@ -308,6 +323,22 @@ class DocumentImportTests {
         assertEquals("UPLOAD",item.get("nextAction"));
     }
 
+    @Test void recordsOnlyMeaningfulChangesAfterAnExistingDetail() throws Exception {
+        Context context=context();
+        Map<String,Object> before=detailSnapshot(10_000_000L,400_000L,"2026-11-20T18:00");
+        Map<String,Object> after=detailSnapshot(12_000_000L,400_000L,"2026-11-22T18:00");
+        String revisionId=context.extractions().recordRevision("notice","PDF_COMMITTED",null,"hash",null,before,after,"2026-11-14T10:00:00Z");
+        context.extractions().recordChangeEvents("notice",revisionId,before,after,"2026-11-14T10:00:00Z");
+
+        List<String> categories=context.jdbc().queryForList("SELECT category FROM announcement_change_events WHERE detail_revision_id=? ORDER BY category",String.class,revisionId);
+        assertEquals(List.of("RENTAL_CONDITION","SCHEDULE"),categories);
+        assertEquals(10_000_000,context.jdbc().queryForObject("SELECT json_extract(before_json,'$') FROM announcement_change_events WHERE detail_revision_id=? AND category='RENTAL_CONDITION'",Integer.class,revisionId));
+
+        String initialRevision=context.extractions().recordRevision("notice","PDF_COMMITTED",null,"initial",null,Map.of("sites",List.of(),"events",List.of(),"eligibilityRules",List.of()),after,"2026-11-14T11:00:00Z");
+        context.extractions().recordChangeEvents("notice",initialRevision,Map.of("sites",List.of(),"events",List.of(),"eligibilityRules",List.of()),after,"2026-11-14T11:00:00Z");
+        assertEquals(0,context.jdbc().queryForObject("SELECT COUNT(*) FROM announcement_change_events WHERE detail_revision_id=?",Integer.class,initialRevision));
+    }
+
     private Context context() throws Exception {
         Files.createDirectories(root.resolve("data"));
         mapper.writeValue(root.resolve("data/all-announcements.json").toFile(),Map.of("items",List.of(announcement())));
@@ -317,10 +348,13 @@ class DocumentImportTests {
         AnnouncementRepository announcements=new AnnouncementRepository(jdbc,transactions,mapper,root.toString());
         DocumentExtractionRepository extractions=new DocumentExtractionRepository(jdbc,mapper,announcements);
         DocumentImportService service=new DocumentImportService(announcements,extractions,new PdfTextLayoutExtractor(),new DocumentParserRegistry(List.of(new SeoulYouthSafePrivatePdfParser(),new LhPublicRentalPdfParser())),transactions,root.toString());
-        return new Context(jdbc,announcements,service);
+        return new Context(jdbc,announcements,extractions,service);
     }
 
     private Map<String,Object> announcement(){return Map.ofEntries(Map.entry("id","notice"),Map.entry("sourceId","seoul-youth-safe"),Map.entry("sourceName","청년안심주택 모집공고"),Map.entry("provider","서울특별시"),Map.entry("title","세이지움 개봉 청년안심주택 민간임대 추가모집"),Map.entry("housingType","청년안심주택"),Map.entry("announcedAt","2026-11-05"),Map.entry("applicationEnd","2026-11-10"),Map.entry("status","접수중"),Map.entry("officialUrl","https://example.test/notice"),Map.entry("retrievedAt","2026-11-08T10:00:00"));}
+    private Map<String,Object> detailSnapshot(long deposit,long rent,String deadline){return Map.of(
+            "sites",List.of(Map.of("sourceSiteKey","site","name","테스트 단지","location",Map.of("address","서울특별시 구로구 테스트로 1"),"units",List.of(Map.of("sourceUnitKey","A","unitType","A형","rentalOptions",List.of(Map.of("optionKey","base","depositWon",deposit,"monthlyRentWon",rent)))))),
+            "events",List.of(Map.of("eventType","APPLICATION","startsAt","2026-11-15T09:00","endsAt",deadline,"status","CONFIRMED")),"eligibilityRules",List.of());}
     private MockMultipartFile pdf(String name,byte[] bytes){return new MockMultipartFile("file",name,"application/pdf",bytes);}
     @SuppressWarnings("unchecked")
     private void confirmAmounts(Map<String,Object> draft){Map<String,Object> site=(Map<String,Object>)((List<?>)draft.get("sites")).getFirst();Map<String,Object> unit=(Map<String,Object>)((List<?>)site.get("units")).getFirst();Map<String,Object> option=(Map<String,Object>)((List<?>)unit.get("rentalOptions")).getFirst();option.put("depositUnitConfirmed",true);option.put("monthlyRentUnitConfirmed",true);}
@@ -333,9 +367,10 @@ class DocumentImportTests {
     private byte[] blankPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){pdf.addPage(new PDPage());pdf.save(out);return out.toByteArray();}}
     private byte[] encryptedPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){pdf.addPage(new PDPage());AccessPermission access=new AccessPermission();pdf.protect(new StandardProtectionPolicy("owner","user",access));pdf.save(out);return out.toByteArray();}}
     private byte[] otherTextPdf() throws Exception {try(PDDocument pdf=new PDDocument();ByteArrayOutputStream out=new ByteArrayOutputStream()){PDPage page=new PDPage();pdf.addPage(page);try(PDPageContentStream content=new PDPageContentStream(pdf,page)){content.beginText();content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA),12);content.newLineAtOffset(50,700);content.showText("Another supported-site document with enough searchable text.");content.endText();}pdf.save(out);return out.toByteArray();}}
-    private PdfTextLayoutExtractor.DocumentLayout changedTemplateLayout(){
+    private PdfTextLayoutExtractor.DocumentLayout changedTemplateLayout(){return changedTemplateLayout("관리비: 35,000원, 임대보증금 전환 가능");}
+    private PdfTextLayoutExtractor.DocumentLayout changedTemplateLayout(String rentalTerm){
         List<PdfTextLayoutExtractor.TextChunk> first=List.of(
-                chunk("[주택개요]",30,40),chunk("- 주택위치 : 서울특별시 마포구 테스트로 77 (2호선 테스트역 3번 출구)",30,60),chunk("- 공급호수 : 총 720세대 중 공공지원민간임대 410세대 중 금회 추가모집 특별공급 2세대",30,80),chunk("- 단 지 명 : 새봄 하우스",30,100),chunk("- 시행사(임대사업자) : 새봄개발(주)",30,120),chunk("- 시 공 사 : 우리건설",30,140),chunk("18층",510,150),chunk("1802호",510,160),chunk("[공급일정 및 청약]",450,200),chunk("본 공고문의 모집 공고일은 2027.02.01입니다.",450,220),chunk("청약신청 : 2027.02.05 09:00 ~ 2027.02.06 18:00",450,240),chunk("당첨자 발표 : 2027.02.10 ~ 2027.02.11",450,260),chunk("계약체결 : 2027.02.15 10:00 ~ 2027.02.16 17:00",450,280),chunk("입주지정기간 : 2027.03.01 10:00 ~ 2027.03.31 17:00",450,300));
+                chunk("[주택개요]",30,40),chunk("- 주택위치 : 서울특별시 마포구 테스트로 77 (2호선 테스트역 3번 출구)",30,60),chunk("- 공급호수 : 총 720세대 중 공공지원민간임대 410세대 중 금회 추가모집 특별공급 2세대",30,80),chunk("- 단 지 명 : 새봄 하우스",30,100),chunk("- 시행사(임대사업자) : 새봄개발(주)",30,120),chunk("- 시 공 사 : 우리건설",30,140),chunk("18층",510,150),chunk("1802호",510,160),chunk(rentalTerm,30,180),chunk("[공급일정 및 청약]",450,200),chunk("본 공고문의 모집 공고일은 2027.02.01입니다.",450,220),chunk("청약신청 : 2027.02.05 09:00 ~ 2027.02.06 18:00",450,240),chunk("당첨자 발표 : 2027.02.10 ~ 2027.02.11",450,260),chunk("계약체결 : 2027.02.15 10:00 ~ 2027.02.16 17:00",450,280),chunk("입주지정기간 : 2027.03.01 10:00 ~ 2027.03.31 17:00",450,300));
         List<PdfTextLayoutExtractor.TextChunk> second=List.of(
                 chunk("[공급현황]",30,40),chunk("공급 유형",55,70),chunk("주거 전용 (타입)",110,70),chunk("금회 공급 호수",155,70),chunk("보증금액",220,70),chunk("임대료",320,70),chunk("(단위 : 원)",340,80),chunk("청년 특별공급",50,110),chunk("42.75㎡",110,105),chunk("(42C)",115,115),chunk("2",162,115),chunk("98,765,432",220,115),chunk("567,890",325,115),chunk("1802호",115,125),chunk("[신청자격 및 제출서류]",30,200),chunk("신청자는 모집공고일 기준 20세 이상 38세 이하여야 합니다.",30,220),chunk("신청자 및 입주 예정 세대원 전부는 무주택요건을 충족해야 합니다.",30,240),chunk("자동차가액 5,000만원 이내",30,260));
         String firstText=first.stream().map(PdfTextLayoutExtractor.TextChunk::text).reduce("",(a,b)->a+"\n"+b),secondText=second.stream().map(PdfTextLayoutExtractor.TextChunk::text).reduce("",(a,b)->a+"\n"+b);
@@ -344,5 +379,5 @@ class DocumentImportTests {
     private PdfTextLayoutExtractor.TextChunk chunk(String text,float x,float y){return new PdfTextLayoutExtractor.TextChunk(text,x,y,Math.max(20,text.length()*5),8);}
     private static Map<String,Object> map(Object value){Map<String,Object> result=new LinkedHashMap<>();if(value instanceof Map<?,?> raw)raw.forEach((key,item)->result.put(String.valueOf(key),item));return result;}
     private static List<Map<String,Object>> maps(Object value){if(!(value instanceof List<?> list))return List.of();return list.stream().map(DocumentImportTests::map).toList();}
-    private record Context(JdbcTemplate jdbc,AnnouncementRepository announcements,DocumentImportService service){}
+    private record Context(JdbcTemplate jdbc,AnnouncementRepository announcements,DocumentExtractionRepository extractions,DocumentImportService service){}
 }

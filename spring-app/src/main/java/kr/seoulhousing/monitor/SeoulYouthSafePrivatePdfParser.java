@@ -16,6 +16,9 @@ class SeoulYouthSafePrivatePdfParser implements DocumentParser {
     private static final Pattern FULL_DATE=Pattern.compile("(20\\d{2})[.\\-/](\\d{1,2})[.\\-/](\\d{1,2})");
     private static final Pattern PARTIAL_DATE=Pattern.compile("(?<!\\d)(\\d{1,2})[.\\-/](\\d{1,2})(?:[.])?");
     private static final Pattern TIME=Pattern.compile("(?:오전|오후)?\\s*(\\d{1,2})(?::|시)\\s*(\\d{2})?");
+    private static final Pattern MANAGEMENT_FEE_LINE=Pattern.compile("(?:공용\\s*)?관리비");
+    private static final Pattern MANAGEMENT_FEE_AMOUNT=Pattern.compile("(?:공용\\s*)?관리비\\D{0,20}([\\d][\\d,]*)\\s*(원|만원)");
+    private static final Pattern CONVERSION_CONDITION=Pattern.compile("(?=.*전환)(?=.*(?:보증금|임대료|월세)).+");
 
     @Override public String parserId(){return ID;}
     @Override public List<DocumentParserRegistry.Key> supportedKeys(){return List.of(new DocumentParserRegistry.Key("SEOUL_YOUTH_SAFE","PRIVATE_RENTAL_NOTICE"));}
@@ -32,6 +35,7 @@ class SeoulYouthSafePrivatePdfParser implements DocumentParser {
         List<Evidence> evidence=new ArrayList<>();
         Map<String,Object> site=parseHousing(document,evidence,warnings);
         List<Map<String,Object>> units=parseSupply(document,evidence,warnings);
+        applyRentalTerms(document,units,evidence,warnings);
         site.put("units",units);
         List<Map<String,Object>> events=parseEvents(document,evidence,warnings);
         List<Map<String,Object>> rules=parseEligibility(document,evidence,warnings);
@@ -127,6 +131,29 @@ class SeoulYouthSafePrivatePdfParser implements DocumentParser {
             if(unitConflict)warnings.add("공급현황 표의 원문 단위("+rawUnit+")와 금액 자릿수가 충돌합니다. "+type.text()+" 보증금·월세 단위를 확인해 주세요.");
         }
         return units;
+    }
+
+    private void applyRentalTerms(PdfTextLayoutExtractor.DocumentLayout document,List<Map<String,Object>> units,List<Evidence> evidence,List<String> warnings){
+        Line management=findLine(document,MANAGEMENT_FEE_LINE),conversion=findLine(document,CONVERSION_CONDITION);
+        if(management==null&&conversion==null)return;
+        int optionCount=units.stream().mapToInt(unit->unit.get("rentalOptions") instanceof List<?> options?options.size():0).sum();
+        if(optionCount>1)warnings.add("관리비·전환 조건은 공통 문구 후보로 모든 임대 조건에 넣었습니다. 적용 범위를 확인해 주세요.");
+        for(int unitIndex=0;unitIndex<units.size();unitIndex++){
+            Object rawOptions=units.get(unitIndex).get("rentalOptions");
+            if(!(rawOptions instanceof List<?> options))continue;
+            for(int optionIndex=0;optionIndex<options.size();optionIndex++){
+                if(!(options.get(optionIndex) instanceof Map<?,?> rawOption))continue;
+                @SuppressWarnings("unchecked") Map<String,Object> option=(Map<String,Object>)rawOption;
+                String path="sites[0].units["+unitIndex+"].rentalOptions["+optionIndex+"]";
+                if(management!=null){
+                    option.put("managementFeeRawText",management.text().trim());
+                    Matcher amount=MANAGEMENT_FEE_AMOUNT.matcher(management.text());
+                    if(amount.find())option.put("managementFeeWon",money(amount.group(1))*("만원".equals(amount.group(2))?10_000:1));
+                    evidence.add(evidence(document,path+".managementFeeRawText",management.text(),"TEXT","NEEDS_REVIEW"));
+                }
+                if(conversion!=null){option.put("conversionConditionText",conversion.text().trim());evidence.add(evidence(document,path+".conversionConditionText",conversion.text(),"TEXT","NEEDS_REVIEW"));}
+            }
+        }
     }
 
     private List<Map<String,Object>> parseEvents(PdfTextLayoutExtractor.DocumentLayout document,List<Evidence> evidence,List<String> warnings){
