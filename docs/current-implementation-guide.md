@@ -1,5 +1,7 @@
 # 현재 구현 기능과 코드 확인 가이드
 
+> 현재 실행 화면은 `web/`의 React·TypeScript 소스를 Vite로 빌드한 정적 번들이다. Spring Boot는 `web/dist/`를 제공한다. 기존 `public/` 정적 화면은 제거됐고, 구조와 전환 원칙은 [React 프론트엔드 전환 아키텍처](ui/react-frontend-architecture.md)를 따른다.
+
 ## 1. 전체 구조
 
 ```text
@@ -8,7 +10,7 @@
   → AnnouncementRepository: SQLite 저장·신규/변경 판정
   → HousingDetailCollector + 기관별 파서: 상세 페이지 수집
   → HousingDataController / MobileApiController: 웹·모바일 API
-  → public/app.js / Android 앱: 사용자 화면
+  → web/src/App.tsx / Android 앱: 사용자 화면
   → NotificationDispatchService: 신규 공고 조건 확인·FCM 전송
 ```
 
@@ -22,15 +24,16 @@
 | DB 구조와 저장 방식 | `spring-app/src/main/java/kr/seoulhousing/monitor/AnnouncementRepository.java` |
 | LH 상세 수집 | `HousingDetailCollector.java`, `LhDetailParser.java` |
 | 웹 API | `HousingDataController.java`, `MonitorRefreshController.java` |
-| 사용자 화면 | `public/index.html`, `public/app.js`, `public/app.css` |
-| 지도 | `public/announcement-map.js` |
-| 관리자 수집 화면 | `public/admin.html`, `public/admin.js`, `public/admin.css` |
-| PDF 상세정보 가져오기 | `public/admin-import.html`, `public/admin-import.js`, `public/admin-import.css` |
+| 사용자·관리자 라우팅 | `web/src/App.tsx` |
+| 공통 UI·Toast | `web/src/components/ui.tsx`, `web/src/components/ui.module.css` |
+| 지도 | `web/src/map.ts` |
+| PDF 상세정보 가져오기 | `web/src/ReviewComplete.tsx`, `web/src/App.tsx` |
 | PDF 추출·저장 API | `DocumentImportController.java`, `DocumentImportService.java`, `DocumentExtractionRepository.java` |
 | 모바일·알림 | `MobileApiController.java`, `NotificationDispatchService.java`, `NotificationStore.java` |
 | 주요 설정 | `data/sources.json`, `spring-app/src/main/resources/application.properties` |
 | 데이터 모델 설계 | `docs/data/announcement-database-design.md` |
 | 다음 개선 계획 | `docs/data/detail-collection-priority-design.md` |
+| React 전환 설계 | `docs/ui/react-frontend-architecture.md` |
 
 ## 2. 애플리케이션 실행
 
@@ -43,7 +46,7 @@ cd spring-app
 
 - 기본 주소: `http://127.0.0.1:4173`
 - 시작점: `HousingMonitorApplication.main()`
-- 정적 파일: `public/`
+- 정적 파일: `web/dist/` (`web/`에서 `npm run build` 후 생성)
 - 데이터 위치: `data/`
 - DB: `data/housing-monitor.db`
 
@@ -55,7 +58,7 @@ cd spring-app
 npm run serve
 ```
 
-`src/server.mjs`는 정적 화면, JSON 기반 `/api/overview`, 프로필 저장만 제공한다. SQLite 공고 상세 API, 수동 수집, 모바일 API는 Spring 서버에서만 동작한다.
+`src/server.mjs`는 레거시 개발용 도구다. React 개발은 `web/`에서 `npm run dev`로 실행하며 `/api` 요청은 Spring 서버로 프록시한다. SQLite 공고 상세 API, 수동 수집, 모바일 API는 Spring 서버에서만 동작한다.
 
 ## 3. 공고 목록 수집
 
@@ -248,16 +251,18 @@ DB가 비어 있을 때는 `all-announcements.json`과 `announcement-details.jso
 
 ## 8. 사용자 웹 화면
 
+> 아래의 업무 동작·표시 규칙은 유지한다. `load()`, `setActiveView()` 등 기존 정적 JavaScript 함수명은 역사적 구현 기록이며, 현재 React 컴포넌트·상태·경로 기준은 `docs/ui/react-frontend-architecture.md`와 `web/src/`를 따른다.
+
 ### 화면 구조
 
-`public/index.html`은 다음 hash 화면을 가진다.
+React Router는 다음 경로 화면을 가진다.
 
-- `#home`: 추천 공고와 최근 공고
-- `#announcements`: 전체 공고 검색
-- `#preferences`: 관심 조건과 추가 프로필 메모
-- `#programs`: 제도 안내
+- `/`: 추천 공고와 최근 공고
+- `/announcements`: 전체 공고 검색
+- `/preferences`: 관심 조건과 추가 프로필 메모
+- `/programs`: 제도 안내
 
-`public/app.js`의 `setActiveView()`가 hash에 따라 한 화면만 표시한다. 뒤로 가기·앞으로 가기·새로고침에서도 같은 화면을 유지한다.
+`web/src/App.tsx`의 React Router가 경로에 따라 한 화면을 표시한다. 뒤로 가기·앞으로 가기·새로고침에서도 같은 화면을 유지한다. 이전 hash 주소는 앱 시작 시 대응 경로로 바뀐다.
 
 ### 데이터 로딩
 
@@ -308,7 +313,7 @@ Drawer가 닫힐 때는 열기 버튼으로 포커스를 되돌린다. 모바일
 
 ## 9. 지도
 
-`public/announcement-map.js`가 위치 정보를 화면과 지도에 맞는 형태로 바꾼다.
+`web/src/map.ts`가 위치 정보를 화면과 지도에 맞는 형태로 바꾼다.
 
 ### 위치 우선순위
 
@@ -317,7 +322,7 @@ Drawer가 닫힐 때는 열기 버튼으로 포커스를 되돌린다. 모바일
 3. 목록 지역
 4. 공급기관·공고명 기반 검색어
 
-`renderAnnouncementMap()`은 `/api/config`에서 `KAKAO_MAP_APP_KEY`를 읽는다.
+`drawMap()`은 `/api/config`에서 `KAKAO_MAP_APP_KEY`를 읽는다.
 
 - 좌표가 있으면 바로 마커 표시
 - 주소만 있으면 카카오 장소 검색으로 좌표 확인
@@ -328,9 +333,9 @@ Drawer가 닫힐 때는 열기 버튼으로 포커스를 되돌린다. 모바일
 
 ## 10. 관리자 화면과 수동 수집
 
-`/admin.html`은 일반 사용자 기능과 분리된 운영 화면이다.
+`/admin`은 일반 사용자 기능과 분리된 운영 화면이다.
 
-`public/admin.js`:
+`web/src/App.tsx`의 `AdminDashboard`:
 
 - `/api/overview`에서 최근 성공 시각, 공고 수, 신규 수, 기관별 상태 확인
 - `지금 공고 수집` 클릭 시 `POST /api/monitor/refresh`
@@ -422,11 +427,10 @@ npm test
 | `HousingDetailCollectorTests` | LH 상세 수집, 원문 저장, 실패 후 상세 보존 |
 | `MonitorRefreshCoordinatorTests` | 수동 수집 중복·상태·cooldown |
 | `NotificationDispatchServiceTests` | 알림 조건·중복 방지·전송 결과 |
-| `announcement-explorer.test.mjs` | 관심 조건과 검색 판정 |
-| `announcement-map.test.mjs` | 위치 선택·지도 fallback |
+| `catalog-pagination-contract.test.mjs` | React 공고 검색의 서버 페이지 API·URL 적용 조건 |
+| `react-ui-contract.test.mjs` | React PDF 등록·검토 API 계약과 지도 fallback 구성 |
 | `status-contract.test.mjs` | 상태 JSON 계약 |
 | `DocumentImportTests` | PDF 추출·근거·검증·확정 저장·롤백·HTML 값 불일치 경고 |
-| `admin-import.test.mjs` | 관리자 PDF 업로드·한글 코드 라벨·근거·반복 입력 UI 계약 |
 
 ### 증상별 확인 위치
 

@@ -4,7 +4,8 @@
 
 - 프로젝트: 서울 청년 주거 공고 모니터
 - GitHub: `https://github.com/hyeongsi/youth-housing-monitor.git` / `main`
-- Spring Boot 전환 완료. 화면은 기존 `public/` 정적 파일을 Spring이 제공한다.
+- Spring Boot 전환과 React 전환 완료. Spring은 `web/dist/` React 번들을 제공한다.
+- React 구조 기준은 `docs/ui/react-frontend-architecture.md`를 따른다.
 - 전체 공고 데이터: 2,386건 (2026-10-24 23:49 KST Java 수집 기준)
   - LH 43 / SH 1,730 / 서울주거포털 85 / 청년안심주택 528
 
@@ -33,7 +34,7 @@ cd D:\workspace\Subscription-Housing\spring-app
 - `HousingDataController.java`
   - `GET /api/overview`: 화면 데이터 전체 반환
   - `PUT /api/profile`: 로컬 프로필 메모 저장
-- `public/`
+- `web/`
   - 전체 2,386건 스크롤 목록, 출처·상태·검색 필터, 원문 링크
   - 개인 조건은 자동 필터에 사용하지 않는다.
 

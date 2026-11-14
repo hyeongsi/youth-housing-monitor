@@ -1,10 +1,14 @@
 node_modules/
+web/dist/
 logs/
 tmp/
 data/monitor-state.json
 data/auto-discovered.json
 data/notifications.json
 data/profile.json
+data/document-imports/
+data/documents/
+data/pdf-fixtures/
 data/housing-monitor.db
 data/housing-monitor.db-*
 data/pdf-fixtures/

@@ -1,5 +1,7 @@
 # 메뉴형 UI 개발 명세
 
+> 구현 상태: 기존 정적 화면 기준 완료 기록. 메뉴 구조·UX 규칙은 유지하되, React 전환 이후 파일 구조·컴포넌트·라우팅 기준은 [React 프론트엔드 전환 아키텍처](react-frontend-architecture.md)를 우선한다.
+
 ## 1. 목적과 기준 파일
 
 운영 화면을 `docs/ui/housing-menu-reference.html`과 `docs/ui/housing-menu-reference.css`의 정보 구조와 시각 밀도에 맞게 개선한다.

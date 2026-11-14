@@ -1,5 +1,7 @@
 # 기관별 PDF 파서 구현 계획
 
+> 프론트엔드 파일 경로는 현재 정적 화면 기준이다. React 전환 이후 PDF 검토 UI 구조는 [React 프론트엔드 전환 아키텍처](../ui/react-frontend-architecture.md)를 우선하며, 이 문서의 파서·근거·검증 규칙은 그대로 유지한다.
+
 ## 목표
 
 관리자가 선택한 `siteCode`와 `documentType`만으로 파서를 결정한다. PDF 본문·파일명으로 기관이나 유형을 추측하지 않는다.
