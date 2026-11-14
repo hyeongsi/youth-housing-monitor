@@ -22,6 +22,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.jsoup:jsoup:1.18.3'
 	implementation 'org.apache.pdfbox:pdfbox:3.0.3'

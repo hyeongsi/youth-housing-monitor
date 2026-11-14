@@ -49,12 +49,13 @@ public class AnnouncementRepository {
                 "CREATE TABLE IF NOT EXISTS housing_sites (id TEXT PRIMARY KEY, canonical_key TEXT NOT NULL UNIQUE, name TEXT, location_id TEXT REFERENCES locations(id))",
                 "CREATE TABLE IF NOT EXISTS announcement_sites (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, site_id TEXT NOT NULL REFERENCES housing_sites(id), source_site_key TEXT NOT NULL, display_order INTEGER NOT NULL, move_in_text TEXT, eligibility_text TEXT, UNIQUE(announcement_id, source_site_key))",
                 "CREATE TABLE IF NOT EXISTS supply_units (id TEXT PRIMARY KEY, announcement_site_id TEXT NOT NULL REFERENCES announcement_sites(id) ON DELETE CASCADE, source_unit_key TEXT NOT NULL, unit_type TEXT, exclusive_area_m2 REAL, supply_count INTEGER, category_text TEXT, floor_text TEXT, room_text TEXT, display_order INTEGER NOT NULL, UNIQUE(announcement_site_id, source_unit_key))",
-                "CREATE TABLE IF NOT EXISTS rental_options (id TEXT PRIMARY KEY, supply_unit_id TEXT NOT NULL REFERENCES supply_units(id) ON DELETE CASCADE, option_key TEXT NOT NULL, condition_text TEXT, deposit_won INTEGER, monthly_rent_won INTEGER, management_fee_text TEXT, display_order INTEGER NOT NULL, UNIQUE(supply_unit_id, option_key))",
+                "CREATE TABLE IF NOT EXISTS rental_options (id TEXT PRIMARY KEY, supply_unit_id TEXT NOT NULL REFERENCES supply_units(id) ON DELETE CASCADE, option_key TEXT NOT NULL, condition_text TEXT, deposit_won INTEGER, monthly_rent_won INTEGER, management_fee_text TEXT, management_fee_won INTEGER, conversion_condition_text TEXT, display_order INTEGER NOT NULL, UNIQUE(supply_unit_id, option_key))",
                 "CREATE TABLE IF NOT EXISTS supply_rooms (id TEXT PRIMARY KEY, supply_unit_id TEXT NOT NULL REFERENCES supply_units(id) ON DELETE CASCADE, building_text TEXT, floor_text TEXT, room_text TEXT, source_text TEXT)",
                 "CREATE TABLE IF NOT EXISTS site_organizations (id TEXT PRIMARY KEY, announcement_site_id TEXT NOT NULL REFERENCES announcement_sites(id) ON DELETE CASCADE, role TEXT NOT NULL, organization_name TEXT NOT NULL)",
                 "CREATE TABLE IF NOT EXISTS announcement_events (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, event_type TEXT NOT NULL, starts_at TEXT, ends_at TEXT, status TEXT NOT NULL, description TEXT)",
                 "CREATE TABLE IF NOT EXISTS eligibility_rules (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, category TEXT NOT NULL, target_group TEXT, rank INTEGER, household_size INTEGER, operator TEXT, threshold_value NUMERIC, threshold_unit TEXT, description TEXT)",
                 "CREATE TABLE IF NOT EXISTS announcement_detail_revisions (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, action TEXT NOT NULL, extraction_id TEXT, document_hash TEXT, source_revision_id TEXT REFERENCES announcement_detail_revisions(id), before_json TEXT NOT NULL, after_json TEXT NOT NULL, created_at TEXT NOT NULL)",
+                "CREATE TABLE IF NOT EXISTS announcement_change_events (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, detail_revision_id TEXT REFERENCES announcement_detail_revisions(id) ON DELETE CASCADE, category TEXT NOT NULL, field_path TEXT NOT NULL, before_json TEXT, after_json TEXT, occurred_at TEXT NOT NULL, created_at TEXT NOT NULL, UNIQUE(detail_revision_id, category, field_path))",
                 "CREATE TABLE IF NOT EXISTS announcement_documents (id TEXT PRIMARY KEY, announcement_id TEXT NOT NULL REFERENCES announcements(id) ON DELETE CASCADE, document_url TEXT NOT NULL, document_type TEXT NOT NULL, content_hash TEXT, local_path TEXT, retrieved_at TEXT, parser_version TEXT, parse_status TEXT NOT NULL, parse_error TEXT)",
                 "CREATE TABLE IF NOT EXISTS collection_runs (id TEXT PRIMARY KEY, trigger_type TEXT NOT NULL, started_at TEXT NOT NULL, finished_at TEXT, status TEXT NOT NULL, new_count INTEGER NOT NULL DEFAULT 0, changed_count INTEGER NOT NULL DEFAULT 0)",
                 "CREATE TABLE IF NOT EXISTS collection_source_runs (id TEXT PRIMARY KEY, collection_run_id TEXT NOT NULL REFERENCES collection_runs(id) ON DELETE CASCADE, source_id TEXT NOT NULL REFERENCES announcement_sources(id), started_at TEXT NOT NULL, finished_at TEXT, status TEXT NOT NULL, record_count INTEGER NOT NULL DEFAULT 0, new_count INTEGER NOT NULL DEFAULT 0, changed_count INTEGER NOT NULL DEFAULT 0, error TEXT)",
@@ -72,9 +73,12 @@ public class AnnouncementRepository {
         ensureColumn("announcements", "detail_parser_version TEXT");
         ensureColumn("announcements", "detail_source_hash TEXT");
         ensureColumn("announcements", "content_kind TEXT NOT NULL DEFAULT 'ANNOUNCEMENT'");
+        ensureColumn("rental_options", "management_fee_won INTEGER");
+        ensureColumn("rental_options", "conversion_condition_text TEXT");
         jdbc.update("UPDATE announcements SET content_kind=CASE WHEN title LIKE '%당첨자%발표%' OR title LIKE '%예비자%발표%' OR title LIKE '%당첨자%명단%' OR title LIKE '%예비자%명단%' OR title LIKE '%서류%제출%' OR title LIKE '%서류%심사%' OR title LIKE '%계약%안내%' OR title LIKE '%입주%안내%' OR title LIKE '%결과%발표%' THEN 'NOTICE' ELSE 'ANNOUNCEMENT' END WHERE content_kind IS NULL OR content_kind='ANNOUNCEMENT'");
         jdbc.execute("CREATE INDEX IF NOT EXISTS idx_announcements_detail_candidates ON announcements(active, detail_attempt_status, detail_next_retry_at)");
         jdbc.execute("CREATE INDEX IF NOT EXISTS idx_detail_revisions_announcement ON announcement_detail_revisions(announcement_id, created_at DESC)");
+        jdbc.execute("CREATE INDEX IF NOT EXISTS idx_change_events_announcement ON announcement_change_events(announcement_id, occurred_at DESC)");
     }
 
     private void ensureColumn(String table, String definition) {
@@ -183,13 +187,19 @@ public class AnnouncementRepository {
             else {where.append(" AND a.id IN (").append(String.join(",",Collections.nCopies(query.savedIds().size(),"?"))).append(")");args.addAll(query.savedIds());}
         }
         addInterestFilter(where,args,query.interest());
+        if(query.deadlineSoonOnly())where.append(" AND date(COALESCE((SELECT ends_at FROM announcement_events e WHERE e.announcement_id=a.id AND e.event_type='APPLICATION' ORDER BY ends_at LIMIT 1),a.application_end)) BETWEEN date('now') AND date('now','+3 days')");
         if(!query.includeClosed())where.append(" AND COALESCE((SELECT ends_at FROM announcement_events e WHERE e.announcement_id=a.id AND e.event_type='APPLICATION' ORDER BY ends_at LIMIT 1),a.application_end,'9999-12-31')>=date('now') AND COALESCE(a.status,'') NOT LIKE '%마감%' AND COALESCE(a.status,'') NOT LIKE '%종료%'");
         int total=jdbc.queryForObject("SELECT COUNT(*) FROM announcements a JOIN announcement_sources s ON s.id=a.source_id"+where,Integer.class,args.toArray());
-        String order="DEADLINE".equals(query.sort())?" ORDER BY COALESCE((SELECT ends_at FROM announcement_events e WHERE e.announcement_id=a.id AND e.event_type='APPLICATION' ORDER BY ends_at LIMIT 1),a.application_end,'9999-12-31'),a.announcement_date DESC":" ORDER BY COALESCE(a.announcement_date,'') DESC,a.first_seen_at DESC";
-        List<Object> pageArgs=new ArrayList<>(args);pageArgs.add(query.size());pageArgs.add((query.page()-1)*query.size());
+        List<Object> orderArgs=new ArrayList<>();String order;
+        if("SAVED".equals(query.sort())&&query.savedOnly()&&!query.savedIds().isEmpty()){
+            StringBuilder savedOrder=new StringBuilder(" ORDER BY CASE a.id");
+            for(int index=0;index<query.savedIds().size();index++){savedOrder.append(" WHEN ? THEN ").append(index);orderArgs.add(query.savedIds().get(index));}
+            order=savedOrder.append(" ELSE ").append(query.savedIds().size()).append(" END").toString();
+        }else order="DEADLINE".equals(query.sort())?" ORDER BY COALESCE((SELECT ends_at FROM announcement_events e WHERE e.announcement_id=a.id AND e.event_type='APPLICATION' ORDER BY ends_at LIMIT 1),a.application_end,'9999-12-31'),a.announcement_date DESC":" ORDER BY COALESCE(a.announcement_date,'') DESC,a.first_seen_at DESC";
+        List<Object> pageArgs=new ArrayList<>(args);pageArgs.addAll(orderArgs);pageArgs.add(query.size());pageArgs.add((query.page()-1)*query.size());
         List<String> ids=jdbc.queryForList("SELECT a.id FROM announcements a JOIN announcement_sources s ON s.id=a.source_id"+where+order+" LIMIT ? OFFSET ?",String.class,pageArgs.toArray());
-        List<Map<String,Object>> items=new ArrayList<>();for(Map<String,Object> item:announcementsByIds(ids)){Map<String,Object> row=new LinkedHashMap<>(item);row.put("detail",detail(text(item.get("id"))));items.add(row);}
-        Map<String,Object> applied=new LinkedHashMap<>();applied.put("region",query.region());applied.put("housingType",query.housingType());applied.put("status",query.status());applied.put("source",query.source());applied.put("query",query.query());applied.put("depositMaxWon",query.depositMax());applied.put("rentMaxWon",query.rentMax());applied.put("areaMin",query.areaMin());applied.put("areaMax",query.areaMax());applied.put("sort",query.sort());applied.put("includeClosed",query.includeClosed());applied.put("includeUnknown",query.includeUnknown());applied.put("savedOnly",query.savedOnly());applied.put("savedCount",query.savedIds().size());applied.put("interestOnly",query.interest().enabled());applied.put("supplementalOnly",query.supplementalOnly());
+        List<Map<String,Object>> items=new ArrayList<>();for(Map<String,Object> item:announcementsByIds(ids)){Map<String,Object> row=new LinkedHashMap<>(item);row.put("detail",detail(text(item.get("id"))));row.put("recentChange",recentChange(text(item.get("id"))));items.add(row);}
+        Map<String,Object> applied=new LinkedHashMap<>();applied.put("region",query.region());applied.put("housingType",query.housingType());applied.put("status",query.status());applied.put("source",query.source());applied.put("query",query.query());applied.put("depositMaxWon",query.depositMax());applied.put("rentMaxWon",query.rentMax());applied.put("areaMin",query.areaMin());applied.put("areaMax",query.areaMax());applied.put("sort",query.sort());applied.put("includeClosed",query.includeClosed());applied.put("includeUnknown",query.includeUnknown());applied.put("savedOnly",query.savedOnly());applied.put("savedCount",query.savedIds().size());applied.put("interestOnly",query.interest().enabled());applied.put("supplementalOnly",query.supplementalOnly());applied.put("deadlineSoonOnly",query.deadlineSoonOnly());
         return Map.of("items",items,"page",query.page(),"size",query.size(),"totalCount",total,"hasNext",query.page()*query.size()<total,"appliedFilters",applied);
     }
 
@@ -230,6 +240,16 @@ public class AnnouncementRepository {
         return rows.isEmpty() ? null : rows.getFirst();
     }
 
+    public Map<String,Object> compare(List<String> requestedIds) {
+        List<Map<String,Object>> items=new ArrayList<>(), excluded=new ArrayList<>();
+        for(String id:requestedIds){
+            Map<String,Object> announcement=announcement(id);
+            if(announcement==null||!"ANNOUNCEMENT".equals(announcement.get("contentKind"))){excluded.add(Map.of("id",id,"reason","공개 중인 공고가 아닙니다."));continue;}
+            Map<String,Object> item=new LinkedHashMap<>();item.put("announcement",announcement);item.put("details",Optional.ofNullable(detail(id)).orElse(Map.of()));items.add(item);
+        }
+        return Map.of("items",items,"excluded",excluded);
+    }
+
     public List<Map<String,Object>> adminSearch(String query) {
         String term="%"+(query==null?"":query.trim())+"%";
         return jdbc.query("SELECT * FROM announcements WHERE active=1 AND (title LIKE ? OR official_url LIKE ?) ORDER BY COALESCE(announcement_date,'') DESC LIMIT 30",(rs,row)->mapAnnouncement(rs),term,term);
@@ -255,6 +275,25 @@ public class AnnouncementRepository {
         });
         if (!sites.isEmpty()) applyLegacyProjection(detail, sites.getFirst());
         return detail;
+    }
+
+    public List<Map<String,Object>> changes(String announcementId) {
+        return jdbc.query("SELECT category,field_path,before_json,after_json,occurred_at FROM announcement_change_events WHERE announcement_id=? ORDER BY occurred_at DESC,id DESC",(rs,row)->{
+            Map<String,Object> item=new LinkedHashMap<>(); item.put("category",rs.getString("category"));item.put("fieldPath",rs.getString("field_path"));item.put("before",jsonValue(rs.getString("before_json")));item.put("after",jsonValue(rs.getString("after_json")));item.put("occurredAt",rs.getString("occurred_at"));return item;
+        },announcementId);
+    }
+
+    private Map<String,Object> recentChange(String announcementId){
+        List<Map<String,Object>> changes=jdbc.query("SELECT category,field_path,occurred_at FROM announcement_change_events WHERE announcement_id=? AND datetime(occurred_at)>=datetime('now','-7 days') ORDER BY occurred_at DESC,id DESC",(rs,row)->Map.<String,Object>of("category",rs.getString("category"),"fieldPath",rs.getString("field_path"),"occurredAt",rs.getString("occurred_at")),announcementId);
+        if(changes.isEmpty())return Map.of();
+        Map<String,Object> latest=changes.getFirst();Map<String,Object> result=new LinkedHashMap<>(latest);result.put("count",changes.size());result.put("summary",changeSummary(text(latest.get("category")),text(latest.get("fieldPath")),changes.size()));return result;
+    }
+
+    private String changeSummary(String category,String fieldPath,int count){
+        if(count>1)return switch(category){case "RENTAL_CONDITION"->"임대 조건 "+count+"건 변경";case "SCHEDULE"->"일정 "+count+"건 변경";case "RECRUITMENT"->"모집 정보 "+count+"건 변경";default->"공급 주택 정보 "+count+"건 변경";};
+        if("RENTAL_CONDITION".equals(category))return fieldPath.contains("보증금")?"보증금 변경":fieldPath.contains("월세")?"월세 변경":"임대 조건 변경";
+        if("SCHEDULE".equals(category))return fieldPath.contains("마감")?"접수 마감 변경":fieldPath.contains("시작")?"접수 시작 변경":"일정 변경";
+        return "RECRUITMENT".equals(category)?"모집 상태 변경":"공급 주택 정보 변경";
     }
 
     public List<Map<String,Object>> search(String region, Double areaMin, Double areaMax, Long depositMax, Long rentMax) {
@@ -345,7 +384,7 @@ public class AnnouncementRepository {
                     List<Map<String,Object>> options=maps(unit.get("rentalOptions"));
                     for(int optionIndex=0;optionIndex<options.size();optionIndex++){
                         Map<String,Object> option=options.get(optionIndex); String optionKey=text(option.getOrDefault("optionKey","option-"+optionIndex));
-                        jdbc.update("INSERT INTO rental_options(id,supply_unit_id,option_key,condition_text,deposit_won,monthly_rent_won,management_fee_text,display_order) VALUES(?,?,?,?,?,?,?,?)",sha("option:"+unitId+":"+optionKey),unitId,optionKey,nullable(option.get("conditionText")),longOrNull(option.get("depositWon")),longOrNull(option.get("monthlyRentWon")),nullable(option.get("managementFeeText")),optionIndex);
+                        jdbc.update("INSERT INTO rental_options(id,supply_unit_id,option_key,condition_text,deposit_won,monthly_rent_won,management_fee_text,management_fee_won,conversion_condition_text,display_order) VALUES(?,?,?,?,?,?,?,?,?,?)",sha("option:"+unitId+":"+optionKey),unitId,optionKey,nullable(option.get("conditionText")),longOrNull(option.get("depositWon")),longOrNull(option.get("monthlyRentWon")),nullable(option.get("managementFeeRawText")),longOrNull(option.get("managementFeeWon")),nullable(option.get("conversionConditionText")),optionIndex);
                     }
                 }
             }
@@ -362,18 +401,30 @@ public class AnnouncementRepository {
         String raw = json(item), now = text(item.getOrDefault("retrievedAt", Instant.now().toString()));
         Map<String,Object> hashInput = new LinkedHashMap<>(item); hashInput.remove("retrievedAt");
         String hash = sha(json(hashInput));
-        List<String> old = jdbc.queryForList("SELECT content_hash FROM announcements WHERE id=?", String.class, id);
+        List<Map<String,Object>> old = jdbc.query("SELECT content_hash,status,application_start,application_end FROM announcements WHERE id=?",(rs,row)->{Map<String,Object> value=new LinkedHashMap<>();value.put("contentHash",rs.getString("content_hash"));value.put("status",rs.getString("status"));value.put("applicationStart",rs.getString("application_start"));value.put("applicationEnd",rs.getString("application_end"));return value;},id);
         String date = nullable(item.getOrDefault("announcementDate", item.get("announcedAt")));
         if (old.isEmpty()) {
             jdbc.update("INSERT INTO announcements(id,source_id,source_announcement_key,provider_id,title,housing_type,announcement_date,application_start,application_end,status,official_url,detail_status,content_hash,first_seen_at,last_seen_at,last_changed_at,active,raw_summary_json,content_kind) VALUES(?,?,?,?,?,?,?,?,?,?,?,'NOT_COLLECTED',?,?,?,?,1,?,?)",
                     id, sourceId, text(item.getOrDefault("sourceAnnouncementKey", id)), providerId, text(item.getOrDefault("title", "제목 없음")), nullable(item.get("housingType")), date, nullable(item.get("applicationStart")), nullable(item.get("applicationEnd")), nullable(item.get("status")), text(item.getOrDefault("officialUrl", "")), hash, now, now, now, raw, contentKind(item));
             return true;
         }
-        boolean changed = !old.getFirst().equals(hash);
+        boolean changed = !text(old.getFirst().get("contentHash")).equals(hash);
         jdbc.update("UPDATE announcements SET provider_id=?,title=?,housing_type=?,announcement_date=?,application_start=?,application_end=?,status=?,official_url=?,content_hash=?,last_seen_at=?,last_changed_at=CASE WHEN content_hash<>? THEN ? ELSE last_changed_at END,active=1,raw_summary_json=?,content_kind=? WHERE id=?",
                 providerId, text(item.getOrDefault("title", "제목 없음")), nullable(item.get("housingType")), date, nullable(item.get("applicationStart")), nullable(item.get("applicationEnd")), nullable(item.get("status")), text(item.getOrDefault("officialUrl", "")), hash, now, hash, now, raw, contentKind(item), id);
+        if(changed) recordCollectionChanges(id,old.getFirst(),item,now);
         return changed;
     }
+
+    private void recordCollectionChanges(String announcementId,Map<String,Object> before,Map<String,Object> after,String at){
+        List<CollectionChange> changes=new ArrayList<>();
+        addCollectionChange(changes,"RECRUITMENT","공고.모집 상태",before.get("status"),after.get("status"));
+        addCollectionChange(changes,"SCHEDULE","공고.접수 시작",before.get("applicationStart"),after.get("applicationStart"));
+        addCollectionChange(changes,"SCHEDULE","공고.접수 마감",before.get("applicationEnd"),after.get("applicationEnd"));
+        if(changes.isEmpty()) return;
+        for(CollectionChange change:changes) jdbc.update("INSERT INTO announcement_change_events(id,announcement_id,detail_revision_id,category,field_path,before_json,after_json,occurred_at,created_at) VALUES(?,?,NULL,?,?,?,?,?,?)",UUID.randomUUID().toString(),announcementId,change.category(),change.path(),json(change.before()),json(change.after()),at,at);
+    }
+
+    private void addCollectionChange(List<CollectionChange> changes,String category,String path,Object before,Object after){if(!Objects.equals(nullable(before),nullable(after)))changes.add(new CollectionChange(category,path,nullable(before),nullable(after)));}
 
     private Map<String,Object> mapAnnouncement(ResultSet rs) throws SQLException {
         Map<String,Object> item = jsonMap(rs.getString("raw_summary_json"));
@@ -407,8 +458,8 @@ public class AnnouncementRepository {
         jdbc.update("INSERT OR IGNORE INTO supply_units(id,announcement_site_id,source_unit_key,unit_type,exclusive_area_m2,display_order) VALUES(?,?,?,?,?,0)", unitId, linkId, "legacy-unit", unitType, area);
         for (int i=0;i<options.size();i++) {
             Map<String,Object> option = options.get(i);
-            jdbc.update("INSERT OR IGNORE INTO rental_options(id,supply_unit_id,option_key,condition_text,deposit_won,monthly_rent_won,management_fee_text,display_order) VALUES(?,?,?,?,?,?,?,?)",
-                    sha(unitId+":"+i), unitId, "legacy-option-"+i, nullable(option.get("conditionText")), longOrNull(option.get("depositWon")), longOrNull(option.get("monthlyRentWon")), nullable(map(detail.get("cost")).get("managementFeeText")), i);
+            jdbc.update("INSERT OR IGNORE INTO rental_options(id,supply_unit_id,option_key,condition_text,deposit_won,monthly_rent_won,management_fee_text,management_fee_won,conversion_condition_text,display_order) VALUES(?,?,?,?,?,?,?,?,?,?)",
+                    sha(unitId+":"+i), unitId, "legacy-option-"+i, nullable(option.get("conditionText")), longOrNull(option.get("depositWon")), longOrNull(option.get("monthlyRentWon")), nullable(map(detail.get("cost")).get("managementFeeText")), null, null, i);
         }
         jdbc.update("UPDATE announcements SET detail_status=?,application_start=COALESCE(?,application_start),application_end=COALESCE(?,application_end),last_changed_at=? WHERE id=?",
                 "VERIFIED".equals(detail.get("verificationStatus")) ? "PARSED" : "PARTIAL", nullable(map(detail.get("application")).get("start")), nullable(map(detail.get("application")).get("end")), text(detail.getOrDefault("verifiedAt", Instant.now().toString())), announcementId);
@@ -427,7 +478,7 @@ public class AnnouncementRepository {
 
     private List<Map<String,Object>> units(String siteLinkId) {
         List<Map<String,Object>> units=jdbc.query("SELECT * FROM supply_units WHERE announcement_site_id=? ORDER BY display_order",(rs,row)->{ Map<String,Object> unit=new LinkedHashMap<>(); unit.put("id",rs.getString("id")); unit.put("sourceUnitKey",rs.getString("source_unit_key")); unit.put("unitType",rs.getString("unit_type")); unit.put("exclusiveAreaM2",rs.getObject("exclusive_area_m2")); unit.put("supplyCount",rs.getObject("supply_count")); unit.put("categoryText",rs.getString("category_text")); unit.put("floorText",rs.getString("floor_text")); unit.put("roomText",rs.getString("room_text")); return unit; },siteLinkId);
-        for(Map<String,Object> unit:units) { unit.put("rooms",rooms(text(unit.get("id")))); unit.put("rentalOptions",jdbc.query("SELECT * FROM rental_options WHERE supply_unit_id=? ORDER BY display_order",(rs,row)->{ Map<String,Object> option=new LinkedHashMap<>(); option.put("id",rs.getString("id")); option.put("conditionText",rs.getString("condition_text")); option.put("depositWon",rs.getObject("deposit_won")); option.put("monthlyRentWon",rs.getObject("monthly_rent_won")); option.put("managementFeeText",rs.getString("management_fee_text")); return option; },unit.get("id"))); }
+        for(Map<String,Object> unit:units) { unit.put("rooms",rooms(text(unit.get("id")))); unit.put("rentalOptions",jdbc.query("SELECT * FROM rental_options WHERE supply_unit_id=? ORDER BY display_order",(rs,row)->{ Map<String,Object> option=new LinkedHashMap<>(); option.put("id",rs.getString("id")); option.put("conditionText",rs.getString("condition_text")); option.put("depositWon",rs.getObject("deposit_won")); option.put("monthlyRentWon",rs.getObject("monthly_rent_won")); option.put("managementFeeText",rs.getString("management_fee_text")); option.put("managementFeeWon",rs.getObject("management_fee_won")); option.put("conversionConditionText",rs.getString("conversion_condition_text")); return option; },unit.get("id"))); }
         return units;
     }
 
@@ -502,6 +553,7 @@ public class AnnouncementRepository {
     private void write(String file,Object value){ try{ Files.createDirectories(data); mapper.writerWithDefaultPrettyPrinter().writeValue(data.resolve(file).toFile(),value); }catch(Exception error){ throw new IllegalStateException(error); } }
     private String json(Object value){ try{return mapper.writeValueAsString(value);}catch(Exception error){throw new IllegalStateException(error);} }
     private Map<String,Object> jsonMap(String value){ try{return value==null?new LinkedHashMap<>():mapper.readValue(value,new TypeReference<>(){});}catch(Exception ignored){return new LinkedHashMap<>();} }
+    private Object jsonValue(String value){try{return value==null?null:mapper.readValue(value,Object.class);}catch(Exception ignored){return value;}}
     @SuppressWarnings("unchecked") private Map<String,Object> map(Object value){ return value instanceof Map<?,?> raw?copy(raw):new LinkedHashMap<>(); }
     private Map<String,Object> copy(Map<?,?> raw){ Map<String,Object> result=new LinkedHashMap<>(); raw.forEach((k,v)->result.put(String.valueOf(k),v)); return result; }
     @SuppressWarnings("unchecked") private List<Map<String,Object>> maps(Object value){ if(!(value instanceof List<?> list)) return List.of(); return list.stream().filter(Map.class::isInstance).map(v->copy((Map<?,?>)v)).toList(); }
@@ -516,13 +568,15 @@ public class AnnouncementRepository {
     private String sha(String value){ try{ byte[] bytes=MessageDigest.getInstance("SHA-256").digest(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)); return java.util.HexFormat.of().formatHex(bytes); }catch(Exception error){throw new IllegalStateException(error);} }
     public record SourceResult(List<Map<String,Object>> newItems,int changedCount) { public int newCount(){ return newItems.size(); } }
     public record DetailCandidate(String id, String title, String officialUrl, int attemptCount) {}
+    private record CollectionChange(String category,String path,String before,String after) {}
     public record InterestQuery(boolean enabled,List<String> regions,Long depositMax,Long rentMax,Double areaMin,Double areaMax,boolean includeUnknown) {
         public InterestQuery { regions=regions==null?List.of():regions.stream().filter(value->value!=null&&!value.isBlank()).distinct().toList(); }
     }
-    public record CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,boolean savedOnly,List<String> savedIds,InterestQuery interest,boolean supplementalOnly) {
+    public record CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,boolean savedOnly,List<String> savedIds,InterestQuery interest,boolean supplementalOnly,boolean deadlineSoonOnly) {
         public CatalogQuery { savedIds=savedIds==null?List.of():savedIds.stream().filter(value->value!=null&&!value.isBlank()).distinct().toList();interest=interest==null?new InterestQuery(false,List.of(),null,null,null,null,true):interest; }
-        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,boolean savedOnly,List<String> savedIds,InterestQuery interest){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,includeUnknown,savedOnly,savedIds,interest,false);}
-        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,List<String> savedIds,InterestQuery interest){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,includeUnknown,savedIds!=null&&!savedIds.isEmpty(),savedIds,interest,false);}
-        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,true,false,List.of(),null,false);}
+        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,boolean savedOnly,List<String> savedIds,InterestQuery interest,boolean supplementalOnly){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,includeUnknown,savedOnly,savedIds,interest,supplementalOnly,false);}
+        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,boolean savedOnly,List<String> savedIds,InterestQuery interest){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,includeUnknown,savedOnly,savedIds,interest,false,false);}
+        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed,boolean includeUnknown,List<String> savedIds,InterestQuery interest){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,includeUnknown,savedIds!=null&&!savedIds.isEmpty(),savedIds,interest,false,false);}
+        public CatalogQuery(int page,int size,String region,String housingType,String status,String source,String query,Long depositMax,Long rentMax,Double areaMin,Double areaMax,String sort,boolean includeClosed){this(page,size,region,housingType,status,source,query,depositMax,rentMax,areaMin,areaMax,sort,includeClosed,true,false,List.of(),null,false,false);}
     }
 }

@@ -23,7 +23,7 @@ public class HousingDataController {
     private final ObjectMapper mapper;
     private final Path data;
     private final AnnouncementRepository announcements;
-    private static final Set<String> PROFILE_FIELDS = Set.of("employmentStatus", "grossIncomeBand", "assetBand", "cashForDepositBand", "maxMonthlyRent", "maxDeposit", "homeOwnership", "maritalAndHousehold", "livesSeparatelyFromParents", "vehicleOwnership", "preferredAreas", "commuteOrSchoolCondition", "currentLeaseEnd", "earliestMoveDate", "notes");
+    private static final Set<String> PROFILE_FIELDS = Set.of("employmentStatus", "grossIncomeBand", "assetBand", "cashForDepositBand", "maxMonthlyRent", "maxDeposit", "minExclusiveArea", "maxExclusiveArea", "homeOwnership", "maritalAndHousehold", "livesSeparatelyFromParents", "vehicleOwnership", "preferredAreas", "commuteOrSchoolCondition", "currentLeaseEnd", "earliestMoveDate", "notes");
 
     @Autowired
     public HousingDataController(ObjectMapper mapper, @Value("${housing.root}") String root, AnnouncementRepository announcements) {
@@ -60,12 +60,12 @@ public class HousingDataController {
             @RequestParam(defaultValue="") String source,@RequestParam(defaultValue="") String query,@RequestParam(required=false) Long depositMaxWon,
             @RequestParam(required=false) Long rentMaxWon,@RequestParam(required=false) Double areaMin,@RequestParam(required=false) Double areaMax,
             @RequestParam(defaultValue="LATEST") String sort,@RequestParam(defaultValue="false") boolean includeClosed,@RequestParam(defaultValue="true") boolean includeUnknown,
-            @RequestParam(defaultValue="false") boolean savedOnly,@RequestParam(defaultValue="false") boolean supplementalOnly,@RequestParam(name="savedId",required=false) List<String> savedIds,@RequestParam(defaultValue="false") boolean interestOnly,@RequestParam(name="interestRegion",required=false) List<String> interestRegions,
+            @RequestParam(defaultValue="false") boolean savedOnly,@RequestParam(defaultValue="false") boolean supplementalOnly,@RequestParam(defaultValue="false") boolean deadlineSoonOnly,@RequestParam(name="savedId",required=false) List<String> savedIds,@RequestParam(defaultValue="false") boolean interestOnly,@RequestParam(name="interestRegion",required=false) List<String> interestRegions,
             @RequestParam(required=false) Long interestDepositMaxWon,@RequestParam(required=false) Long interestRentMaxWon,@RequestParam(required=false) Double interestAreaMin,@RequestParam(required=false) Double interestAreaMax,@RequestParam(defaultValue="true") boolean interestIncludeUnknown){
         if(page<1||size<1||size>50||negative(depositMaxWon)||negative(rentMaxWon)||negative(areaMin)||negative(areaMax)||negative(interestDepositMaxWon)||negative(interestRentMaxWon)||negative(interestAreaMin)||negative(interestAreaMax)||!finite(areaMin)||!finite(areaMax)||!finite(interestAreaMin)||!finite(interestAreaMax)||(areaMin!=null&&areaMax!=null&&areaMin>areaMax)||(interestAreaMin!=null&&interestAreaMax!=null&&interestAreaMin>interestAreaMax)||invalidSavedIds(savedIds))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"검색 조건이 올바르지 않습니다.");
-        String normalizedSort="DEADLINE".equals(sort)?"DEADLINE":"LATEST";if(!"LATEST".equals(sort)&&!"DEADLINE".equals(sort))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"정렬 조건이 올바르지 않습니다.");
+        String normalizedSort=Set.of("LATEST","DEADLINE","SAVED").contains(sort)?sort:"LATEST";if(!Set.of("LATEST","DEADLINE","SAVED").contains(sort))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"정렬 조건이 올바르지 않습니다.");
         if(announcements==null)throw new org.springframework.web.server.ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"공고 저장소를 사용할 수 없습니다.");
-        return announcements.page(new AnnouncementRepository.CatalogQuery(page,size,region,housingType,status,source,query,depositMaxWon,rentMaxWon,areaMin,areaMax,normalizedSort,includeClosed,includeUnknown,savedOnly,savedIds,new AnnouncementRepository.InterestQuery(interestOnly,interestRegions,interestDepositMaxWon,interestRentMaxWon,interestAreaMin,interestAreaMax,interestIncludeUnknown),supplementalOnly));
+        return announcements.page(new AnnouncementRepository.CatalogQuery(page,size,region,housingType,status,source,query,depositMaxWon,rentMaxWon,areaMin,areaMax,normalizedSort,includeClosed,includeUnknown,savedOnly,savedIds,new AnnouncementRepository.InterestQuery(interestOnly,interestRegions,interestDepositMaxWon,interestRentMaxWon,interestAreaMin,interestAreaMax,interestIncludeUnknown),supplementalOnly,deadlineSoonOnly));
     }
 
     @GetMapping("/config")
@@ -82,6 +82,20 @@ public class HousingDataController {
         result.put("announcement", item);
         result.put("details", Optional.ofNullable(announcements.detail(id)).orElse(Map.of()));
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/announcements/{id}/changes")
+    public ResponseEntity<Map<String,Object>> announcementChanges(@PathVariable String id) {
+        if (announcements == null || announcements.announcement(id) == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(Map.of("items",announcements.changes(id)));
+    }
+
+    @GetMapping("/announcements/compare")
+    public Map<String,Object> compareAnnouncements(@RequestParam String ids) {
+        if(announcements==null)throw new org.springframework.web.server.ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"공고 저장소를 사용할 수 없습니다.");
+        List<String> values=Arrays.stream(ids.split(",")).map(String::trim).filter(value->!value.isBlank()).distinct().toList();
+        if(values.size()<2||values.size()>3||invalidSavedIds(values))throw new org.springframework.web.server.ResponseStatusException(HttpStatus.BAD_REQUEST,"비교할 공고는 2~3개를 선택해 주세요.");
+        return announcements.compare(values);
     }
 
     private boolean negative(Number value){return value!=null&&value.doubleValue()<0;}

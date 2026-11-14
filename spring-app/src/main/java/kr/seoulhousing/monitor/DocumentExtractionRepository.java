@@ -86,9 +86,31 @@ class DocumentExtractionRepository {
     String extractionIdForHash(String announcementId,String hash){List<String> ids=jdbc.queryForList("SELECT e.id FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE d.announcement_id=? AND d.content_hash=? ORDER BY e.created_at DESC LIMIT 1",String.class,announcementId,hash);return ids.isEmpty()?null:ids.getFirst();}
     boolean committedHash(String announcementId,String hash,String exceptId){ return jdbc.queryForObject("SELECT COUNT(*) FROM announcement_documents d LEFT JOIN document_extractions e ON e.announcement_document_id=d.id WHERE d.announcement_id=? AND d.content_hash=? AND d.parse_status='COMMITTED' AND (e.id IS NULL OR e.id<>?)",Integer.class,announcementId,hash,exceptId)>0; }
     String documentPath(String id){ List<String> paths=jdbc.queryForList("SELECT d.local_path FROM document_extractions e JOIN announcement_documents d ON d.id=e.announcement_document_id WHERE e.id=?",String.class,id); return paths.isEmpty()?null:paths.getFirst(); }
-    void recordRevision(String announcementId,String action,String extractionId,String documentHash,String sourceRevisionId,Map<String,Object> before,Map<String,Object> after,String at){
+    String recordRevision(String announcementId,String action,String extractionId,String documentHash,String sourceRevisionId,Map<String,Object> before,Map<String,Object> after,String at){
+        String id=UUID.randomUUID().toString();
         jdbc.update("INSERT INTO announcement_detail_revisions(id,announcement_id,action,extraction_id,document_hash,source_revision_id,before_json,after_json,created_at) VALUES(?,?,?,?,?,?,?,?,?)",
-                UUID.randomUUID().toString(),announcementId,action,nullable(extractionId),nullable(documentHash),nullable(sourceRevisionId),json(before),json(after),at);
+                id,announcementId,action,nullable(extractionId),nullable(documentHash),nullable(sourceRevisionId),json(before),json(after),at);
+        return id;
+    }
+
+    void recordChangeEvents(String announcementId,String revisionId,Map<String,Object> before,Map<String,Object> after,String at){
+        if(!hasDetail(before)) return;
+        for(Map<String,Object> change:DetailRevisionDiff.compare(before,after)){
+            String category=changeCategory(change);
+            if(category==null) continue;
+            String fieldPath=String.valueOf(change.get("label"));
+            jdbc.update("INSERT OR IGNORE INTO announcement_change_events(id,announcement_id,detail_revision_id,category,field_path,before_json,after_json,occurred_at,created_at) VALUES(?,?,?,?,?,?,?,?,?)",
+                    UUID.randomUUID().toString(),announcementId,revisionId,category,fieldPath,json(change.get("beforeRaw")),json(change.get("afterRaw")),at,at);
+        }
+    }
+
+    private boolean hasDetail(Map<String,Object> detail){return !maps(detail.get("sites")).isEmpty()||!maps(detail.get("events")).isEmpty()||!maps(detail.get("eligibilityRules")).isEmpty();}
+    private String changeCategory(Map<String,Object> change){
+        String section=text(change.get("section")),field=text(change.get("field"));
+        if("임대 조건".equals(section)&&Set.of("보증금","월세","관리비","전환 조건").contains(field)) return "RENTAL_CONDITION";
+        if("일정".equals(section)&&Set.of("시작","종료","상태").contains(field)) return "SCHEDULE";
+        if("공급 주택".equals(section)&&Set.of("단지명","주소","공급호수","전용면적","호실").contains(field)) return "HOUSING";
+        return null;
     }
     List<Map<String,Object>> revisions(String announcementId){
         return jdbc.query("SELECT id,action,document_hash,source_revision_id,before_json,after_json,created_at FROM announcement_detail_revisions WHERE announcement_id=? ORDER BY created_at DESC,id DESC",(rs,row)->{

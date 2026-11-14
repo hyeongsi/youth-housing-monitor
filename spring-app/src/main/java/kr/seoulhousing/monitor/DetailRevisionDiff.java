@@ -56,6 +56,8 @@ final class DetailRevisionDiff {
             compare(changes,"임대 조건",unitLabel+" · "+key,"조건 설명",value(oldOption,"conditionText"),value(newOption,"conditionText"),DetailRevisionDiff::plain);
             compare(changes,"임대 조건",optionLabel,"보증금",value(oldOption,"depositWon"),value(newOption,"depositWon"),DetailRevisionDiff::won);
             compare(changes,"임대 조건",optionLabel,"월세",value(oldOption,"monthlyRentWon"),value(newOption,"monthlyRentWon"),DetailRevisionDiff::won);
+            compare(changes,"임대 조건",optionLabel,"관리비",value(oldOption,"managementFeeWon"),value(newOption,"managementFeeWon"),DetailRevisionDiff::won);
+            compare(changes,"임대 조건",optionLabel,"전환 조건",value(oldOption,"conversionConditionText"),value(newOption,"conversionConditionText"),DetailRevisionDiff::plain);
         }
     }
 
@@ -70,7 +72,11 @@ final class DetailRevisionDiff {
     }
 
     private static void compare(List<Map<String,Object>> changes,String section,String parent,String field,Object before,Object after,java.util.function.Function<Object,String> formatter){
-        if(equal(before,after))return;String oldValue=missing(before)?"없음":formatter.apply(before),newValue=missing(after)?"없음":formatter.apply(after);String kind=missing(before)?"ADDED":missing(after)?"REMOVED":"CHANGED";changes.add(Map.of("section",section,"label",parent+" · "+field,"before",oldValue,"after",newValue,"kind",kind));
+        if(equal(before,after))return;
+        String oldValue=missing(before)?"없음":formatter.apply(before),newValue=missing(after)?"없음":formatter.apply(after),kind=missing(before)?"ADDED":missing(after)?"REMOVED":"CHANGED";
+        Map<String,Object> change=new LinkedHashMap<>();
+        change.put("section",section);change.put("label",parent+" · "+field);change.put("field",field);change.put("before",oldValue);change.put("after",newValue);change.put("beforeRaw",before);change.put("afterRaw",after);change.put("kind",kind);
+        changes.add(change);
     }
     private static Map<String,Map<String,Object>> indexed(List<Map<String,Object>> items,String key){Map<String,Map<String,Object>> result=new LinkedHashMap<>();for(int index=0;index<items.size();index++){Map<String,Object> item=items.get(index);String value=plain(item.get(key));result.put(value.isBlank()?"#"+index:value,item);}return result;}
     private static Map<String,Map<String,Object>> indexedRules(List<Map<String,Object>> items){Map<String,Map<String,Object>> result=new LinkedHashMap<>();for(int index=0;index<items.size();index++){Map<String,Object> item=items.get(index);result.put(plain(item.get("category"))+":"+plain(item.get("targetGroup"))+":"+plain(item.get("rank"))+":"+index,item);}return result;}
